@@ -22,6 +22,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from '@/components/ui/textarea';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 
 const donationSchema = z.object({
@@ -174,10 +175,11 @@ function DonationTable() {
               <PlusCircle className="mr-2 h-4 w-4" /> Add Donation
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="sm:max-w-lg max-h-[90vh]">
             <DialogHeader>
               <DialogTitle>{form.getValues("id") ? 'Edit' : 'Add'} Donation</DialogTitle>
             </DialogHeader>
+            <ScrollArea className="pr-4">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                 <FormField control={form.control} name="title" render={({ field }) => (
@@ -256,12 +258,13 @@ function DonationTable() {
                     <FormMessage />
                   </FormItem>
                 )} />
-                <DialogFooter>
+                <DialogFooter className="sticky bottom-0 bg-background py-4">
                   <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
                   <Button type="submit">Save</Button>
                 </DialogFooter>
               </form>
             </Form>
+            </ScrollArea>
           </DialogContent>
         </Dialog>
       </CardHeader>
@@ -270,8 +273,8 @@ function DonationTable() {
           <TableHeader>
             <TableRow>
               <TableHead>Title</TableHead>
-              <TableHead>Donor</TableHead>
-              <TableHead>Description</TableHead>
+              <TableHead className="hidden md:table-cell">Donor</TableHead>
+              <TableHead className="hidden lg:table-cell">Description</TableHead>
               <TableHead className="text-right">Value</TableHead>
               <TableHead className="hidden md:table-cell">Date</TableHead>
               <TableHead>Actions</TableHead>
@@ -281,8 +284,8 @@ function DonationTable() {
             {items.map((item) => (
               <TableRow key={item.id}>
                 <TableCell className="font-medium">{item.title}</TableCell>
-                <TableCell>{item.donorName || 'N/A'}</TableCell>
-                <TableCell>{item.description || 'N/A'}</TableCell>
+                <TableCell className="hidden md:table-cell">{item.donorName || 'N/A'}</TableCell>
+                <TableCell className="hidden lg:table-cell">{item.description || 'N/A'}</TableCell>
                 <TableCell className="text-right">
                   {item.amount !== undefined ? `INR ${new Intl.NumberFormat('en-IN').format(item.amount)}` : item.item}
                 </TableCell>
@@ -401,39 +404,41 @@ function FinanceTable<T extends Collection | Expense>({
               <PlusCircle className="mr-2 h-4 w-4" /> Add {title}
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="sm:max-w-lg max-h-[90vh]">
             <DialogHeader>
               <DialogTitle>{form.getValues("id") ? 'Edit' : 'Add'} {title}</DialogTitle>
             </DialogHeader>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <FormField control={form.control} name="title" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Title</FormLabel>
-                    <FormControl><Input placeholder={`${title} title`} {...field} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="amount" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Amount</FormLabel>
-                    <FormControl><Input type="number" step="0.01" {...field} onChange={e => field.onChange(+e.target.value)}/></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="date" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Date</FormLabel>
-                    <FormControl><Input type="date" {...field} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-                <DialogFooter>
-                  <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
-                  <Button type="submit">Save</Button>
-                </DialogFooter>
-              </form>
-            </Form>
+             <ScrollArea className="pr-4">
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                  <FormField control={form.control} name="title" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Title</FormLabel>
+                      <FormControl><Input placeholder={`${title} title`} {...field} /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+                  <FormField control={form.control} name="amount" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Amount</FormLabel>
+                      <FormControl><Input type="number" step="0.01" {...field} onChange={e => field.onChange(+e.target.value)}/></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+                  <FormField control={form.control} name="date" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Date</FormLabel>
+                      <FormControl><Input type="date" {...field} /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+                  <DialogFooter className="sticky bottom-0 bg-background py-4">
+                    <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
+                    <Button type="submit">Save</Button>
+                  </DialogFooter>
+                </form>
+              </Form>
+            </ScrollArea>
           </DialogContent>
         </Dialog>
       </CardHeader>
@@ -494,7 +499,7 @@ export default function FinancesPage() {
         </Card>
 
         <Tabs defaultValue="donations" className="space-y-4">
-          <TabsList>
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="donations">Donations</TabsTrigger>
             <TabsTrigger value="collections">Collections</TabsTrigger>
             <TabsTrigger value="expenses">Expenses</TabsTrigger>

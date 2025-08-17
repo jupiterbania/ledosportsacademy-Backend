@@ -2,9 +2,9 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { HandCoins, Medal, Sprout, Users, Calendar } from "lucide-react";
+import { HandCoins, Medal, Users, Calendar } from "lucide-react";
 import {
-  getAllDonations, Donation,
+  getAllDonations, Donation, 
   getAllCollections, Collection,
   getAllExpenses, Expense,
   getAllAchievements, Achievement,
@@ -24,7 +24,6 @@ import {
   TimelineDescription,
   TimelineContent,
 } from "@/components/ui/timeline";
-import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import Link from 'next/link';
 
@@ -57,19 +56,6 @@ export default function AdminDashboard() {
   useEffect(() => {
     fetchData();
   }, []);
-
-  const handleSeed = async () => {
-    setLoading(true);
-    try {
-      await seedDatabase();
-      toast({ title: "Database Seeded", description: "Sample data has been added successfully." });
-      await fetchData(); // Refresh data after seeding
-    } catch (error) {
-      console.error(error);
-      toast({ title: "Error Seeding Database", description: "Something went wrong.", variant: "destructive" });
-    }
-    setLoading(false);
-  }
 
   const totalDonations = useMemo(() => donations.reduce((sum, d) => sum + (d.amount || 0), 0), [donations]);
   const totalCollections = useMemo(() => collections.reduce((sum, c) => sum + c.amount, 0), [collections]);
@@ -190,21 +176,6 @@ export default function AdminDashboard() {
           </CardContent>
         </Card>
       </div>
-
-       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div>
-            <CardTitle>Seed Database</CardTitle>
-            <p className="text-sm text-muted-foreground pt-1">
-              Populate the database with sample data to see all features in action.
-            </p>
-          </div>
-          <Button onClick={handleSeed} disabled={loading}>
-            <Sprout className="mr-2 h-4 w-4" />
-            {loading ? 'Seeding...' : 'Seed Database'}
-          </Button>
-        </CardHeader>
-      </Card>
     </main>
   );
 }

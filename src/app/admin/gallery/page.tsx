@@ -17,6 +17,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Switch } from "@/components/ui/switch";
 import Image from 'next/image';
 import { Textarea } from '@/components/ui/textarea';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const photoSchema = z.object({
   id: z.string().optional(),
@@ -109,76 +110,78 @@ export default function GalleryManagementPage() {
                 <PlusCircle className="mr-2 h-4 w-4" /> Add Photo
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-xl">
+            <DialogContent className="sm:max-w-xl max-h-[90vh]">
               <DialogHeader>
                 <DialogTitle>{form.getValues("id") ? 'Edit Photo' : 'Add New Photo'}</DialogTitle>
               </DialogHeader>
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                  <FormField
-                    control={form.control}
-                    name="url"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Photo URL</FormLabel>
-                        <FormControl>
-                          <Input placeholder="https://placehold.co/600x400.png" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="description"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Description</FormLabel>
-                        <FormControl>
-                          <Textarea placeholder="A short description of the photo" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="data-ai-hint"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>AI Hint</FormLabel>
-                        <FormControl>
-                          <Input placeholder="e.g. 'community event'" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                   <FormField
-                    control={form.control}
-                    name="isSliderPhoto"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                        <div className="space-y-0.5">
-                          <FormLabel>Show on Homepage Slider</FormLabel>
-                        </div>
-                        <FormControl>
-                          <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <DialogFooter>
-                    <DialogClose asChild>
-                      <Button type="button" variant="ghost">Cancel</Button>
-                    </DialogClose>
-                    <Button type="submit">Save Photo</Button>
-                  </DialogFooter>
-                </form>
-              </Form>
+               <ScrollArea className="pr-4">
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="url"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Photo URL</FormLabel>
+                          <FormControl>
+                            <Input placeholder="https://placehold.co/600x400.png" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="description"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Description</FormLabel>
+                          <FormControl>
+                            <Textarea placeholder="A short description of the photo" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="data-ai-hint"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>AI Hint</FormLabel>
+                          <FormControl>
+                            <Input placeholder="e.g. 'community event'" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                     <FormField
+                      control={form.control}
+                      name="isSliderPhoto"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                          <div className="space-y-0.5">
+                            <FormLabel>Show on Homepage Slider</FormLabel>
+                          </div>
+                          <FormControl>
+                            <Switch
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                    <DialogFooter className="sticky bottom-0 bg-background py-4">
+                      <DialogClose asChild>
+                        <Button type="button" variant="ghost">Cancel</Button>
+                      </DialogClose>
+                      <Button type="submit">Save Photo</Button>
+                    </DialogFooter>
+                  </form>
+                </Form>
+              </ScrollArea>
             </DialogContent>
           </Dialog>
         </CardHeader>
@@ -197,10 +200,10 @@ export default function GalleryManagementPage() {
                 <TableRow key={photo.id}>
                    <TableCell>
                       <div className="flex items-center gap-4">
-                        <div className="relative h-16 w-16 rounded-md overflow-hidden">
+                        <div className="relative h-16 w-16 rounded-md overflow-hidden shrink-0">
                            <Image src={photo.url} alt={`Photo ${photo.id}`} fill className="object-cover" sizes="64px" />
                         </div>
-                         <a href={photo.url} target="_blank" rel="noopener noreferrer" className="truncate text-sm font-medium hover:underline max-w-[200px]">{photo.url}</a>
+                         <a href={photo.url} target="_blank" rel="noopener noreferrer" className="truncate text-sm font-medium hover:underline hidden sm:inline-block max-w-[150px] lg:max-w-[250px]">{photo.url}</a>
                       </div>
                   </TableCell>
                   <TableCell className="hidden md:table-cell">{photo.description || 'N/A'}</TableCell>

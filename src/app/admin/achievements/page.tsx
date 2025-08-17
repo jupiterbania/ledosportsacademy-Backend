@@ -16,6 +16,7 @@ import { getAllAchievements, Achievement, addAchievement, updateAchievement, del
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import Image from 'next/image';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const achievementSchema = z.object({
   id: z.string().optional(),
@@ -107,85 +108,87 @@ export default function AchievementsManagementPage() {
                 <PlusCircle className="mr-2 h-4 w-4" /> Add Achievement
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-2xl">
+            <DialogContent className="sm:max-w-2xl max-h-[90vh]">
               <DialogHeader>
                 <DialogTitle>{form.getValues("id") ? 'Edit Achievement' : 'Add New Achievement'}</DialogTitle>
               </DialogHeader>
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                  <FormField
-                    control={form.control}
-                    name="title"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Title</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Tournament Champions" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                   <FormField
-                    control={form.control}
-                    name="description"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Description</FormLabel>
-                        <FormControl>
-                          <Textarea placeholder="Won the regional tournament..." {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="date"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Date</FormLabel>
-                        <FormControl>
-                           <Input type="date" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                   <FormField
-                    control={form.control}
-                    name="photoUrl"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Photo URL</FormLabel>
-                        <FormControl>
-                          <Input placeholder="https://placehold.co/600x400.png" {...field} />
-                        </FormControl>
-                         <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                   <FormField
-                    control={form.control}
-                    name="data-ai-hint"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>AI Hint</FormLabel>
-                        <FormControl>
-                          <Input placeholder="e.g. 'award trophy'" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <DialogFooter>
-                    <DialogClose asChild>
-                      <Button type="button" variant="ghost">Cancel</Button>
-                    </DialogClose>
-                    <Button type="submit">Save Achievement</Button>
-                  </DialogFooter>
-                </form>
-              </Form>
+               <ScrollArea className="pr-4">
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="title"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Title</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Tournament Champions" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                     <FormField
+                      control={form.control}
+                      name="description"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Description</FormLabel>
+                          <FormControl>
+                            <Textarea placeholder="Won the regional tournament..." {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="date"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Date</FormLabel>
+                          <FormControl>
+                             <Input type="date" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                     <FormField
+                      control={form.control}
+                      name="photoUrl"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Photo URL</FormLabel>
+                          <FormControl>
+                            <Input placeholder="https://placehold.co/600x400.png" {...field} />
+                          </FormControl>
+                           <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                     <FormField
+                      control={form.control}
+                      name="data-ai-hint"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>AI Hint</FormLabel>
+                          <FormControl>
+                            <Input placeholder="e.g. 'award trophy'" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <DialogFooter className="sticky bottom-0 bg-background py-4">
+                      <DialogClose asChild>
+                        <Button type="button" variant="ghost">Cancel</Button>
+                      </DialogClose>
+                      <Button type="submit">Save Achievement</Button>
+                    </DialogFooter>
+                  </form>
+                </Form>
+              </ScrollArea>
             </DialogContent>
           </Dialog>
         </CardHeader>
@@ -193,24 +196,24 @@ export default function AchievementsManagementPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Photo</TableHead>
+                <TableHead className="hidden sm:table-cell">Photo</TableHead>
                 <TableHead>Title</TableHead>
-                <TableHead>Description</TableHead>
-                <TableHead className="hidden md:table-cell">Date</TableHead>
+                <TableHead className="hidden md:table-cell">Description</TableHead>
+                <TableHead className="hidden lg:table-cell">Date</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {achievements.map((achievement) => (
                 <TableRow key={achievement.id}>
-                    <TableCell>
+                    <TableCell className="hidden sm:table-cell">
                          <div className="relative h-16 w-16 rounded-md overflow-hidden">
                            <Image src={achievement.photoUrl} alt={`Photo for ${achievement.title}`} fill className="object-cover" sizes="64px" />
                         </div>
                     </TableCell>
                   <TableCell className="font-medium">{achievement.title}</TableCell>
-                  <TableCell>{achievement.description}</TableCell>
-                  <TableCell className="hidden md:table-cell">{new Date(achievement.date).toLocaleDateString()}</TableCell>
+                  <TableCell className="hidden md:table-cell">{achievement.description}</TableCell>
+                  <TableCell className="hidden lg:table-cell">{new Date(achievement.date).toLocaleDateString()}</TableCell>
                   <TableCell>
                     <div className="flex gap-2">
                        <Button variant="outline" size="icon" onClick={() => handleEdit(achievement)}>
