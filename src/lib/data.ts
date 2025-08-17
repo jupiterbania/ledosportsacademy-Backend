@@ -1,4 +1,5 @@
-import { db } from './firebase';
+
+import { db, isConfigComplete } from './firebase';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy, limit, where, writeBatch } from 'firebase/firestore';
 
 // Base types
@@ -73,22 +74,35 @@ export interface SlideshowItem {
 
 // Generic Firestore functions
 async function getCollection<T extends BaseDocument>(collectionName: string, orderField: string = 'date', orderDirection: 'asc' | 'desc' = 'desc'): Promise<T[]> {
+  if (!isConfigComplete) return [];
   const q = query(collection(db, collectionName), orderBy(orderField, orderDirection));
   const snapshot = await getDocs(q);
   return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as T));
 }
 
 async function addDocument<T>(collectionName: string, data: Omit<T, 'id'>): Promise<T & BaseDocument> {
+  if (!isConfigComplete) {
+    console.error("Firebase not configured, cannot add document.");
+    throw new Error("Firebase not configured");
+  }
   const docRef = await addDoc(collection(db, collectionName), data);
   return { id: docRef.id, ...data } as T & BaseDocument;
 }
 
 async function updateDocument<T>(collectionName: string, id: string, data: Partial<T>) {
+  if (!isConfigComplete) {
+    console.error("Firebase not configured, cannot update document.");
+    return;
+  }
   const docRef = doc(db, collectionName, id);
   await updateDoc(docRef, data);
 }
 
 async function deleteDocument(collectionName: string, id: string) {
+  if (!isConfigComplete) {
+     console.error("Firebase not configured, cannot delete document.");
+     return;
+  }
   const docRef = doc(db, collectionName, id);
   await deleteDoc(docRef);
 }
@@ -101,6 +115,7 @@ export const updatePhoto = (id: string, data: Partial<Photo>) => updateDocument<
 export const deletePhoto = (id: string) => deleteDocument('photos', id);
 
 export const getRecentPhotos = async () => {
+    if (!isConfigComplete) return [];
     const q = query(collection(db, "photos"), orderBy("uploadedAt", "desc"), limit(5));
     const snapshot = await getDocs(q);
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Photo));
@@ -113,6 +128,7 @@ export const updateEvent = (id: string, data: Partial<Event>) => updateDocument<
 export const deleteEvent = (id: string) => deleteDocument('events', id);
 
 export const getRecentEvents = async () => {
+    if (!isConfigComplete) return [];
     const q = query(
         collection(db, "events"), 
         where("date", "<=", new Date().toISOString().split('T')[0]),
@@ -154,6 +170,7 @@ export const updateAchievement = (id: string, data: Partial<Achievement>) => upd
 export const deleteAchievement = (id: string) => deleteDocument('achievements', id);
 
 export const getRecentAchievements = async () => {
+    if (!isConfigComplete) return [];
     const q = query(collection(db, "achievements"), orderBy("date", "desc"), limit(3));
     const snapshot = await getDocs(q);
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Achievement));
@@ -161,6 +178,7 @@ export const getRecentAchievements = async () => {
 
 // Slideshow Items
 export const getSlideshowItems = async (): Promise<SlideshowItem[]> => {
+    if (!isConfigComplete) return [];
     const photoQuery = query(collection(db, 'photos'), where('isSliderPhoto', '==', true));
     const eventQuery = query(collection(db, 'events'), where('showOnSlider', '==', true));
 
@@ -239,6 +257,10 @@ const sampleData = {
 };
 
 export async function seedDatabase() {
+    if (!isConfigComplete) {
+        console.error("Firebase not configured, cannot seed database.");
+        throw new Error("Firebase not configured");
+    }
     const batch = writeBatch(db);
 
     for (const [collectionName, data] of Object.entries(sampleData)) {
@@ -259,3 +281,5 @@ export async function seedDatabase() {
 
     await batch.commit();
 }
+
+    

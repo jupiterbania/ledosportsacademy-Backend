@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -7,14 +8,18 @@ import {
   onAuthStateChanged,
   User,
 } from "firebase/auth";
-import { auth, googleProvider } from "./firebase";
+import { auth, googleProvider, isConfigComplete } from "./firebase";
 
 // For demo purposes, we'll hardcode an admin email.
 // In a real application, this would be managed via custom claims or a database role system.
-export const ADMIN_EMAIL = "jupiterbania472@gmail.com";
+export const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
 
 
 export const signInWithGoogle = async () => {
+  if (!isConfigComplete) {
+    console.error("Firebase is not configured. Cannot sign in.");
+    throw new Error("Firebase is not properly configured.");
+  }
   try {
     const result = await signInWithPopup(auth, googleProvider);
     return result.user;
@@ -25,6 +30,10 @@ export const signInWithGoogle = async () => {
 };
 
 export const signOut = async () => {
+   if (!isConfigComplete) {
+    console.error("Firebase is not configured. Cannot sign out.");
+    return;
+  }
   try {
     await firebaseSignOut(auth);
   } catch (error)
@@ -34,5 +43,11 @@ export const signOut = async () => {
 };
 
 export const onAuthChange = (callback: (user: User | null) => void) => {
+   if (!isConfigComplete) {
+    console.warn("Firebase is not configured. Auth state changes will not be monitored.");
+    // Immediately call back with null user and return a no-op unsubscribe function
+    callback(null);
+    return () => {};
+  }
   return onAuthStateChanged(auth, callback);
 };
