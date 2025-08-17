@@ -2,6 +2,7 @@ import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/components/auth/auth-provider';
+import { Header } from '@/components/layout/header';
 
 export const metadata: Metadata = {
   title: 'Club Central',
@@ -22,6 +23,7 @@ export default function RootLayout({
       </head>
       <body className="font-body bg-background text-foreground antialiased min-h-screen flex flex-col">
         <AuthProvider>
+            <Header />
             <main className="flex-grow">{children}</main>
             <Toaster />
         </AuthProvider>

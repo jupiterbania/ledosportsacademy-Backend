@@ -1,12 +1,13 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { HandCoins, Medal } from "lucide-react";
+import { HandCoins, Medal, Sprout } from "lucide-react";
 import {
   getAllDonations, Donation,
   getAllCollections, Collection,
   getAllExpenses, Expense,
-  getAllAchievements, Achievement
+  getAllAchievements, Achievement,
+  seedDatabase
 } from "@/lib/data";
 import { useMemo, useState, useEffect } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis, ResponsiveContainer, Tooltip, Legend, YAxis } from "recharts";
@@ -19,22 +20,42 @@ import {
   TimelineTitle,
   TimelineDescription,
 } from "@/components/ui/timeline";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 export default function AdminDashboard() {
   const [donations, setDonations] = useState<Donation[]>([]);
   const [collections, setCollections] = useState<Collection[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [achievements, setAchievements] = useState<Achievement[]>([]);
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
+
+  const fetchData = async () => {
+    setLoading(true);
+    setDonations(await getAllDonations());
+    setCollections(await getAllCollections());
+    setExpenses(await getAllExpenses());
+    setAchievements(await getAllAchievements());
+    setLoading(false);
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      setDonations(await getAllDonations());
-      setCollections(await getAllCollections());
-      setExpenses(await getAllExpenses());
-      setAchievements(await getAllAchievements());
-    };
     fetchData();
   }, []);
+
+  const handleSeed = async () => {
+    setLoading(true);
+    try {
+      await seedDatabase();
+      toast({ title: "Database Seeded", description: "Sample data has been added successfully." });
+      await fetchData(); // Refresh data after seeding
+    } catch (error) {
+      console.error(error);
+      toast({ title: "Error Seeding Database", description: "Something went wrong.", variant: "destructive" });
+    }
+    setLoading(false);
+  }
 
   const totalDonations = useMemo(() => donations.reduce((sum, d) => sum + (d.amount || 0), 0), [donations]);
   const totalCollections = useMemo(() => collections.reduce((sum, c) => sum + c.amount, 0), [collections]);
@@ -48,6 +69,20 @@ export default function AdminDashboard() {
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
+       <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle>Seed Database</CardTitle>
+            <p className="text-sm text-muted-foreground pt-1">
+              Click the button to populate your application with sample data.
+            </p>
+          </div>
+          <Button onClick={handleSeed} disabled={loading}>
+            <Sprout className="mr-2 h-4 w-4" />
+            {loading ? 'Seeding...' : 'Seed Database'}
+          </Button>
+        </CardHeader>
+      </Card>
       <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
         <Card className="xl:col-span-1">
           <CardHeader>
@@ -84,16 +119,16 @@ export default function AdminDashboard() {
                 <BarChart data={financialData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
-                   <YAxis tickFormatter={(value) => `INR ${new Intl.NumberFormat('en-IN').format(value)}`} />
+                   <YAxis tickFormatter={(value) => `₹${new Intl.NumberFormat('en-IN').format(value)}`} />
                   <Tooltip
-                     formatter={(value: number) => `INR ${new Intl.NumberFormat('en-IN').format(value)}`}
+                     formatter={(value: number) => `₹${new Intl.NumberFormat('en-IN').format(value)}`}
                     contentStyle={{
                       background: "hsl(var(--background))",
                       borderColor: "hsl(var(--border))",
                     }}
                   />
                   <Legend />
-                  <Bar dataKey="value" name="Amount (INR)" />
+                  <Bar dataKey="value" name="Amount (₹)" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -107,7 +142,7 @@ export default function AdminDashboard() {
             <HandCoins className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">INR {new Intl.NumberFormat('en-IN').format(totalDonations)}</div>
+            <div className="text-2xl font-bold">₹{new Intl.NumberFormat('en-IN').format(totalDonations)}</div>
             <p className="text-xs text-muted-foreground">{donations.length} donations recorded</p>
           </CardContent>
         </Card>
@@ -117,7 +152,7 @@ export default function AdminDashboard() {
             <HandCoins className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">INR {new Intl.NumberFormat('en-IN').format(totalCollections)}</div>
+            <div className="text-2xl font-bold">₹{new Intl.NumberFormat('en-IN').format(totalCollections)}</div>
             <p className="text-xs text-muted-foreground">{collections.length} collections recorded</p>
           </CardContent>
         </Card>
@@ -127,7 +162,7 @@ export default function AdminDashboard() {
             <HandCoins className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">INR {new Intl.NumberFormat('en-IN').format(totalExpenses)}</div>
+            <div className="text-2xl font-bold">₹{new Intl.NumberFormat('en-IN').format(totalExpenses)}</div>
             <p className="text-xs text-muted-foreground">{expenses.length} expenses recorded</p>
           </CardContent>
         </Card>

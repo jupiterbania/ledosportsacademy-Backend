@@ -6,7 +6,7 @@ import Link from "next/link";
 import { getAllEvents, Event } from "@/lib/data";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Calendar } from "lucide-react";
-import { Header } from "@/components/layout/header";
+
 
 export default function EventsPage() {
   const [events, setEvents] = useState<Event[]>([]);
@@ -45,8 +45,7 @@ export default function EventsPage() {
   );
 
   return (
-    <>
-    <Header />
+    
     <div className="container py-8 md:py-12 animate-fade-in">
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">Club Events</h1>
@@ -64,6 +63,6 @@ export default function EventsPage() {
         ))}
       </div>
     </div>
-    </>
+    
   )
 }

@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/use-auth';
-import { Header } from '@/components/layout/header';
+
 
 export default function MemberDashboardLayout({
   children,
@@ -29,7 +29,7 @@ export default function MemberDashboardLayout({
 
   return (
     <div>
-        <Header />
+        
         {children}
     </div>
   );

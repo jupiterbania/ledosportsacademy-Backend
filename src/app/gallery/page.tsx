@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from "next/image"
 import { getAllPhotos, Photo } from "@/lib/data"
 import { Card, CardContent } from "@/components/ui/card"
-import { Header } from "@/components/layout/header"
+
 import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 
 export default function GalleryPage() {
@@ -28,8 +28,7 @@ export default function GalleryPage() {
   };
 
   return (
-    <>
-    <Header />
+    
     <div className="container py-8 md:py-12 animate-fade-in">
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">Photo Gallery</h1>
@@ -80,6 +79,6 @@ export default function GalleryPage() {
         ))}
       </div>
     </div>
-    </>
+    
   )
 }
