@@ -217,7 +217,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
             </SidebarMenu>
           </SidebarContent>
       </Sidebar>
-      <div className="flex flex-col flex-1 overflow-hidden">
+      <div className="flex flex-col flex-1">
         <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-background px-6 shrink-0">
           <SidebarTrigger className="md:hidden" />
           <div className="flex-1">
@@ -240,7 +240,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-auto">
           <SidebarInset>{children}</SidebarInset>
         </div>
       </div>
