@@ -95,12 +95,11 @@ function DonationTable() {
 
   const onSubmit = async (data: DonationFormValues) => {
     const { id, ...donationData } = data;
-    const submittedData: Partial<Donation> = { ...donationData };
-    if (data.donationType === 'money') {
-      submittedData.item = undefined;
-    } else {
-      submittedData.amount = undefined;
-    }
+    const submittedData: Partial<Donation> = { 
+        ...donationData,
+        amount: data.donationType === 'money' ? Number(data.amount) : undefined,
+        item: data.donationType === 'item' ? data.item : undefined,
+     };
 
     try {
       if (id) {
@@ -209,7 +208,7 @@ function DonationTable() {
                   <FormField control={form.control} name="amount" render={({ field }) => (
                     <FormItem>
                       <FormLabel>Amount</FormLabel>
-                      <FormControl><Input type="number" step="0.01" {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} /></FormControl>
+                      <FormControl><Input type="number" step="0.01" {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.valueAsNumber)} /></FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
@@ -509,5 +508,3 @@ export default function FinancesPage() {
     </main>
   );
 }
-
-    
