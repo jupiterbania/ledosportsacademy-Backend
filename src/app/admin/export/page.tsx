@@ -10,7 +10,10 @@ import "jspdf-autotable";
 import { 
   getAllDonations, Donation,
   getAllCollections, Collection,
-  getAllExpenses, Expense
+  getAllExpenses, Expense,
+  getAllMembers, Member,
+  getAllEvents, Event,
+  getAllAchievements, Achievement
 } from "@/lib/data";
 
 // Extend jsPDF with autoTable
@@ -58,7 +61,7 @@ export default function ExportPage() {
                 data = await getAllCollections();
                 columns = ["Date", "Title", "Amount"];
                 body = data.map((c: Collection) => [
-                    new Date(c.date).toLocaleDate-String(),
+                    new Date(c.date).toLocaleDateString(),
                     c.title,
                     `INR ${new Intl.NumberFormat('en-IN').format(c.amount)}`
                 ]);
@@ -96,6 +99,104 @@ export default function ExportPage() {
     }
   };
 
+  const generateFullAnalyticsPdf = async () => {
+    toast({
+      title: "Full Analytics Export Initiated",
+      description: "Generating comprehensive PDF report. This may take a moment...",
+    });
+
+    const doc = new jsPDF() as jsPDFWithAutoTable;
+    const date = new Date().toLocaleDateString();
+
+    try {
+      // Main Title
+      doc.setFontSize(22);
+      doc.text("Club Central - Full Analytics Report", 105, 20, { align: 'center' });
+      doc.setFontSize(12);
+      doc.text(`Generated on: ${date}`, 105, 28, { align: 'center' });
+
+      const [donations, collections, expenses, members, events, achievements] = await Promise.all([
+        getAllDonations(),
+        getAllCollections(),
+        getAllExpenses(),
+        getAllMembers(),
+        getAllEvents(),
+        getAllAchievements()
+      ]);
+      
+      let startY = 40;
+
+      const addSection = (title: string, head: any[], body: any[][]) => {
+          if (doc.internal.pageSize.height - startY < 60) {
+            doc.addPage();
+            startY = 20;
+          }
+          doc.setFontSize(16);
+          doc.text(title, 14, startY);
+          startY += 8;
+
+          doc.autoTable({
+              head: head,
+              body: body,
+              startY: startY,
+              theme: 'striped',
+              headStyles: { fillColor: '#16a34a' },
+          });
+          startY = doc.autoTable.previous.finalY + 15;
+      }
+      
+      // Donations
+      addSection(
+        "Donations",
+        [["Date", "Title", "Donor", "Description", "Value"]],
+        donations.map(d => [new Date(d.date).toLocaleDateString(), d.title, d.donorName || 'N/A', d.description || 'N/A', d.amount ? `INR ${new Intl.NumberFormat('en-IN').format(d.amount)}` : d.item || 'N/A'])
+      );
+
+      // Collections
+      addSection(
+        "Collections",
+        [["Date", "Title", "Amount"]],
+        collections.map(c => [new Date(c.date).toLocaleDateString(), c.title, `INR ${new Intl.NumberFormat('en-IN').format(c.amount)}`])
+      );
+      
+      // Expenses
+      addSection(
+        "Expenses",
+        [["Date", "Title", "Amount"]],
+        expenses.map(e => [new Date(e.date).toLocaleDateString(), e.title, `INR ${new Intl.NumberFormat('en-IN').format(e.amount)}`])
+      );
+      
+      // Members
+      addSection(
+        "Members",
+        [["Join Date", "Name", "Email"]],
+        members.map(m => [new Date(m.joinDate).toLocaleDateString(), m.name, m.email])
+      );
+
+      // Events
+      addSection(
+        "Events",
+        [["Date", "Title", "Description"]],
+        events.map(e => [new Date(e.date).toLocaleDateString(), e.title, e.description])
+      );
+
+      // Achievements
+      addSection(
+        "Achievements",
+        [["Date", "Title", "Description"]],
+        achievements.map(a => [new Date(a.date).toLocaleDateString(), a.title, a.description])
+      );
+
+
+      doc.save(`full_analytics_report_${Date.now()}.pdf`);
+      toast({ title: "Export Successful", description: "Full analytics PDF has been downloaded." });
+
+    } catch (error) {
+      console.error("Full analytics PDF generation failed: ", error);
+      toast({ title: "Export Failed", description: "Could not generate the full analytics PDF.", variant: "destructive" });
+    }
+  };
+
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
@@ -119,7 +220,7 @@ export default function ExportPage() {
               <FileDown className="mr-2 h-4 w-4" />
               Export Expenses
             </Button>
-            <Button onClick={() => { toast({ title: "Coming Soon", description: "Full analytics export is under development."})}}>
+            <Button onClick={generateFullAnalyticsPdf}>
               <FileDown className="mr-2 h-4 w-4" />
               Export Full Analytics
             </Button>
@@ -129,4 +230,3 @@ export default function ExportPage() {
     </main>
   );
 }
-
