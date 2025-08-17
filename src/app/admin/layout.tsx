@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useEffect } from 'react';
@@ -27,6 +28,10 @@ import {
   SidebarFooter,
   SidebarInset,
   useSidebar,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
 } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -35,11 +40,11 @@ import { useAuth } from '@/hooks/use-auth';
 import { signOut } from '@/lib/auth';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 function AdminLayout({ children }: { children: React.ReactNode }) {
   const { user, loading, isAdmin } = useAuth();
   const router = useRouter();
-  const { toggleSidebar } = useSidebar();
   const pathname = usePathname();
 
   useEffect(() => {
@@ -66,15 +71,43 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
   }
 
   const menuItems = [
-    { href: '/admin', label: 'Home', icon: Home },
+    { href: '/admin', label: 'Dashboard', icon: Home },
+    { href: '/admin/analytics', label: 'Analytics', icon: LineChart },
+  ];
+
+  const contentManagementItems = [
     { href: '/admin/gallery', label: 'Gallery', icon: GalleryHorizontal },
     { href: '/admin/events', label: 'Events', icon: Calendar },
-    { href: '/admin/members', label: 'Members', icon: Users },
-    { href: '/admin/finances', label: 'Finances', icon: HandCoins },
     { href: '/admin/achievements', label: 'Achievements', icon: Medal },
-    { href: '/admin/analytics', label: 'Analytics', icon: LineChart },
+  ]
+
+  const userManagementItems = [
+     { href: '/admin/members', label: 'Members', icon: Users },
+  ];
+
+  const financialManagementItems = [
+    { href: '/admin/finances', label: 'Finances', icon: HandCoins },
+  ];
+  
+  const dataManagementItems = [
     { href: '/admin/export', label: 'PDF Export', icon: FileDown },
   ];
+
+  const settingsItems = [
+    { href: '/admin/settings', label: 'Settings', icon: Settings },
+  ]
+  
+
+  const NavLink = ({ href, label, icon: Icon, isActive }: { href: string; label: string; icon: React.ElementType; isActive: boolean; }) => (
+     <Link href={href} passHref>
+      <SidebarMenuButton asChild isActive={isActive}>
+        <span>
+          <Icon />
+          {label}
+        </span>
+      </SidebarMenuButton>
+    </Link>
+  )
 
   return (
     <div className="flex h-screen bg-muted/40">
@@ -90,18 +123,103 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
              </div>
           </SidebarHeader>
           <SidebarMenu>
-            {menuItems.map((item) => (
-              <SidebarMenuItem key={item.href}>
-                <Link href={item.href} passHref>
-                  <SidebarMenuButton asChild isActive={pathname === item.href}>
-                    <span>
-                      <item.icon/>
-                      {item.label}
-                    </span>
-                  </SidebarMenuButton>
-                </Link>
-              </SidebarMenuItem>
-            ))}
+              {menuItems.map((item) => (
+                <SidebarMenuItem key={item.href}>
+                  <NavLink {...item} isActive={pathname === item.href} />
+                </SidebarMenuItem>
+              ))}
+
+            <Collapsible className="w-full">
+              <CollapsibleTrigger className="w-full">
+                <SidebarMenuButton className="w-full justify-start gap-2">
+                  <GalleryHorizontal />
+                  Content
+                </SidebarMenuButton>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <SidebarMenuSub>
+                  {contentManagementItems.map((item) => (
+                     <SidebarMenuSubButton key={item.href} asChild isActive={pathname === item.href}>
+                      <Link href={item.href}>{item.label}</Link>
+                    </SidebarMenuSubButton>
+                  ))}
+                </SidebarMenuSub>
+              </CollapsibleContent>
+            </Collapsible>
+            
+             <Collapsible className="w-full">
+              <CollapsibleTrigger className="w-full">
+                <SidebarMenuButton className="w-full justify-start gap-2">
+                  <Users />
+                  Users
+                </SidebarMenuButton>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <SidebarMenuSub>
+                  {userManagementItems.map((item) => (
+                     <SidebarMenuSubButton key={item.href} asChild isActive={pathname === item.href}>
+                      <Link href={item.href}>{item.label}</Link>
+                    </SidebarMenuSubButton>
+                  ))}
+                </SidebarMenuSub>
+              </CollapsibleContent>
+            </Collapsible>
+            
+            <Collapsible className="w-full">
+              <CollapsibleTrigger className="w-full">
+                <SidebarMenuButton className="w-full justify-start gap-2">
+                  <HandCoins />
+                  Financial
+                </SidebarMenuButton>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <SidebarMenuSub>
+                  {financialManagementItems.map((item) => (
+                     <SidebarMenuSubButton key={item.href} asChild isActive={pathname === item.href}>
+                      <Link href={item.href}>{item.label}</Link>
+                    </SidebarMenuSubButton>
+                  ))}
+                </SidebarMenuSub>
+              </CollapsibleContent>
+            </Collapsible>
+
+             <Collapsible className="w-full">
+              <CollapsibleTrigger className="w-full">
+                <SidebarMenuButton className="w-full justify-start gap-2">
+                  <FileDown />
+                  Data
+                </SidebarMenuButton>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <SidebarMenuSub>
+                  {dataManagementItems.map((item) => (
+                     <SidebarMenuSubButton key={item.href} asChild isActive={pathname === item.href}>
+                      <Link href={item.href}>{item.label}</Link>
+                    </SidebarMenuSubButton>
+                  ))}
+                </SidebarMenuSub>
+              </CollapsibleContent>
+            </Collapsible>
+
+             <Collapsible className="w-full">
+              <CollapsibleTrigger className="w-full">
+                <SidebarMenuButton className="w-full justify-start gap-2">
+                  <Settings />
+                  General
+                </SidebarMenuButton>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <SidebarMenuSub>
+                  {settingsItems.map((item) => (
+                     <SidebarMenuSubButton key={item.href} asChild isActive={pathname === item.href}>
+                      <Link href={item.href}>{item.label}</Link>
+                    </SidebarMenuSubButton>
+                  ))}
+                </SidebarMenuSub>
+              </CollapsibleContent>
+            </Collapsible>
+
+
           </SidebarMenu>
         </SidebarContent>
       </Sidebar>
@@ -123,7 +241,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem><Settings className="mr-2 h-4 w-4" />Settings</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push('/admin/settings')}><Settings className="mr-2 h-4 w-4" />Settings</DropdownMenuItem>
               <DropdownMenuItem onClick={handleLogout}><LogOut className="mr-2 h-4 w-4" />Logout</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
