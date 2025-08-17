@@ -1,39 +1,72 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { HandCoins, Medal } from "lucide-react";
+import { HandCoins, Medal, Users, Calendar } from "lucide-react";
+import {
+  getAllDonations,
+  getAllCollections,
+  getAllExpenses,
+  getAllAchievements,
+  getAllMembers,
+  getAllEvents,
+} from "@/lib/data";
+import { useMemo } from "react";
+import { Bar, BarChart, CartesianGrid, XAxis, ResponsiveContainer, Tooltip, Legend } from "recharts";
+import {
+  Timeline,
+  TimelineItem,
+  TimelineConnector,
+  TimelineHeader,
+  TimelineIcon,
+  TimelineTitle,
+  TimelineDescription,
+} from "@/components/ui/timeline";
 
 export default function AdminDashboard() {
+  const donations = useMemo(() => getAllDonations(), []);
+  const collections = useMemo(() => getAllCollections(), []);
+  const expenses = useMemo(() => getAllExpenses(), []);
+  const achievements = useMemo(() => getAllAchievements(), []);
+  const members = useMemo(() => getAllMembers(), []);
+  const events = useMemo(() => getAllEvents(), []);
+
+  const totalDonations = useMemo(() => donations.reduce((sum, d) => sum + (d.amount || 0), 0), [donations]);
+  const totalCollections = useMemo(() => collections.reduce((sum, c) => sum + c.amount, 0), [collections]);
+  const totalExpenses = useMemo(() => expenses.reduce((sum, e) => sum + e.amount, 0), [expenses]);
+  
+  const oldestAchievementYear = useMemo(() => {
+    if (achievements.length === 0) return new Date().getFullYear();
+    return Math.min(...achievements.map(a => new Date(a.date).getFullYear()));
+  }, [achievements]);
+  const clubExperienceYears = new Date().getFullYear() - oldestAchievementYear;
+
+  const financialData = [
+    { name: "Donations", value: totalDonations, fill: "hsl(var(--chart-1))" },
+    { name: "Collections", value: totalCollections, fill: "hsl(var(--chart-2))" },
+    { name: "Expenses", value: totalExpenses, fill: "hsl(var(--chart-3))" },
+  ];
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Total Donations
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">Total Donations</CardTitle>
             <HandCoins className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$0.00</div>
-            <p className="text-xs text-muted-foreground">
-              No donations yet.
-            </p>
+            <div className="text-2xl font-bold">{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(totalDonations)}</div>
+            <p className="text-xs text-muted-foreground">{donations.length} donations recorded</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Total Collections
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">Total Collections</CardTitle>
             <HandCoins className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$0.00</div>
-            <p className="text-xs text-muted-foreground">
-             No collections yet.
-            </p>
+            <div className="text-2xl font-bold">{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(totalCollections)}</div>
+            <p className="text-xs text-muted-foreground">{collections.length} collections recorded</p>
           </CardContent>
         </Card>
         <Card>
@@ -42,47 +75,69 @@ export default function AdminDashboard() {
             <HandCoins className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$0.00</div>
-            <p className="text-xs text-muted-foreground">
-              No expenses yet.
-            </p>
+            <div className="text-2xl font-bold">{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(totalExpenses)}</div>
+            <p className="text-xs text-muted-foreground">{expenses.length} expenses recorded</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Club Experience
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">Club Experience</CardTitle>
             <Medal className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">0 Years</div>
-            <p className="text-xs text-muted-foreground">
-              No achievements recorded.
-            </p>
+            <div className="text-2xl font-bold">{clubExperienceYears}+ Years</div>
+            <p className="text-xs text-muted-foreground">{achievements.length} achievements recorded</p>
           </CardContent>
         </Card>
       </div>
       <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-         <Card className="xl:col-span-2">
-            <CardHeader>
-                <CardTitle>Analytics</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div className="h-[300px] flex items-center justify-center text-muted-foreground">
-                    <p>Charts and analytics will be displayed here.</p>
-                </div>
-            </CardContent>
+        <Card className="xl:col-span-2">
+          <CardHeader>
+            <CardTitle>Financial Overview</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={financialData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <Tooltip
+                    contentStyle={{
+                      background: "hsl(var(--background))",
+                      borderColor: "hsl(var(--border))",
+                    }}
+                  />
+                  <Legend />
+                  <Bar dataKey="value" name="Amount (USD)" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
         </Card>
         <Card>
-            <CardHeader>
-                <CardTitle>Achievements</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div className="h-[300px] flex items-center justify-center text-muted-foreground">
-                    <p>Achievement timeline will be displayed here.</p>
-                </div>
-            </CardContent>
+          <CardHeader>
+            <CardTitle>Recent Achievements</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[300px] overflow-y-auto">
+              <Timeline>
+                {achievements.slice(0, 5).map((achievement, index) => (
+                  <TimelineItem key={achievement.id}>
+                    <TimelineConnector />
+                    <TimelineHeader>
+                      <TimelineIcon>
+                        <Medal className="h-4 w-4" />
+                      </TimelineIcon>
+                      <TimelineTitle>{achievement.title}</TimelineTitle>
+                    </TimelineHeader>
+                    <TimelineDescription>
+                      {new Date(achievement.date).toLocaleDateString()}
+                    </TimelineDescription>
+                  </TimelineItem>
+                ))}
+              </Timeline>
+            </div>
+          </CardContent>
         </Card>
       </div>
     </main>
