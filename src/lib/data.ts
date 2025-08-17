@@ -1,6 +1,6 @@
 
 import { db, isConfigComplete } from './firebase';
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy, limit, where } from 'firebase/firestore';
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy, limit, where, writeBatch } from 'firebase/firestore';
 
 // Base types
 export interface BaseDocument {
@@ -31,6 +31,9 @@ export interface Member extends BaseDocument {
   email: string;
   photoUrl: string;
   joinDate: string;
+  phone?: string;
+  age?: number;
+  bloodGroup?: string;
 }
 
 export interface Donation extends BaseDocument {
@@ -243,5 +246,3 @@ export async function seedDatabase() {
 
     await batch.commit();
 }
-
-    

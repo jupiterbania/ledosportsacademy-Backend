@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -16,12 +17,16 @@ import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const memberSchema = z.object({
   id: z.string().optional(),
   name: z.string().min(1, { message: "Name is required" }),
   email: z.string().email({ message: "Invalid email address" }),
   photoUrl: z.string().url({ message: "Please enter a valid URL." }),
+  phone: z.string().optional(),
+  age: z.coerce.number().positive().int().optional().or(z.literal('')),
+  bloodGroup: z.string().optional(),
 });
 
 type MemberFormValues = z.infer<typeof memberSchema>;
@@ -46,6 +51,9 @@ export default function MembersManagementPage() {
       name: "",
       email: "",
       photoUrl: "https://placehold.co/100x100.png",
+      phone: "",
+      age: '',
+      bloodGroup: "",
     },
   });
 
@@ -72,7 +80,10 @@ export default function MembersManagementPage() {
   };
 
   const handleEdit = (member: Member) => {
-    form.reset(member);
+    form.reset({
+      ...member,
+      age: member.age || '',
+    });
     setIsDialogOpen(true);
   };
   
@@ -99,6 +110,9 @@ export default function MembersManagementPage() {
                     name: "",
                     email: "",
                     photoUrl: `https://placehold.co/100x100.png`,
+                    phone: "",
+                    age: '',
+                    bloodGroup: "",
                   });
                   setIsDialogOpen(true);
                 }}>
@@ -140,6 +154,61 @@ export default function MembersManagementPage() {
                     />
                     <FormField
                       control={form.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Phone</FormLabel>
+                          <FormControl>
+                            <Input placeholder="+91 1234567890" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <div className="grid grid-cols-2 gap-4">
+                        <FormField
+                        control={form.control}
+                        name="age"
+                        render={({ field }) => (
+                            <FormItem>
+                            <FormLabel>Age</FormLabel>
+                            <FormControl>
+                                <Input type="number" placeholder="25" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                            </FormItem>
+                        )}
+                        />
+                        <FormField
+                        control={form.control}
+                        name="bloodGroup"
+                        render={({ field }) => (
+                            <FormItem>
+                            <FormLabel>Blood Group</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select" />
+                                </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    <SelectItem value="A+">A+</SelectItem>
+                                    <SelectItem value="A-">A-</SelectItem>
+                                    <SelectItem value="B+">B+</SelectItem>
+                                    <SelectItem value="B-">B-</SelectItem>
+                                    <SelectItem value="AB+">AB+</SelectItem>
+                                    <SelectItem value="AB-">AB-</SelectItem>
+                                    <SelectItem value="O+">O+</SelectItem>
+                                    <SelectItem value="O-">O-</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <FormMessage />
+                            </FormItem>
+                        )}
+                        />
+                    </div>
+                    <FormField
+                      control={form.control}
                       name="photoUrl"
                       render={({ field }) => (
                         <FormItem>
@@ -168,7 +237,9 @@ export default function MembersManagementPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Member</TableHead>
-                <TableHead className="hidden md:table-cell">Join Date</TableHead>
+                <TableHead className="hidden sm:table-cell">Join Date</TableHead>
+                <TableHead className="hidden md:table-cell">Age</TableHead>
+                <TableHead className="hidden md:table-cell">Blood Group</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -187,7 +258,9 @@ export default function MembersManagementPage() {
                          </div>
                       </div>
                   </TableCell>
-                  <TableCell className="hidden md:table-cell">{new Date(member.joinDate).toLocaleDateString()}</TableCell>
+                  <TableCell className="hidden sm:table-cell">{new Date(member.joinDate).toLocaleDateString()}</TableCell>
+                  <TableCell className="hidden md:table-cell">{member.age || 'N/A'}</TableCell>
+                  <TableCell className="hidden md:table-cell">{member.bloodGroup || 'N/A'}</TableCell>
                   <TableCell>
                     <div className="flex gap-2">
                        <Button variant="outline" size="icon" onClick={() => handleEdit(member)}>
