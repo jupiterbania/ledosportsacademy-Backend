@@ -1,7 +1,6 @@
-
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -13,27 +12,37 @@ import { useToast } from "@/hooks/use-toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { getAllEvents, Event } from "@/lib/data";
+import { getAllEvents, Event, addEvent, updateEvent, deleteEvent } from "@/lib/data";
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Switch } from '@/components/ui/switch';
 
 const eventSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(),
   title: z.string().min(1, { message: "Title is required" }),
   description: z.string().min(1, { message: "Description is required" }),
   date: z.string().refine((val) => !isNaN(Date.parse(val)), { message: "Invalid date format" }),
   photoUrl: z.string().url({ message: "Please enter a valid URL." }),
   redirectUrl: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
   showOnSlider: z.boolean().default(false),
+  'data-ai-hint': z.string().optional(),
 });
 
 type EventFormValues = z.infer<typeof eventSchema>;
 
 export default function EventsManagementPage() {
-  const [events, setEvents] = useState<Event[]>(() => getAllEvents().sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
+  const [events, setEvents] = useState<Event[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
+
+  const fetchEvents = async () => {
+    const data = await getAllEvents();
+    setEvents(data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
+  };
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
 
   const form = useForm<EventFormValues>({
     resolver: zodResolver(eventSchema),
@@ -47,26 +56,22 @@ export default function EventsManagementPage() {
     },
   });
 
-  const sortEvents = (events: Event[]) => {
-    return events.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  };
-
-  const onSubmit = (data: EventFormValues) => {
-    const isEditing = !!data.id;
-    if (isEditing) {
-      setEvents(prevEvents => sortEvents(prevEvents.map(event => event.id === data.id ? { ...event, ...data } : event)));
-      toast({ title: "Event Updated", description: "The event has been successfully updated." });
-    } else {
-      const newEvent: Event = {
-        ...data,
-        id: events.length > 0 ? Math.max(...events.map(e => e.id)) + 1 : 1,
-        'data-ai-hint': 'custom event'
-      };
-      setEvents(prevEvents => sortEvents([...prevEvents, newEvent]));
-      toast({ title: "Event Created", description: "The new event has been added." });
+  const onSubmit = async (data: EventFormValues) => {
+    const { id, ...eventData } = data;
+    try {
+      if (id) {
+        await updateEvent(id, eventData);
+        toast({ title: "Event Updated", description: "The event has been successfully updated." });
+      } else {
+        await addEvent({ ...eventData, 'data-ai-hint': 'custom event' });
+        toast({ title: "Event Created", description: "The new event has been added." });
+      }
+      fetchEvents();
+      setIsDialogOpen(false);
+      form.reset();
+    } catch (error) {
+      toast({ title: "Error", description: "Something went wrong.", variant: "destructive" });
     }
-    setIsDialogOpen(false);
-    form.reset();
   };
 
   const handleEdit = (event: Event) => {
@@ -74,9 +79,14 @@ export default function EventsManagementPage() {
     setIsDialogOpen(true);
   };
   
-  const handleDelete = (id: number) => {
-    setEvents(prevEvents => sortEvents(prevEvents.filter(event => event.id !== id)));
-    toast({ title: "Event Deleted", description: "The event has been removed.", variant: "destructive" });
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteEvent(id);
+      fetchEvents();
+      toast({ title: "Event Deleted", description: "The event has been removed.", variant: "destructive" });
+    } catch (error) {
+       toast({ title: "Error", description: "Something went wrong.", variant: "destructive" });
+    }
   };
 
   return (

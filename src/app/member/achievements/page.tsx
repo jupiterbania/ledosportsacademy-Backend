@@ -1,22 +1,21 @@
 "use client";
 
-import { useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { getAllAchievements } from "@/lib/data";
-import {
-  Timeline,
-  TimelineItem,
-  TimelineConnector,
-  TimelineHeader,
-  TimelineIcon,
-  TimelineTitle,
-  TimelineContent,
-} from "@/components/ui/timeline";
+import { getAllAchievements, Achievement } from "@/lib/data";
 import { Medal } from 'lucide-react';
 import Image from 'next/image';
 
 export default function MemberAchievementsPage() {
-  const achievements = useMemo(() => getAllAchievements(), []);
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
+
+  useEffect(() => {
+    const fetchAchievements = async () => {
+      const data = await getAllAchievements();
+      setAchievements(data);
+    };
+    fetchAchievements();
+  }, []);
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6 animate-fade-in">

@@ -1,19 +1,25 @@
+"use client";
 
-import Image from "next/image"
-import Link from "next/link"
-import { getAllEvents } from "@/lib/data"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Calendar } from "lucide-react"
-import { Header } from "@/components/layout/header"
-
-export const metadata = {
-  title: "Events | Club Central",
-};
+import { useState, useEffect } from 'react';
+import Image from "next/image";
+import Link from "next/link";
+import { getAllEvents, Event } from "@/lib/data";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Calendar } from "lucide-react";
+import { Header } from "@/components/layout/header";
 
 export default function EventsPage() {
-  const events = getAllEvents()
+  const [events, setEvents] = useState<Event[]>([]);
 
-  const EventCard = ({ event, index }: { event: (typeof events)[0], index: number }) => (
+  useEffect(() => {
+    const fetchEvents = async () => {
+      const data = await getAllEvents();
+      setEvents(data);
+    };
+    fetchEvents();
+  }, []);
+
+  const EventCard = ({ event, index }: { event: Event, index: number }) => (
     <Card key={event.id} className="group overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1.5 flex flex-col border-2 border-transparent hover:border-primary animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
       <div className="relative aspect-video w-full">
         <Image

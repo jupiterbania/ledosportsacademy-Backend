@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -12,13 +12,13 @@ import { useToast } from "@/hooks/use-toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { getAllAchievements, Achievement } from "@/lib/data";
+import { getAllAchievements, Achievement, addAchievement, updateAchievement, deleteAchievement } from "@/lib/data";
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import Image from 'next/image';
 
 const achievementSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(),
   title: z.string().min(1, { message: "Title is required" }),
   description: z.string().min(1, { message: "Description is required" }),
   date: z.string().refine((val) => !isNaN(Date.parse(val)), { message: "Invalid date format" }),
@@ -29,9 +29,18 @@ const achievementSchema = z.object({
 type AchievementFormValues = z.infer<typeof achievementSchema>;
 
 export default function AchievementsManagementPage() {
-  const [achievements, setAchievements] = useState<Achievement[]>(getAllAchievements());
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
+
+  const fetchAchievements = async () => {
+    const data = await getAllAchievements();
+    setAchievements(data);
+  };
+
+  useEffect(() => {
+    fetchAchievements();
+  }, []);
 
   const form = useForm<AchievementFormValues>({
     resolver: zodResolver(achievementSchema),
@@ -44,21 +53,22 @@ export default function AchievementsManagementPage() {
     },
   });
 
-  const onSubmit = (data: AchievementFormValues) => {
-    const isEditing = !!data.id;
-    if (isEditing) {
-      setAchievements(achievements.map(achievement => achievement.id === data.id ? { ...achievement, ...data } : achievement));
-      toast({ title: "Achievement Updated", description: "The achievement has been successfully updated." });
-    } else {
-      const newAchievement: Achievement = {
-        ...data,
-        id: achievements.length > 0 ? Math.max(...achievements.map(e => e.id)) + 1 : 1,
-      };
-      setAchievements([...achievements, newAchievement].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
-      toast({ title: "Achievement Added", description: "The new achievement has been recorded." });
+  const onSubmit = async (data: AchievementFormValues) => {
+    const { id, ...achievementData } = data;
+    try {
+      if (id) {
+        await updateAchievement(id, achievementData);
+        toast({ title: "Achievement Updated", description: "The achievement has been successfully updated." });
+      } else {
+        await addAchievement(achievementData);
+        toast({ title: "Achievement Added", description: "The new achievement has been recorded." });
+      }
+      fetchAchievements();
+      setIsDialogOpen(false);
+      form.reset();
+    } catch (error) {
+      toast({ title: "Error", description: "Something went wrong.", variant: "destructive" });
     }
-    setIsDialogOpen(false);
-    form.reset();
   };
 
   const handleEdit = (achievement: Achievement) => {
@@ -66,9 +76,14 @@ export default function AchievementsManagementPage() {
     setIsDialogOpen(true);
   };
   
-  const handleDelete = (id: number) => {
-    setAchievements(achievements.filter(achievement => achievement.id !== id));
-    toast({ title: "Achievement Deleted", description: "The achievement has been removed.", variant: "destructive" });
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteAchievement(id);
+      fetchAchievements();
+      toast({ title: "Achievement Deleted", description: "The achievement has been removed.", variant: "destructive" });
+    } catch (error) {
+       toast({ title: "Error", description: "Something went wrong.", variant: "destructive" });
+    }
   };
 
   return (

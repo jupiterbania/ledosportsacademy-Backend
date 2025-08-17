@@ -1,16 +1,14 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { HandCoins, Medal, Users, Calendar } from "lucide-react";
+import { HandCoins, Medal } from "lucide-react";
 import {
-  getAllDonations,
-  getAllCollections,
-  getAllExpenses,
-  getAllAchievements,
-  getAllMembers,
-  getAllEvents,
+  getAllDonations, Donation,
+  getAllCollections, Collection,
+  getAllExpenses, Expense,
+  getAllAchievements, Achievement
 } from "@/lib/data";
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis, ResponsiveContainer, Tooltip, Legend, YAxis } from "recharts";
 import {
   Timeline,
@@ -23,22 +21,30 @@ import {
 } from "@/components/ui/timeline";
 
 export default function AdminDashboard() {
-  const donations = useMemo(() => getAllDonations(), []);
-  const collections = useMemo(() => getAllCollections(), []);
-  const expenses = useMemo(() => getAllExpenses(), []);
-  const achievements = useMemo(() => getAllAchievements(), []);
-  const members = useMemo(() => getAllMembers(), []);
-  const events = useMemo(() => getAllEvents(), []);
+  const [donations, setDonations] = useState<Donation[]>([]);
+  const [collections, setCollections] = useState<Collection[]>([]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setDonations(await getAllDonations());
+      setCollections(await getAllCollections());
+      setExpenses(await getAllExpenses());
+      setAchievements(await getAllAchievements());
+    };
+    fetchData();
+  }, []);
 
   const totalDonations = useMemo(() => donations.reduce((sum, d) => sum + (d.amount || 0), 0), [donations]);
   const totalCollections = useMemo(() => collections.reduce((sum, c) => sum + c.amount, 0), [collections]);
   const totalExpenses = useMemo(() => expenses.reduce((sum, e) => sum + e.amount, 0), [expenses]);
   
-  const financialData = [
+  const financialData = useMemo(() => [
     { name: "Donations", value: totalDonations, fill: "hsl(var(--chart-1))" },
     { name: "Collections", value: totalCollections, fill: "hsl(var(--chart-2))" },
     { name: "Expenses", value: totalExpenses, fill: "hsl(var(--chart-3))" },
-  ];
+  ], [totalDonations, totalCollections, totalExpenses]);
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">

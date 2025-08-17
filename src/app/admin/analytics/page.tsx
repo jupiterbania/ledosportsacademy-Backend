@@ -1,14 +1,14 @@
 "use client";
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import {
-  getAllDonations,
-  getAllCollections,
-  getAllExpenses,
-  getAllAchievements,
-  getAllMembers,
-  getAllEvents
+  getAllDonations, Donation,
+  getAllCollections, Collection,
+  getAllExpenses, Expense,
+  getAllAchievements, Achievement,
+  getAllMembers, Member,
+  getAllEvents, Event,
 } from "@/lib/data";
 import { Bar, BarChart, Line, LineChart, Pie, PieChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, Cell } from "recharts";
 import {
@@ -27,22 +27,34 @@ import { Medal, Users, Calendar, HandCoins } from 'lucide-react';
 const COLORS = ['hsl(var(--chart-1))', 'hsl(var(--chart-2))', 'hsl(var(--chart-3))', 'hsl(var(--chart-4))', 'hsl(var(--chart-5))'];
 
 export default function AnalyticsDashboardPage() {
-  const donations = useMemo(() => getAllDonations(), []);
-  const collections = useMemo(() => getAllCollections(), []);
-  const expenses = useMemo(() => getAllExpenses(), []);
-  const achievements = useMemo(() => getAllAchievements(), []);
-  const members = useMemo(() => getAllMembers(), []);
-  const events = useMemo(() => getAllEvents(), []);
+  const [donations, setDonations] = useState<Donation[]>([]);
+  const [collections, setCollections] = useState<Collection[]>([]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
+  const [members, setMembers] = useState<Member[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setDonations(await getAllDonations());
+      setCollections(await getAllCollections());
+      setExpenses(await getAllExpenses());
+      setAchievements(await getAllAchievements());
+      setMembers(await getAllMembers());
+      setEvents(await getAllEvents());
+    };
+    fetchData();
+  }, []);
 
   const totalDonations = useMemo(() => donations.reduce((sum, d) => sum + (d.amount || 0), 0), [donations]);
   const totalCollections = useMemo(() => collections.reduce((sum, c) => sum + c.amount, 0), [collections]);
   const totalExpenses = useMemo(() => expenses.reduce((sum, e) => sum + e.amount, 0), [expenses]);
   
-  const financialSummaryData = [
+  const financialSummaryData = useMemo(() => [
     { name: 'Donations', value: totalDonations },
     { name: 'Collections', value: totalCollections },
     { name: 'Expenses', value: totalExpenses },
-  ];
+  ], [totalDonations, totalCollections, totalExpenses]);
 
   const monthlyFinancials = useMemo(() => {
     const data: { [key: string]: { month: string, donations: number, collections: number, expenses: number } } = {};

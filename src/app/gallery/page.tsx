@@ -1,15 +1,23 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from "next/image"
 import { getAllPhotos, Photo } from "@/lib/data"
 import { Card, CardContent } from "@/components/ui/card"
 import { Header } from "@/components/layout/header"
-import { Dialog, DialogContent, DialogTrigger, DialogClose, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 
 export default function GalleryPage() {
-  const photos = getAllPhotos()
+  const [photos, setPhotos] = useState<Photo[]>([]);
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
+
+  useEffect(() => {
+    const fetchPhotos = async () => {
+      const data = await getAllPhotos();
+      setPhotos(data);
+    }
+    fetchPhotos();
+  }, []);
 
   const handlePhotoClick = (photo: Photo) => {
     setSelectedPhoto(photo);
@@ -57,7 +65,7 @@ export default function GalleryPage() {
                 <DialogContent className="p-0 border-0 max-w-4xl bg-transparent">
                      <DialogTitle className="sr-only">{`Enlarged view of gallery photo ${selectedPhoto.id}`}</DialogTitle>
                      <DialogDescription className="sr-only">
-                        A larger view of the selected photo from the gallery.
+                        A larger view of the selected photo from the gallery. {selectedPhoto.description}
                      </DialogDescription>
                     <Image
                         src={selectedPhoto.url}

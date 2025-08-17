@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -12,9 +12,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import {
-  getAllDonations, Donation,
-  getAllCollections, Collection,
-  getAllExpenses, Expense,
+  getAllDonations, Donation, addDonation, updateDonation, deleteDonation,
+  getAllCollections, Collection, addCollection, updateCollection, deleteCollection,
+  getAllExpenses, Expense, addExpense, updateExpense, deleteExpense
 } from "@/lib/data";
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
@@ -24,7 +24,7 @@ import { Textarea } from '@/components/ui/textarea';
 
 
 const donationSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(),
   title: z.string().min(1, { message: "Title is required" }),
   date: z.string().refine((val) => !isNaN(Date.parse(val)), { message: "Invalid date format" }),
   donationType: z.enum(['money', 'item']).default('money'),
@@ -40,14 +40,14 @@ const donationSchema = z.object({
 }, { message: "Item description is required", path: ["item"] });
 
 const collectionSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(),
   title: z.string().min(1, { message: "Title is required" }),
   amount: z.coerce.number().positive({ message: "Amount must be a positive number" }),
   date: z.string().refine((val) => !isNaN(Date.parse(val)), { message: "Invalid date format" }),
 });
 
 const expenseSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(),
   title: z.string().min(1, { message: "Title is required" }),
   amount: z.coerce.number().positive({ message: "Amount must be a positive number" }),
   date: z.string().refine((val) => !isNaN(Date.parse(val)), { message: "Invalid date format" }),
@@ -59,9 +59,12 @@ type CollectionFormValues = z.infer<typeof collectionSchema>;
 type ExpenseFormValues = z.infer<typeof expenseSchema>;
 
 function DonationTable() {
-  const [items, setItems] = useState<Donation[]>(getAllDonations());
+  const [items, setItems] = useState<Donation[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
+
+  const fetchItems = async () => setItems(await getAllDonations());
+  useEffect(() => { fetchItems() }, []);
 
   const form = useForm<DonationFormValues>({
     resolver: zodResolver(donationSchema),
@@ -76,29 +79,29 @@ function DonationTable() {
 
   const donationType = form.watch("donationType");
 
-  const onSubmit = (data: DonationFormValues) => {
-    const isEditing = !!data.id;
-    
-    const submittedData: Partial<Donation> = { ...data };
+  const onSubmit = async (data: DonationFormValues) => {
+    const { id, ...donationData } = data;
+    const submittedData: Partial<Donation> = { ...donationData };
     if (data.donationType === 'money') {
       submittedData.item = undefined;
     } else {
       submittedData.amount = undefined;
     }
 
-    if (isEditing) {
-      setItems(items.map(item => item.id === submittedData.id ? { ...item, ...submittedData } as Donation : item));
-      toast({ title: "Donation Updated" });
-    } else {
-      const newItem: Donation = {
-        ...(submittedData as Donation),
-        id: items.length > 0 ? Math.max(...items.map(i => i.id)) + 1 : 1,
-      };
-      setItems([...items, newItem].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
-      toast({ title: "Donation Added" });
+    try {
+      if (id) {
+        await updateDonation(id, submittedData);
+        toast({ title: "Donation Updated" });
+      } else {
+        await addDonation(submittedData as Omit<Donation, 'id'>);
+        toast({ title: "Donation Added" });
+      }
+      fetchItems();
+      setIsDialogOpen(false);
+      form.reset();
+    } catch (error) {
+      toast({ title: "Error", variant: "destructive" });
     }
-    setIsDialogOpen(false);
-    form.reset();
   };
 
   const handleEdit = (item: Donation) => {
@@ -107,9 +110,14 @@ function DonationTable() {
     setIsDialogOpen(true);
   };
 
-  const handleDelete = (id: number) => {
-    setItems(items.filter(item => item.id !== id));
-    toast({ title: "Donation Deleted", variant: "destructive" });
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteDonation(id);
+      fetchItems();
+      toast({ title: "Donation Deleted", variant: "destructive" });
+    } catch (error) {
+       toast({ title: "Error", variant: "destructive" });
+    }
   };
   
   const totalAmount = useMemo(() => items.reduce((sum, item) => sum + (item.amount || 0), 0), [items]);
@@ -259,17 +267,26 @@ function DonationTable() {
 function FinanceTable<T extends Collection | Expense>({ 
     category, 
     title,
-    data, 
-    schema 
+    schema,
+    getAll,
+    add,
+    update,
+    del,
 }: { 
     category: 'collection' | 'expense',
     title: string,
-    data: T[],
-    schema: z.ZodType<any, any>
+    schema: z.ZodType<any, any>,
+    getAll: () => Promise<T[]>,
+    add: (data: Omit<T, 'id'>) => Promise<any>,
+    update: (id: string, data: Partial<T>) => Promise<void>,
+    del: (id: string) => Promise<void>,
 }) {
-  const [items, setItems] = useState<T[]>(data);
+  const [items, setItems] = useState<T[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
+
+  const fetchItems = async () => setItems(await getAll());
+  useEffect(() => { fetchItems() }, []);
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -280,21 +297,22 @@ function FinanceTable<T extends Collection | Expense>({
     },
   });
   
-  const onSubmit = (data: z.infer<typeof schema>) => {
-    const isEditing = !!data.id;
-    if (isEditing) {
-      setItems(items.map(item => item.id === data.id ? { ...item, ...data } : item));
-      toast({ title: `${title} Updated` });
-    } else {
-      const newItem = {
-        ...data,
-        id: items.length > 0 ? Math.max(...items.map(i => i.id)) + 1 : 1,
-      };
-      setItems([...items, newItem].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
-      toast({ title: `${title} Added` });
+  const onSubmit = async (data: z.infer<typeof schema>) => {
+    const { id, ...itemData } = data;
+    try {
+        if (id) {
+            await update(id, itemData);
+            toast({ title: `${title} Updated` });
+        } else {
+            await add(itemData);
+            toast({ title: `${title} Added` });
+        }
+        fetchItems();
+        setIsDialogOpen(false);
+        form.reset();
+    } catch (error) {
+        toast({ title: "Error", variant: "destructive" });
     }
-    setIsDialogOpen(false);
-    form.reset();
   };
   
   const handleEdit = (item: T) => {
@@ -302,9 +320,14 @@ function FinanceTable<T extends Collection | Expense>({
     setIsDialogOpen(true);
   };
 
-  const handleDelete = (id: number) => {
-    setItems(items.filter(item => item.id !== id));
-    toast({ title: `${title} Deleted`, variant: "destructive" });
+  const handleDelete = async (id: string) => {
+    try {
+        await del(id);
+        fetchItems();
+        toast({ title: `${title} Deleted`, variant: "destructive" });
+    } catch (error) {
+        toast({ title: "Error", variant: "destructive" });
+    }
   };
   
   const totalAmount = useMemo(() => items.reduce((sum, item) => sum + item.amount, 0), [items]);
@@ -432,16 +455,22 @@ export default function FinancesPage() {
              <FinanceTable
                 category="collection"
                 title="Collection"
-                data={getAllCollections()}
                 schema={collectionSchema}
+                getAll={getAllCollections}
+                add={addCollection}
+                update={updateCollection}
+                del={deleteCollection}
             />
           </TabsContent>
           <TabsContent value="expenses" className="space-y-4">
              <FinanceTable
                 category="expense"
                 title="Expense"
-                data={getAllExpenses()}
                 schema={expenseSchema}
+                getAll={getAllExpenses}
+                add={addExpense}
+                update={updateExpense}
+                del={deleteExpense}
             />
           </TabsContent>
         </Tabs>
@@ -449,5 +478,3 @@ export default function FinancesPage() {
     </main>
   );
 }
-
-    

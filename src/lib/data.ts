@@ -1,7 +1,13 @@
+import { db } from './firebase';
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy, limit, where } from 'firebase/firestore';
 
+// Base types
+export interface BaseDocument {
+  id: string;
+}
 
-export interface Photo {
-  id: number;
+// Interfaces
+export interface Photo extends BaseDocument {
   url: string;
   isSliderPhoto: boolean;
   uploadedAt: string;
@@ -9,8 +15,7 @@ export interface Photo {
   description?: string;
 }
 
-export interface Event {
-  id: number;
+export interface Event extends BaseDocument {
   title: string;
   description: string;
   date: string;
@@ -20,95 +25,39 @@ export interface Event {
   showOnSlider?: boolean;
 }
 
-export interface Member {
-  id: number;
+export interface Member extends BaseDocument {
   name: string;
   email: string;
   photoUrl: string;
   joinDate: string;
 }
 
-export interface Donation {
-    id: number;
+export interface Donation extends BaseDocument {
     title: string;
     amount?: number;
     item?: string;
     date: string;
 }
 
-export interface Collection {
-    id: number;
+export interface Collection extends BaseDocument {
     title: string;
     amount: number;
     date: string;
 }
 
-export interface Expense {
-    id: number;
+export interface Expense extends BaseDocument {
     title: string;
     amount: number;
     date: string;
 }
 
-export interface Achievement {
-    id: number;
+export interface Achievement extends BaseDocument {
     title: string;
     description: string;
     date: string;
     photoUrl: string;
     'data-ai-hint'?: string;
 }
-
-export const photos: Photo[] = [
-  { id: 1, url: 'https://placehold.co/1200x600.png', isSliderPhoto: true, uploadedAt: '2023-10-26T10:00:00Z', 'data-ai-hint': 'community event', description: 'A vibrant photo of our latest community event.' },
-  { id: 2, url: 'https://placehold.co/1200x600.png', isSliderPhoto: true, uploadedAt: '2023-10-25T11:00:00Z', 'data-ai-hint': 'team celebration', description: 'The team celebrating their recent victory.' },
-  { id: 3, url: 'https://placehold.co/1200x600.png', isSliderPhoto: false, uploadedAt: '2023-10-24T12:00:00Z', 'data-ai-hint': 'outdoor activity', description: 'Enjoying a beautiful day with an outdoor activity.' },
-  { id: 4, url: 'https://placehold.co/1200x600.png', isSliderPhoto: false, uploadedAt: '2023-10-23T13:00:00Z', 'data-ai-hint': 'group meeting', description: 'An important group meeting to plan for the future.' },
-  { id: 5, url: 'https://placehold.co/1200x600.png', isSliderPhoto: false, uploadedAt: '2023-10-22T14:00:00Z', 'data-ai-hint': 'workshop session', description: 'Members participating in an interactive workshop.' },
-  { id: 6, url: 'https://placehold.co/600x400.png', isSliderPhoto: false, uploadedAt: '2023-10-21T15:00:00Z', 'data-ai-hint': 'charity drive' },
-  { id: 7, url: 'https://placehold.co/600x400.png', isSliderPhoto: false, uploadedAt: '2023-10-20T16:00:00Z', 'data-ai-hint': 'sports day' },
-  { id: 8, url: 'https://placehold.co/600x400.png', isSliderPhoto: false, uploadedAt: '2023-10-19T17:00:00Z', 'data-ai-hint': 'annual dinner' },
-  { id: 9, url: 'https://placehold.co/600x400.png', isSliderPhoto: false, uploadedAt: '2023-10-18T18:00:00Z', 'data-ai-hint': 'member award' },
-  { id: 10, url: 'https://placehold.co/600x400.png', isSliderPhoto: false, uploadedAt: '2023-10-17T19:00:00Z', 'data-ai-hint': 'conference talk' },
-];
-
-export const events: Event[] = [
-  { id: 1, title: 'Annual General Meeting', description: 'Join us for our annual general meeting to discuss the future of the club.', date: '2023-09-15', photoUrl: 'https://placehold.co/1200x600.png', 'data-ai-hint': 'formal meeting', redirectUrl: 'https://example.com/agm-details', showOnSlider: true },
-  { id: 2, title: 'Charity Bake Sale', description: 'Help us raise funds for a good cause while enjoying delicious treats.', date: '2023-10-20', photoUrl: 'https://placehold.co/1200x600.png', 'data-ai-hint': 'bake sale', redirectUrl: 'https://example.com/bake-sale-info', showOnSlider: true },
-  { id: 3, title: 'Holiday Party', description: 'Celebrate the holiday season with fellow club members.', date: '2023-12-10', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'holiday party' },
-  { id: 4, title: 'Tech Workshop', description: 'A hands-on workshop on the latest technologies.', date: '2024-01-05', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'tech workshop', redirectUrl: 'https://example.com/tech-workshop-signup' },
-  { id: 5, title: 'Spring Picnic', description: 'Enjoy a day out in the sun with food, games, and fun.', date: '2024-04-22', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'picnic park' },
-];
-
-export const members: Member[] = [
-    { id: 1, name: 'Alice Johnson', email: 'alice.j@example.com', photoUrl: 'https://placehold.co/100x100.png', joinDate: '2022-03-12' },
-    { id: 2, name: 'Bob Williams', email: 'bob.w@example.com', photoUrl: 'https://placehold.co/100x100.png', joinDate: '2022-05-20' },
-    { id: 3, name: 'Charlie Brown', email: 'charlie.b@example.com', photoUrl: 'https://placehold.co/100x100.png', joinDate: '2023-01-10' },
-    { id: 4, name: 'Diana Miller', email: 'diana.m@example.com', photoUrl: 'https://placehold.co/100x100.png', joinDate: '2023-06-01' },
-    { id: 5, name: 'Ethan Davis', email: 'ethan.d@example.com', photoUrl: 'https://placehold.co/100x100.png', joinDate: '2023-09-18' },
-];
-
-export const donations: Donation[] = [
-    { id: 1, title: 'Corporate Sponsorship', amount: 500, date: '2023-08-01' },
-    { id: 2, title: 'Member Contribution', amount: 50, date: '2023-09-15' },
-    { id: 3, title: 'Old Laptops for Charity', item: '5 Laptops', date: '2023-11-01' },
-];
-
-export const collections: Collection[] = [
-    { id: 1, title: 'Bake Sale Fundraiser', amount: 350, date: '2023-10-20' },
-    { id: 2, title: 'Membership Dues', amount: 1200, date: '2024-01-01' },
-];
-
-export const expenses: Expense[] = [
-    { id: 1, title: 'Venue Rental for AGM', amount: 150, date: '2023-09-14' },
-    { id: 2, title: 'Holiday Party Supplies', amount: 200, date: '2023-12-05' },
-];
-
-export const achievements: Achievement[] = [
-    { id: 1, title: 'Club of the Year', description: 'Awarded by the regional committee for outstanding performance.', date: '2022-12-31', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'award trophy' },
-    { id: 2, title: '10 Years Anniversary', description: 'Celebrating a decade of community and service.', date: '2023-05-20', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'celebration confetti' },
-    { id: 3, title: 'Regional Tournament Champions', description: 'Won the annual regional tournament.', date: '2023-08-15', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'sports trophy' },
-];
 
 export interface SlideshowItem {
     id: string;
@@ -119,62 +68,128 @@ export interface SlideshowItem {
     date: string;
 }
 
-export const getSlideshowItems = (): SlideshowItem[] => {
-    const sliderPhotos: SlideshowItem[] = photos
-        .filter(p => p.isSliderPhoto)
-        .map(p => ({
-            id: `photo-${p.id}`,
+
+// Generic Firestore functions
+async function getCollection<T extends BaseDocument>(collectionName: string, orderField: string = 'date', orderDirection: 'asc' | 'desc' = 'desc'): Promise<T[]> {
+  const q = query(collection(db, collectionName), orderBy(orderField, orderDirection));
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as T));
+}
+
+async function addDocument<T>(collectionName: string, data: Omit<T, 'id'>): Promise<T & BaseDocument> {
+  const docRef = await addDoc(collection(db, collectionName), data);
+  return { id: docRef.id, ...data } as T & BaseDocument;
+}
+
+async function updateDocument<T>(collectionName: string, id: string, data: Partial<T>) {
+  const docRef = doc(db, collectionName, id);
+  await updateDoc(docRef, data);
+}
+
+async function deleteDocument(collectionName: string, id: string) {
+  const docRef = doc(db, collectionName, id);
+  await deleteDoc(docRef);
+}
+
+
+// Photos
+export const getAllPhotos = () => getCollection<Photo>('photos', 'uploadedAt');
+export const addPhoto = (data: Omit<Photo, 'id'>) => addDocument<Photo>('photos', data);
+export const updatePhoto = (id: string, data: Partial<Photo>) => updateDocument<Photo>('photos', id, data);
+export const deletePhoto = (id: string) => deleteDocument('photos', id);
+
+export const getRecentPhotos = async () => {
+    const q = query(collection(db, "photos"), orderBy("uploadedAt", "desc"), limit(5));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Photo));
+};
+
+// Events
+export const getAllEvents = () => getCollection<Event>('events', 'date', 'asc');
+export const addEvent = (data: Omit<Event, 'id'>) => addDocument<Event>('events', data);
+export const updateEvent = (id: string, data: Partial<Event>) => updateDocument<Event>('events', id, data);
+export const deleteEvent = (id: string) => deleteDocument('events', id);
+
+export const getRecentEvents = async () => {
+    const q = query(
+        collection(db, "events"), 
+        where("date", "<", new Date().toISOString()),
+        orderBy("date", "desc"), 
+        limit(3)
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Event));
+};
+
+// Members
+export const getAllMembers = () => getCollection<Member>('members', 'joinDate');
+export const addMember = (data: Omit<Member, 'id'>) => addDocument<Member>('members', data);
+export const updateMember = (id: string, data: Partial<Member>) => updateDocument<Member>('members', id, data);
+export const deleteMember = (id: string) => deleteDocument('members', id);
+
+// Donations
+export const getAllDonations = () => getCollection<Donation>('donations');
+export const addDonation = (data: Omit<Donation, 'id'>) => addDocument<Donation>('donations', data);
+export const updateDonation = (id: string, data: Partial<Donation>) => updateDocument<Donation>('donations', id, data);
+export const deleteDonation = (id: string) => deleteDocument('donations', id);
+
+// Collections
+export const getAllCollections = () => getCollection<Collection>('collections');
+export const addCollection = (data: Omit<Collection, 'id'>) => addDocument<Collection>('collections', data);
+export const updateCollection = (id: string, data: Partial<Collection>) => updateDocument<Collection>('collections', id, data);
+export const deleteCollection = (id: string) => deleteDocument('collections', id);
+
+// Expenses
+export const getAllExpenses = () => getCollection<Expense>('expenses');
+export const addExpense = (data: Omit<Expense, 'id'>) => addDocument<Expense>('expenses', data);
+export const updateExpense = (id: string, data: Partial<Expense>) => updateDocument<Expense>('expenses', id, data);
+export const deleteExpense = (id: string) => deleteDocument('expenses', id);
+
+// Achievements
+export const getAllAchievements = () => getCollection<Achievement>('achievements');
+export const addAchievement = (data: Omit<Achievement, 'id'>) => addDocument<Achievement>('achievements', data);
+export const updateAchievement = (id: string, data: Partial<Achievement>) => updateDocument<Achievement>('achievements', id, data);
+export const deleteAchievement = (id: string) => deleteDocument('achievements', id);
+
+export const getRecentAchievements = async () => {
+    const q = query(collection(db, "achievements"), orderBy("date", "desc"), limit(3));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Achievement));
+};
+
+// Slideshow Items
+export const getSlideshowItems = async (): Promise<SlideshowItem[]> => {
+    const photoQuery = query(collection(db, 'photos'), where('isSliderPhoto', '==', true));
+    const eventQuery = query(collection(db, 'events'), where('showOnSlider', '==', true));
+
+    const [photoSnapshot, eventSnapshot] = await Promise.all([
+        getDocs(photoQuery),
+        getDocs(eventQuery)
+    ]);
+
+    const sliderPhotos: SlideshowItem[] = photoSnapshot.docs.map(doc => {
+        const p = doc.data() as Omit<Photo, 'id'>;
+        return {
+            id: `photo-${doc.id}`,
             url: p.url,
             title: "Welcome to Club Central",
             description: p.description,
             'data-ai-hint': p['data-ai-hint'],
             date: p.uploadedAt,
-        }));
+        };
+    });
 
-    const sliderEvents: SlideshowItem[] = events
-        .filter(e => e.showOnSlider)
-        .map(e => ({
-            id: `event-${e.id}`,
+    const sliderEvents: SlideshowItem[] = eventSnapshot.docs.map(doc => {
+        const e = doc.data() as Omit<Event, 'id'>;
+        return {
+            id: `event-${doc.id}`,
             url: e.photoUrl,
             title: e.title,
             description: e.description,
             'data-ai-hint': e['data-ai-hint'],
             date: e.date,
-        }));
+        };
+    });
     
     return [...sliderPhotos, ...sliderEvents].sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
-
-export const getRecentPhotos = () => [...photos]
-  .sort((a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime())
-  .slice(0, 5);
-
-export const getAllPhotos = () => [...photos]
-  .sort((a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime());
-
-export const getRecentEvents = () => [...events]
-  .filter(event => new Date(event.date) < new Date())
-  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-  .slice(0, 3);
-
-export const getAllEvents = () => [...events]
-  .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
-export const getAllMembers = () => [...members]
-    .sort((a, b) => new Date(b.joinDate).getTime() - new Date(a.joinDate).getTime());
-
-export const getAllDonations = () => [...donations]
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-export const getAllCollections = () => [...collections]
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-export const getAllExpenses = () => [...expenses]
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-export const getRecentAchievements = () => [...achievements]
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, 3);
-
-export const getAllAchievements = () => [...achievements]
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());

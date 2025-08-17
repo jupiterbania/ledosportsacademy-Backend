@@ -1,4 +1,3 @@
-
 "use client"
 
 import * as React from "react"
@@ -10,7 +9,11 @@ import { Card, CardContent } from "@/components/ui/card"
 export function HomepageSlideshow() {
   const [api, setApi] = React.useState<CarouselApi>()
   const [current, setCurrent] = React.useState(0);
-  const slideshowItems = getSlideshowItems();
+  const [slideshowItems, setSlideshowItems] = React.useState<SlideshowItem[]>([]);
+
+  React.useEffect(() => {
+    getSlideshowItems().then(setSlideshowItems);
+  }, []);
 
   React.useEffect(() => {
     if (!api) {

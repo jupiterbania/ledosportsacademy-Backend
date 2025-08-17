@@ -1,13 +1,11 @@
 import Link from "next/link"
 import Image from "next/image"
-import { getRecentPhotos } from "@/lib/data"
+import { Photo } from "@/lib/data"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 
-export function RecentPhotos() {
-  const photos = getRecentPhotos()
-
+export function RecentPhotos({ photos }: { photos: Photo[] }) {
   return (
     <section>
       <div className="flex justify-between items-center mb-6">

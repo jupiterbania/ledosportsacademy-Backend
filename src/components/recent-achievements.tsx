@@ -1,13 +1,11 @@
 import Link from "next/link"
 import Image from "next/image"
-import { getRecentAchievements } from "@/lib/data"
+import { Achievement } from "@/lib/data"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Medal, ArrowRight } from "lucide-react"
 
-export function RecentAchievements() {
-  const achievements = getRecentAchievements()
-
+export function RecentAchievements({ achievements }: { achievements: Achievement[] }) {
   return (
     <section>
       <div className="flex justify-between items-center mb-6">

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -11,15 +11,15 @@ import { useToast } from "@/hooks/use-toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { getAllPhotos, Photo } from "@/lib/data";
-import { PlusCircle, Edit, Trash2, Image as ImageIcon } from 'lucide-react';
+import { getAllPhotos, Photo, addPhoto, updatePhoto, deletePhoto } from "@/lib/data";
+import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Switch } from "@/components/ui/switch";
 import Image from 'next/image';
 import { Textarea } from '@/components/ui/textarea';
 
 const photoSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(),
   url: z.string().url({ message: "Please enter a valid URL." }),
   'data-ai-hint': z.string().optional(),
   isSliderPhoto: z.boolean().default(false),
@@ -29,9 +29,18 @@ const photoSchema = z.object({
 type PhotoFormValues = z.infer<typeof photoSchema>;
 
 export default function GalleryManagementPage() {
-  const [photos, setPhotos] = useState<Photo[]>(getAllPhotos());
+  const [photos, setPhotos] = useState<Photo[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
+
+  const fetchPhotos = async () => {
+    const data = await getAllPhotos();
+    setPhotos(data);
+  };
+
+  useEffect(() => {
+    fetchPhotos();
+  }, []);
 
   const form = useForm<PhotoFormValues>({
     resolver: zodResolver(photoSchema),
@@ -43,22 +52,26 @@ export default function GalleryManagementPage() {
     },
   });
 
-  const onSubmit = (data: PhotoFormValues) => {
-    const isEditing = !!data.id;
-    if (isEditing) {
-      setPhotos(photos.map(photo => photo.id === data.id ? { ...photo, ...data } : photo));
-      toast({ title: "Photo Updated", description: "The photo has been successfully updated." });
-    } else {
-      const newPhoto: Photo = {
-        ...data,
-        id: photos.length > 0 ? Math.max(...photos.map(p => p.id)) + 1 : 1,
-        uploadedAt: new Date().toISOString(),
-      };
-      setPhotos([newPhoto, ...photos]);
-      toast({ title: "Photo Added", description: "The new photo has been added to the gallery." });
+  const onSubmit = async (data: PhotoFormValues) => {
+    const { id, ...photoData } = data;
+    try {
+      if (id) {
+        await updatePhoto(id, photoData);
+        toast({ title: "Photo Updated", description: "The photo has been successfully updated." });
+      } else {
+        const newPhotoData = {
+          ...photoData,
+          uploadedAt: new Date().toISOString(),
+        };
+        await addPhoto(newPhotoData);
+        toast({ title: "Photo Added", description: "The new photo has been added to the gallery." });
+      }
+      fetchPhotos();
+      setIsDialogOpen(false);
+      form.reset();
+    } catch (error) {
+       toast({ title: "Error", description: "Something went wrong.", variant: "destructive" });
     }
-    setIsDialogOpen(false);
-    form.reset();
   };
 
   const handleEdit = (photo: Photo) => {
@@ -66,9 +79,14 @@ export default function GalleryManagementPage() {
     setIsDialogOpen(true);
   };
   
-  const handleDelete = (id: number) => {
-    setPhotos(photos.filter(photo => photo.id !== id));
-    toast({ title: "Photo Deleted", description: "The photo has been removed from the gallery.", variant: "destructive" });
+  const handleDelete = async (id: string) => {
+    try {
+      await deletePhoto(id);
+      fetchPhotos();
+      toast({ title: "Photo Deleted", description: "The photo has been removed from the gallery.", variant: "destructive" });
+    } catch (error) {
+       toast({ title: "Error", description: "Something went wrong.", variant: "destructive" });
+    }
   };
 
   return (

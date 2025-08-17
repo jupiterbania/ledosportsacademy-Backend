@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
@@ -11,7 +11,11 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 function DonationsTable() {
-  const items = useMemo(() => getAllDonations(), []);
+  const [items, setItems] = useState<Donation[]>([]);
+  useEffect(() => {
+    getAllDonations().then(setItems);
+  }, []);
+
   const totalAmount = useMemo(() => items.reduce((sum, item) => sum + (item.amount || 0), 0), [items]);
 
   return (
@@ -50,13 +54,18 @@ function DonationsTable() {
 
 function FinanceTable({ 
     title,
-    data, 
+    fetchData, 
 }: { 
     title: string,
-    data: (Collection[] | Expense[]),
+    fetchData: () => Promise<(Collection[] | Expense[])>,
 }) {
-  const items = useMemo(() => data, [data]);
-  const totalAmount = useMemo(() => items.reduce((sum, item) => sum + item.amount, 0), [items]);
+  const [items, setItems] = useState<(Collection[] | Expense[])>([]);
+
+  useEffect(() => {
+    fetchData().then(setItems);
+  }, [fetchData]);
+  
+  const totalAmount = useMemo(() => items.reduce((sum, item) => sum + (item as Collection).amount, 0), [items]);
 
   return (
     <Card>
@@ -79,7 +88,7 @@ function FinanceTable({
             {items.map((item) => (
               <TableRow key={item.id}>
                 <TableCell className="font-medium">{item.title}</TableCell>
-                <TableCell>INR {new Intl.NumberFormat('en-IN').format(item.amount)}</TableCell>
+                <TableCell>INR {new Intl.NumberFormat('en-IN').format((item as Collection).amount)}</TableCell>
                 <TableCell>{new Date(item.date).toLocaleDateString()}</TableCell>
               </TableRow>
             ))}
@@ -91,9 +100,6 @@ function FinanceTable({
 }
 
 export default function MemberFinancesPage() {
-  const collections = useMemo(() => getAllCollections(), []);
-  const expenses = useMemo(() => getAllExpenses(), []);
-
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6 animate-fade-in">
         <Card>
@@ -115,13 +121,13 @@ export default function MemberFinancesPage() {
           <TabsContent value="collections" className="space-y-4">
              <FinanceTable
                 title="Collections"
-                data={collections}
+                fetchData={getAllCollections}
             />
           </TabsContent>
           <TabsContent value="expenses" className="space-y-4">
              <FinanceTable
                 title="Expenses"
-                data={expenses}
+                fetchData={getAllExpenses}
             />
           </TabsContent>
         </Tabs>

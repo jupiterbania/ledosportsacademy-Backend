@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -11,13 +11,13 @@ import { useToast } from "@/hooks/use-toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { getAllMembers, Member } from "@/lib/data";
+import { getAllMembers, Member, addMember, updateMember, deleteMember } from "@/lib/data";
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const memberSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(),
   name: z.string().min(1, { message: "Name is required" }),
   email: z.string().email({ message: "Invalid email address" }),
   photoUrl: z.string().url({ message: "Please enter a valid URL." }),
@@ -26,9 +26,18 @@ const memberSchema = z.object({
 type MemberFormValues = z.infer<typeof memberSchema>;
 
 export default function MembersManagementPage() {
-  const [members, setMembers] = useState<Member[]>(getAllMembers());
+  const [members, setMembers] = useState<Member[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
+
+  const fetchMembers = async () => {
+    const data = await getAllMembers();
+    setMembers(data);
+  };
+
+  useEffect(() => {
+    fetchMembers();
+  }, []);
 
   const form = useForm<MemberFormValues>({
     resolver: zodResolver(memberSchema),
@@ -39,22 +48,26 @@ export default function MembersManagementPage() {
     },
   });
 
-  const onSubmit = (data: MemberFormValues) => {
-    const isEditing = !!data.id;
-    if (isEditing) {
-      setMembers(members.map(member => member.id === data.id ? { ...member, ...data } : member));
-      toast({ title: "Member Updated", description: "The member's details have been updated." });
-    } else {
-      const newMember: Member = {
-        ...data,
-        id: members.length > 0 ? Math.max(...members.map(m => m.id)) + 1 : 1,
-        joinDate: new Date().toISOString().split('T')[0],
-      };
-      setMembers([newMember, ...members]);
-      toast({ title: "Member Added", description: "The new member has been added." });
+  const onSubmit = async (data: MemberFormValues) => {
+    const { id, ...memberData } = data;
+    try {
+      if (id) {
+        await updateMember(id, memberData);
+        toast({ title: "Member Updated", description: "The member's details have been updated." });
+      } else {
+        const newMemberData = {
+          ...memberData,
+          joinDate: new Date().toISOString().split('T')[0],
+        };
+        await addMember(newMemberData);
+        toast({ title: "Member Added", description: "The new member has been added." });
+      }
+      fetchMembers();
+      setIsDialogOpen(false);
+      form.reset();
+    } catch (error) {
+      toast({ title: "Error", description: "Something went wrong.", variant: "destructive" });
     }
-    setIsDialogOpen(false);
-    form.reset();
   };
 
   const handleEdit = (member: Member) => {
@@ -62,9 +75,14 @@ export default function MembersManagementPage() {
     setIsDialogOpen(true);
   };
   
-  const handleDelete = (id: number) => {
-    setMembers(members.filter(member => member.id !== id));
-    toast({ title: "Member Removed", description: "The member has been removed from the club.", variant: "destructive" });
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteMember(id);
+      fetchMembers();
+      toast({ title: "Member Removed", description: "The member has been removed from the club.", variant: "destructive" });
+    } catch (error) {
+      toast({ title: "Error", description: "Something went wrong.", variant: "destructive" });
+    }
   };
 
   return (

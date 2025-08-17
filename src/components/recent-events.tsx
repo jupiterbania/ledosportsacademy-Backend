@@ -1,15 +1,13 @@
-
 import Link from "next/link"
 import Image from "next/image"
-import { getRecentEvents } from "@/lib/data"
+import { Event } from "@/lib/data"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Calendar, ArrowRight } from "lucide-react"
 
-export function RecentEvents() {
-  const events = getRecentEvents()
+export function RecentEvents({ events }: { events: Event[] }) {
 
-  const EventCardContent = ({ event }: { event: (typeof events)[0] }) => (
+  const EventCardContent = ({ event }: { event: Event }) => (
     <Card className="overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1.5 h-full flex flex-col border-2 border-transparent hover:border-primary">
       <div className="relative aspect-video w-full">
         <Image

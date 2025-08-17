@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
@@ -9,8 +9,16 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Search } from 'lucide-react';
 
 export default function MemberMembersPage() {
-  const allMembers = useMemo(() => getAllMembers(), []);
+  const [allMembers, setAllMembers] = useState<Member[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    const fetchMembers = async () => {
+      const data = await getAllMembers();
+      setAllMembers(data);
+    };
+    fetchMembers();
+  }, []);
 
   const filteredMembers = useMemo(() => {
     if (!searchTerm) return allMembers;
