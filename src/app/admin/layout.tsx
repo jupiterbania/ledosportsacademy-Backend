@@ -79,8 +79,10 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
           <SidebarHeader>
              <div className="flex items-center gap-2">
                 <SidebarTrigger className="md:hidden" />
-                <Club className="w-6 h-6 text-primary" />
-                <h1 className="text-lg font-semibold">Club Central</h1>
+                <Link href="/" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors">
+                  <Club className="w-6 h-6 text-primary" />
+                  <h1 className="text-lg font-semibold">Club Central</h1>
+                </Link>
              </div>
           </SidebarHeader>
           <SidebarMenu>
