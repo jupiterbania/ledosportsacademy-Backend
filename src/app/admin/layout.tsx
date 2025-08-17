@@ -130,7 +130,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
               ))}
 
             <Collapsible className="w-full">
-              <CollapsibleTrigger className="w-full">
+              <CollapsibleTrigger className="w-full" asChild>
                 <SidebarMenuButton className="w-full justify-start gap-2">
                   <GalleryHorizontal />
                   Content
@@ -148,7 +148,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
             </Collapsible>
             
              <Collapsible className="w-full">
-              <CollapsibleTrigger className="w-full">
+              <CollapsibleTrigger className="w-full" asChild>
                 <SidebarMenuButton className="w-full justify-start gap-2">
                   <Users />
                   Users
@@ -166,7 +166,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
             </Collapsible>
             
             <Collapsible className="w-full">
-              <CollapsibleTrigger className="w-full">
+              <CollapsibleTrigger className="w-full" asChild>
                 <SidebarMenuButton className="w-full justify-start gap-2">
                   <HandCoins />
                   Financial
@@ -184,7 +184,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
             </Collapsible>
 
              <Collapsible className="w-full">
-              <CollapsibleTrigger className="w-full">
+              <CollapsibleTrigger className="w-full" asChild>
                 <SidebarMenuButton className="w-full justify-start gap-2">
                   <FileDown />
                   Data
@@ -202,7 +202,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
             </Collapsible>
 
              <Collapsible className="w-full">
-              <CollapsibleTrigger className="w-full">
+              <CollapsibleTrigger className="w-full" asChild>
                 <SidebarMenuButton className="w-full justify-start gap-2">
                   <Settings />
                   General
