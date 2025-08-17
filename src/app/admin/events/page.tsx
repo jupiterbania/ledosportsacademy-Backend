@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState } from 'react';
@@ -22,6 +23,7 @@ const eventSchema = z.object({
   description: z.string().min(1, { message: "Description is required" }),
   date: z.string().refine((val) => !isNaN(Date.parse(val)), { message: "Invalid date format" }),
   photoUrl: z.string().url({ message: "Please enter a valid URL." }),
+  redirectUrl: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
 });
 
 type EventFormValues = z.infer<typeof eventSchema>;
@@ -38,6 +40,7 @@ export default function EventsManagementPage() {
       description: "",
       date: "",
       photoUrl: "https://placehold.co/600x400.png",
+      redirectUrl: "",
     },
   });
 
@@ -83,6 +86,7 @@ export default function EventsManagementPage() {
                     description: "",
                     date: "",
                     photoUrl: "https://placehold.co/600x400.png",
+                    redirectUrl: "",
                   });
                   setIsDialogOpen(true);
                 }}>
@@ -142,6 +146,19 @@ export default function EventsManagementPage() {
                         <FormLabel>Photo URL</FormLabel>
                         <FormControl>
                           <Input placeholder="https://placehold.co/600x400.png" {...field} />
+                        </FormControl>
+                         <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="redirectUrl"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Redirect URL (Optional)</FormLabel>
+                        <FormControl>
+                          <Input placeholder="https://example.com/event-details" {...field} />
                         </FormControl>
                          <FormMessage />
                       </FormItem>

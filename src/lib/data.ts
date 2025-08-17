@@ -1,3 +1,4 @@
+
 export interface Photo {
   id: number;
   url: string;
@@ -14,6 +15,7 @@ export interface Event {
   date: string;
   photoUrl:string;
   'data-ai-hint'?: string;
+  redirectUrl?: string;
 }
 
 export interface Member {
@@ -69,10 +71,10 @@ export const photos: Photo[] = [
 ];
 
 export const events: Event[] = [
-  { id: 1, title: 'Annual General Meeting', description: 'Join us for our annual general meeting to discuss the future of the club.', date: '2023-09-15', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'formal meeting' },
-  { id: 2, title: 'Charity Bake Sale', description: 'Help us raise funds for a good cause while enjoying delicious treats.', date: '2023-10-20', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'bake sale' },
+  { id: 1, title: 'Annual General Meeting', description: 'Join us for our annual general meeting to discuss the future of the club.', date: '2023-09-15', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'formal meeting', redirectUrl: 'https://example.com/agm-details' },
+  { id: 2, title: 'Charity Bake Sale', description: 'Help us raise funds for a good cause while enjoying delicious treats.', date: '2023-10-20', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'bake sale', redirectUrl: 'https://example.com/bake-sale-info' },
   { id: 3, title: 'Holiday Party', description: 'Celebrate the holiday season with fellow club members.', date: '2023-12-10', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'holiday party' },
-  { id: 4, title: 'Tech Workshop', description: 'A hands-on workshop on the latest technologies.', date: '2024-01-05', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'tech workshop' },
+  { id: 4, title: 'Tech Workshop', description: 'A hands-on workshop on the latest technologies.', date: '2024-01-05', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'tech workshop', redirectUrl: 'https://example.com/tech-workshop-signup' },
   { id: 5, title: 'Spring Picnic', description: 'Enjoy a day out in the sun with food, games, and fun.', date: '2024-04-22', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'picnic park' },
 ];
 
