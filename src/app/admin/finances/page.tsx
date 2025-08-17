@@ -84,7 +84,7 @@ function DonationTable() {
       title: "",
       date: "",
       donationType: 'money',
-      amount: 0,
+      amount: undefined,
       item: "",
       donorName: "",
       description: "",
@@ -148,7 +148,7 @@ function DonationTable() {
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button onClick={() => {
-              form.reset({ id: undefined, title: "", amount: 0, date: "", donationType: 'money', item: "", donorName: "", description: "" });
+              form.reset({ id: undefined, title: "", amount: undefined, date: "", donationType: 'money', item: "", donorName: "", description: "" });
               setIsDialogOpen(true);
             }}>
               <PlusCircle className="mr-2 h-4 w-4" /> Add Donation
@@ -209,7 +209,7 @@ function DonationTable() {
                   <FormField control={form.control} name="amount" render={({ field }) => (
                     <FormItem>
                       <FormLabel>Amount</FormLabel>
-                      <FormControl><Input type="number" step="0.01" {...field} onChange={e => field.onChange(e.target.value)} /></FormControl>
+                      <FormControl><Input type="number" step="0.01" {...field} value={field.value ?? ''} /></FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
