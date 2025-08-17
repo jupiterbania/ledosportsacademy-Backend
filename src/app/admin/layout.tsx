@@ -25,11 +25,7 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarFooter,
   SidebarInset,
-  useSidebar,
-  SidebarGroup,
-  SidebarGroupLabel,
   SidebarMenuSub,
   SidebarMenuSubButton,
 } from '@/components/ui/sidebar';
