@@ -30,7 +30,6 @@ export function Header() {
   ];
   
   const memberNavLinks = [
-    ...baseNavLinks,
     { href: '/member/members', label: 'Members', icon: UsersIcon },
     { href: '/member/finances', label: 'Finances', icon: HandCoins },
     { href: '/member/achievements', label: 'Achievements', icon: Medal },
@@ -53,13 +52,6 @@ export function Header() {
     </SheetClose>
   );
 
-  const getNavLinks = () => {
-    if (user && !isAdmin) return memberNavLinks;
-    return baseNavLinks;
-  }
-  const navLinks = getNavLinks();
-
-
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
@@ -69,7 +61,8 @@ export function Header() {
         </Link>
         
         <nav className="hidden md:flex items-center gap-6 flex-grow">
-          {navLinks.map((link) => <NavLink key={link.href} {...link} />)}
+          {baseNavLinks.map((link) => <NavLink key={link.href} {...link} />)}
+          {user && !isAdmin && memberNavLinks.map((link) => <NavLink key={link.href} {...link} />)}
           {isAdmin && <NavLink href="/admin" label="Admin Dashboard" />}
         </nav>
         
@@ -102,9 +95,8 @@ export function Header() {
                   </Link>
                 </SheetClose>
                 <nav className="flex flex-col gap-3">
-                  {navLinks.map((link) => (
-                    <MobileNavLink key={link.href} {...link} />
-                  ))}
+                  {baseNavLinks.map((link) => <MobileNavLink key={link.href} {...link} />)}
+                   {user && !isAdmin && memberNavLinks.map((link) => <MobileNavLink key={link.href} {...link} />)}
                   {isAdmin && <MobileNavLink href="/admin" label="Admin Dashboard" />}
                   <Separator className="my-3" />
                   <SheetClose asChild>

@@ -5,37 +5,48 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useToast } from "@/hooks/use-toast"
 import { Shield, User } from "lucide-react"
-import { signInWithGoogle } from "@/lib/auth";
+import { signInWithGoogle, onAuthChange, ADMIN_UID } from "@/lib/auth";
 import { useAuth } from "@/hooks/use-auth";
+import { useEffect } from "react";
 
 export default function LoginPage() {
   const { toast } = useToast();
   const router = useRouter();
-  const { isAdmin } = useAuth();
-
+  
   const handleLogin = async (role: 'admin' | 'member') => {
-    const user = await signInWithGoogle();
-    if (user) {
-       // A real app would have a way to differentiate admins from members.
-       // For this demo, we'll check a flag from our auth hook.
-       // We'll treat anyone as a member by default and redirect admins separately.
-      if (role === 'admin' && isAdmin) {
-        toast({
-          title: "Admin Login Successful",
-          description: "Redirecting to the admin dashboard...",
-        });
-        router.push('/admin');
+    try {
+      const user = await signInWithGoogle();
+      if (!user) {
+        throw new Error("Google sign-in failed.");
+      }
+      // The onAuthChange listener in AuthProvider will handle redirection.
+      // We just need to check the role here to provide immediate feedback.
+      if (role === 'admin') {
+         if(user.uid === ADMIN_UID) {
+            toast({
+              title: "Admin Login Successful",
+              description: "Redirecting to the admin dashboard...",
+            });
+            router.push('/admin');
+         } else {
+            toast({
+              title: "Access Denied",
+              description: "You are not an authorized admin.",
+              variant: "destructive"
+            });
+            router.push('/');
+         }
       } else {
-         toast({
+        toast({
           title: "Login Successful",
-          description: `Welcome, ${user.displayName}! Redirecting to the dashboard...`,
+          description: `Welcome, ${user.displayName}!`,
         });
         router.push('/');
       }
-    } else {
-       toast({
+    } catch (error: any) {
+      toast({
         title: "Login Failed",
-        description: "Could not authenticate with Google.",
+        description: error.message || "Could not authenticate with Google.",
         variant: "destructive"
       });
     }
