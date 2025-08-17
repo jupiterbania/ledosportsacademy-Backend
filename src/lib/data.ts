@@ -23,6 +23,34 @@ export interface Member {
   joinDate: string;
 }
 
+export interface Donation {
+    id: number;
+    title: string;
+    amount: number;
+    date: string;
+}
+
+export interface Collection {
+    id: number;
+    title: string;
+    amount: number;
+    date: string;
+}
+
+export interface Expense {
+    id: number;
+    title: string;
+    amount: number;
+    date: string;
+}
+
+export interface Achievement {
+    id: number;
+    title: string;
+    description: string;
+    date: string;
+}
+
 export const photos: Photo[] = [
   { id: 1, url: 'https://placehold.co/1200x600.png', isSliderPhoto: true, uploadedAt: '2023-10-26T10:00:00Z', 'data-ai-hint': 'community event' },
   { id: 2, url: 'https://placehold.co/1200x600.png', isSliderPhoto: true, uploadedAt: '2023-10-25T11:00:00Z', 'data-ai-hint': 'team celebration' },
@@ -52,6 +80,27 @@ export const members: Member[] = [
     { id: 5, name: 'Ethan Davis', email: 'ethan.d@example.com', photoUrl: 'https://placehold.co/100x100.png', joinDate: '2023-09-18' },
 ];
 
+export const donations: Donation[] = [
+    { id: 1, title: 'Corporate Sponsorship', amount: 500, date: '2023-08-01' },
+    { id: 2, title: 'Member Contribution', amount: 50, date: '2023-09-15' },
+];
+
+export const collections: Collection[] = [
+    { id: 1, title: 'Bake Sale Fundraiser', amount: 350, date: '2023-10-20' },
+    { id: 2, title: 'Membership Dues', amount: 1200, date: '2024-01-01' },
+];
+
+export const expenses: Expense[] = [
+    { id: 1, title: 'Venue Rental for AGM', amount: 150, date: '2023-09-14' },
+    { id: 2, title: 'Holiday Party Supplies', amount: 200, date: '2023-12-05' },
+];
+
+export const achievements: Achievement[] = [
+    { id: 1, title: 'Club of the Year', description: 'Awarded by the regional committee for outstanding performance.', date: '2022-12-31' },
+    { id: 2, title: '10 Years Anniversary', description: 'Celebrating a decade of community and service.', date: '2023-05-20' },
+];
+
+
 export const getSliderPhotos = () => photos.filter(p => p.isSliderPhoto).slice(0, 5);
 
 export const getRecentPhotos = () => [...photos]
@@ -71,3 +120,15 @@ export const getAllEvents = () => [...events]
 
 export const getAllMembers = () => [...members]
     .sort((a, b) => new Date(b.joinDate).getTime() - new Date(a.joinDate).getTime());
+
+export const getAllDonations = () => [...donations]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+export const getAllCollections = () => [...collections]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+export const getAllExpenses = () => [...expenses]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+export const getAllAchievements = () => [...achievements]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
