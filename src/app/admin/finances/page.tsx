@@ -29,17 +29,20 @@ const donationSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
   donorName: z.string().optional(),
   description: z.string().optional(),
-  date: z.string().refine((val) => !isNaN(Date.parse(val)), { message: "Invalid date format" }),
+  date: z.string().refine((val) => val && !isNaN(Date.parse(val)), { message: "Date is required" }),
   donationType: z.enum(['money', 'item']).default('money'),
-  amount: z.coerce.number().optional(),
+  amount: z.any().optional(),
   item: z.string().optional(),
 }).superRefine((data, ctx) => {
-    if (data.donationType === 'money' && (data.amount === undefined || data.amount <= 0)) {
-        ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "Amount must be a positive number.",
-            path: ['amount'],
-        });
+    if (data.donationType === 'money') {
+        const parsedAmount = parseFloat(data.amount);
+        if (isNaN(parsedAmount) || parsedAmount <= 0) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: "Amount must be a positive number.",
+                path: ['amount'],
+            });
+        }
     }
     if (data.donationType === 'item' && (!data.item || data.item.trim().length === 0)) {
          ctx.addIssue({
@@ -84,7 +87,7 @@ function DonationTable() {
       title: "",
       date: "",
       donationType: 'money',
-      amount: 0,
+      amount: "",
       item: "",
       donorName: "",
       description: "",
@@ -95,31 +98,47 @@ function DonationTable() {
 
   const onSubmit = async (data: DonationFormValues) => {
     const { id, ...donationData } = data;
-    const submittedData: Partial<Donation> = { 
-        ...donationData,
-        amount: data.donationType === 'money' ? Number(data.amount) : undefined,
-        item: data.donationType === 'item' ? data.item : undefined,
-     };
+    
+    let submittedData: Omit<Donation, 'id'>;
+
+    if (donationData.donationType === 'money') {
+        submittedData = {
+            title: donationData.title,
+            date: donationData.date,
+            donorName: donationData.donorName,
+            description: donationData.description,
+            amount: parseFloat(donationData.amount),
+        };
+    } else {
+         submittedData = {
+            title: donationData.title,
+            date: donationData.date,
+            donorName: donationData.donorName,
+            description: donationData.description,
+            item: donationData.item,
+        };
+    }
 
     try {
       if (id) {
         await updateDonation(id, submittedData);
         toast({ title: "Donation Updated" });
       } else {
-        await addDonation(submittedData as Omit<Donation, 'id'>);
+        await addDonation(submittedData);
         toast({ title: "Donation Added" });
       }
       fetchItems();
       setIsDialogOpen(false);
-      form.reset();
+      form.reset({ title: "", date: "", donationType: 'money', amount: "", item: "", donorName: "", description: "" });
     } catch (error) {
+      console.error("Failed to save donation: ", error);
       toast({ title: "Error", variant: "destructive", description: "Could not save the donation." });
     }
   };
 
   const handleEdit = (item: Donation) => {
     const donationType = item.amount !== undefined ? 'money' : 'item';
-    form.reset({...item, donationType});
+    form.reset({...item, donationType, amount: item.amount ?? '' });
     setIsDialogOpen(true);
   };
 
@@ -144,12 +163,14 @@ function DonationTable() {
             Total: INR {new Intl.NumberFormat('en-IN').format(totalAmount)}
           </p>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <Dialog open={isDialogOpen} onOpenChange={(open) => {
+            if(!open) {
+                form.reset({ id: undefined, title: "", amount: "", date: "", donationType: 'money', item: "", donorName: "", description: "" });
+            }
+            setIsDialogOpen(open);
+        }}>
           <DialogTrigger asChild>
-            <Button onClick={() => {
-              form.reset({ id: undefined, title: "", amount: 0, date: "", donationType: 'money', item: "", donorName: "", description: "" });
-              setIsDialogOpen(true);
-            }}>
+            <Button>
               <PlusCircle className="mr-2 h-4 w-4" /> Add Donation
             </Button>
           </DialogTrigger>
@@ -208,7 +229,7 @@ function DonationTable() {
                   <FormField control={form.control} name="amount" render={({ field }) => (
                     <FormItem>
                       <FormLabel>Amount</FormLabel>
-                      <FormControl><Input type="number" step="0.01" {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.valueAsNumber)} /></FormControl>
+                      <FormControl><Input type="number" step="0.01" {...field} /></FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
@@ -216,7 +237,7 @@ function DonationTable() {
                   <FormField control={form.control} name="item" render={({ field }) => (
                     <FormItem>
                       <FormLabel>Item Description</FormLabel>
-                      <FormControl><Textarea placeholder="Describe the donated item(s)" {...field} value={field.value ?? ''} /></FormControl>
+                      <FormControl><Textarea placeholder="Describe the donated item(s)" {...field} /></FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
@@ -224,7 +245,7 @@ function DonationTable() {
                  <FormField control={form.control} name="description" render={({ field }) => (
                   <FormItem>
                     <FormLabel>Description</FormLabel>
-                    <FormControl><Textarea placeholder="A short description about the donation" {...field} value={field.value ?? ''} /></FormControl>
+                    <FormControl><Textarea placeholder="A short description about the donation" {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
@@ -508,3 +529,5 @@ export default function FinancesPage() {
     </main>
   );
 }
+
+    
