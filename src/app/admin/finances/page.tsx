@@ -33,14 +33,23 @@ const donationSchema = z.object({
   donationType: z.enum(['money', 'item']).default('money'),
   amount: z.coerce.number().optional(),
   item: z.string().optional(),
-}).refine(data => {
-    if (data.donationType === 'money') return data.amount !== undefined && data.amount > 0;
-    return true;
-}, { message: "Amount must be a positive number", path: ["amount"] })
-.refine(data => {
-    if (data.donationType === 'item') return data.item !== undefined && data.item.length > 0;
-    return true;
-}, { message: "Item description is required", path: ["item"] });
+}).superRefine((data, ctx) => {
+    if (data.donationType === 'money' && (data.amount === undefined || data.amount <= 0)) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Amount must be a positive number.",
+            path: ['amount'],
+        });
+    }
+    if (data.donationType === 'item' && (!data.item || data.item.trim().length === 0)) {
+         ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Item description is required.",
+            path: ['item'],
+        });
+    }
+});
+
 
 const collectionSchema = z.object({
   id: z.string().optional(),
@@ -105,7 +114,7 @@ function DonationTable() {
       setIsDialogOpen(false);
       form.reset();
     } catch (error) {
-      toast({ title: "Error", variant: "destructive" });
+      toast({ title: "Error", variant: "destructive", description: "Could not save the donation." });
     }
   };
 
@@ -500,5 +509,3 @@ export default function FinancesPage() {
     </main>
   );
 }
-
-    
