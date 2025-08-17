@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useMemo, useState } from 'react';
@@ -21,7 +22,7 @@ import {
   TimelineDescription,
   TimelineContent,
 } from "@/components/ui/timeline";
-import { Medal, Users, Calendar, HandCoins } from 'lucide-react';
+import { Medal, Users, Calendar, HandCoins, ArrowUpCircle, ArrowDownCircle } from 'lucide-react';
 
 
 const COLORS = ['hsl(var(--chart-1))', 'hsl(var(--chart-2))', 'hsl(var(--chart-3))', 'hsl(var(--chart-4))', 'hsl(var(--chart-5))'];
@@ -85,7 +86,50 @@ export default function AnalyticsDashboardPage() {
         </CardHeader>
       </Card>
 
-       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Total Donations</CardTitle>
+                    <ArrowUpCircle className="h-4 w-4 text-green-500" />
+                </CardHeader>
+                <CardContent>
+                    <div className="text-2xl font-bold">INR {new Intl.NumberFormat('en-IN').format(totalDonations)}</div>
+                    <p className="text-xs text-muted-foreground">Total monetary donations received</p>
+                </CardContent>
+            </Card>
+             <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Total Collections</CardTitle>
+                    <ArrowUpCircle className="h-4 w-4 text-green-500" />
+                </CardHeader>
+                <CardContent>
+                    <div className="text-2xl font-bold">INR {new Intl.NumberFormat('en-IN').format(totalCollections)}</div>
+                    <p className="text-xs text-muted-foreground">Total funds collected</p>
+                </CardContent>
+            </Card>
+            <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Total Expenses</CardTitle>
+                    <ArrowDownCircle className="h-4 w-4 text-red-500" />
+                </CardHeader>
+                <CardContent>
+                    <div className="text-2xl font-bold">INR {new Intl.NumberFormat('en-IN').format(totalExpenses)}</div>
+                    <p className="text-xs text-muted-foreground">Total funds spent</p>
+                </CardContent>
+            </Card>
+             <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Net Balance</CardTitle>
+                    <HandCoins className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                    <div className="text-2xl font-bold">INR {new Intl.NumberFormat('en-IN').format(totalDonations + totalCollections - totalExpenses)}</div>
+                    <p className="text-xs text-muted-foreground">Total income minus expenses</p>
+                </CardContent>
+            </Card>
+        </div>
+        
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Total Members</CardTitle>
@@ -104,16 +148,6 @@ export default function AnalyticsDashboardPage() {
                 <CardContent>
                     <div className="text-2xl font-bold">{events.length}</div>
                     <p className="text-xs text-muted-foreground">Total events hosted</p>
-                </CardContent>
-            </Card>
-             <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Net Balance</CardTitle>
-                    <HandCoins className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                    <div className="text-2xl font-bold">INR {new Intl.NumberFormat('en-IN').format(totalDonations + totalCollections - totalExpenses)}</div>
-                    <p className="text-xs text-muted-foreground">Total income minus expenses</p>
                 </CardContent>
             </Card>
             <Card>
@@ -216,5 +250,3 @@ export default function AnalyticsDashboardPage() {
     </main>
   );
 }
-
-    
