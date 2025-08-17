@@ -120,7 +120,7 @@ function DonationTable() {
         <div className="space-y-1">
           <CardTitle>Manage Donations</CardTitle>
            <p className="text-sm text-muted-foreground">
-            Total: ₹{new Intl.NumberFormat('en-IN').format(totalAmount)}
+            Total: INR {new Intl.NumberFormat('en-IN').format(totalAmount)}
           </p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -225,7 +225,7 @@ function DonationTable() {
               <TableRow key={item.id}>
                 <TableCell className="font-medium">{item.title}</TableCell>
                 <TableCell className="text-right">
-                  {item.amount !== undefined ? `₹${new Intl.NumberFormat('en-IN').format(item.amount)}` : item.item}
+                  {item.amount !== undefined ? `INR ${new Intl.NumberFormat('en-IN').format(item.amount)}` : item.item}
                 </TableCell>
                 <TableCell className="hidden md:table-cell">{new Date(item.date).toLocaleDateString()}</TableCell>
                 <TableCell>
@@ -315,7 +315,7 @@ function FinanceTable<T extends Collection | Expense>({
         <div className="space-y-1">
           <CardTitle>Manage {title}s</CardTitle>
            <p className="text-sm text-muted-foreground">
-            Total: ₹{new Intl.NumberFormat('en-IN').format(totalAmount)}
+            Total: INR {new Intl.NumberFormat('en-IN').format(totalAmount)}
           </p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -377,7 +377,7 @@ function FinanceTable<T extends Collection | Expense>({
             {items.map((item) => (
               <TableRow key={item.id}>
                 <TableCell className="font-medium">{item.title}</TableCell>
-                <TableCell className="text-right">₹{new Intl.NumberFormat('en-IN').format(item.amount)}</TableCell>
+                <TableCell className="text-right">INR {new Intl.NumberFormat('en-IN').format(item.amount)}</TableCell>
                 <TableCell className="hidden md:table-cell">{new Date(item.date).toLocaleDateString()}</TableCell>
                 <TableCell>
                   <div className="flex gap-2">
@@ -449,3 +449,5 @@ export default function FinancesPage() {
     </main>
   );
 }
+
+    

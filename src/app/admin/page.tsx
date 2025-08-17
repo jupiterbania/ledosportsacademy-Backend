@@ -49,7 +49,7 @@ export default function AdminDashboard() {
             <HandCoins className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">₹{new Intl.NumberFormat('en-IN').format(totalDonations)}</div>
+            <div className="text-2xl font-bold">INR {new Intl.NumberFormat('en-IN').format(totalDonations)}</div>
             <p className="text-xs text-muted-foreground">{donations.length} donations recorded</p>
           </CardContent>
         </Card>
@@ -59,7 +59,7 @@ export default function AdminDashboard() {
             <HandCoins className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">₹{new Intl.NumberFormat('en-IN').format(totalCollections)}</div>
+            <div className="text-2xl font-bold">INR {new Intl.NumberFormat('en-IN').format(totalCollections)}</div>
             <p className="text-xs text-muted-foreground">{collections.length} collections recorded</p>
           </CardContent>
         </Card>
@@ -69,7 +69,7 @@ export default function AdminDashboard() {
             <HandCoins className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">₹{new Intl.NumberFormat('en-IN').format(totalExpenses)}</div>
+            <div className="text-2xl font-bold">INR {new Intl.NumberFormat('en-IN').format(totalExpenses)}</div>
             <p className="text-xs text-muted-foreground">{expenses.length} expenses recorded</p>
           </CardContent>
         </Card>
@@ -95,9 +95,9 @@ export default function AdminDashboard() {
                 <BarChart data={financialData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
-                   <YAxis tickFormatter={(value) => `₹${new Intl.NumberFormat('en-IN').format(value)}`} />
+                   <YAxis tickFormatter={(value) => `INR ${new Intl.NumberFormat('en-IN').format(value)}`} />
                   <Tooltip
-                     formatter={(value: number) => `₹${new Intl.NumberFormat('en-IN').format(value)}`}
+                     formatter={(value: number) => `INR ${new Intl.NumberFormat('en-IN').format(value)}`}
                     contentStyle={{
                       background: "hsl(var(--background))",
                       borderColor: "hsl(var(--border))",
@@ -139,3 +139,5 @@ export default function AdminDashboard() {
     </main>
   );
 }
+
+    

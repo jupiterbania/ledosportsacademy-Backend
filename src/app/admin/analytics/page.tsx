@@ -100,7 +100,7 @@ export default function AnalyticsDashboardPage() {
                     <HandCoins className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">₹{new Intl.NumberFormat('en-IN').format(totalDonations + totalCollections - totalExpenses)}</div>
+                    <div className="text-2xl font-bold">INR {new Intl.NumberFormat('en-IN').format(totalDonations + totalCollections - totalExpenses)}</div>
                     <p className="text-xs text-muted-foreground">Total income minus expenses</p>
                 </CardContent>
             </Card>
@@ -129,8 +129,8 @@ export default function AnalyticsDashboardPage() {
                 <LineChart data={monthlyFinancials}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
-                  <YAxis tickFormatter={(value) => `₹${new Intl.NumberFormat('en-IN').format(value)}`} />
-                  <Tooltip formatter={(value: number) => `₹${new Intl.NumberFormat('en-IN').format(value)}`} contentStyle={{ background: "hsl(var(--background))", borderColor: "hsl(var(--border))" }} />
+                  <YAxis tickFormatter={(value) => `INR ${new Intl.NumberFormat('en-IN').format(value)}`} />
+                  <Tooltip formatter={(value: number) => `INR ${new Intl.NumberFormat('en-IN').format(value)}`} contentStyle={{ background: "hsl(var(--background))", borderColor: "hsl(var(--border))" }} />
                   <Legend />
                   <Line type="monotone" dataKey="donations" stroke="hsl(var(--chart-1))" name="Donations" />
                   <Line type="monotone" dataKey="collections" stroke="hsl(var(--chart-2))" name="Collections" />
@@ -165,7 +165,7 @@ export default function AnalyticsDashboardPage() {
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                     </Pie>
-                    <Tooltip formatter={(value: number) => `₹${new Intl.NumberFormat('en-IN').format(value)}`} contentStyle={{ background: "hsl(var(--background))", borderColor: "hsl(var(--border))" }}/>
+                    <Tooltip formatter={(value: number) => `INR ${new Intl.NumberFormat('en-IN').format(value)}`} contentStyle={{ background: "hsl(var(--background))", borderColor: "hsl(var(--border))" }}/>
                     <Legend />
                     </PieChart>
                 </ResponsiveContainer>
@@ -204,3 +204,5 @@ export default function AnalyticsDashboardPage() {
     </main>
   );
 }
+
+    
