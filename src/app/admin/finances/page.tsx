@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useMemo, useEffect } from 'react';
@@ -153,7 +154,7 @@ function DonationTable() {
                 <FormField control={form.control} name="title" render={({ field }) => (
                   <FormItem>
                     <FormLabel>Title</FormLabel>
-                    <FormControl><Input placeholder={`Donation title`} {...field} /></FormControl>
+                    <FormControl><Input placeholder="e.g. 'Annual Gala Sponsorship'" {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
