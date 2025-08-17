@@ -14,7 +14,7 @@ export function UpcomingEvents() {
         <h2 className="text-3xl font-bold">Upcoming Events</h2>
         <Button asChild variant="link" className="text-primary">
           <Link href="/events">
-            View More
+            View All
             <ArrowRight className="w-4 h-4 ml-2" />
           </Link>
         </Button>
