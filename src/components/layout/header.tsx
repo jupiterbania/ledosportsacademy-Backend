@@ -54,6 +54,7 @@ export function Header() {
         
         <nav className="hidden md:flex items-center gap-6 flex-grow">
           {navLinks.map((link) => <NavLink key={link.href} {...link} />)}
+          {user && <NavLink href="/admin" label="Admin Dashboard" />}
         </nav>
 
         <div className="hidden md:flex items-center">
@@ -82,6 +83,7 @@ export function Header() {
                   {navLinks.map((link) => (
                     <MobileNavLink key={link.href} {...link} />
                   ))}
+                  {user && <MobileNavLink href="/admin" label="Admin Dashboard" />}
                   <Separator className="my-3" />
                   <SheetClose asChild>
                     <Button onClick={handleAuthAction} className="w-full">
