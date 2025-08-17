@@ -4,6 +4,7 @@ export interface Photo {
   isSliderPhoto: boolean;
   uploadedAt: string;
   'data-ai-hint'?: string;
+  description?: string;
 }
 
 export interface Event {
@@ -55,11 +56,11 @@ export interface Achievement {
 }
 
 export const photos: Photo[] = [
-  { id: 1, url: 'https://placehold.co/1200x600.png', isSliderPhoto: true, uploadedAt: '2023-10-26T10:00:00Z', 'data-ai-hint': 'community event' },
-  { id: 2, url: 'https://placehold.co/1200x600.png', isSliderPhoto: true, uploadedAt: '2023-10-25T11:00:00Z', 'data-ai-hint': 'team celebration' },
-  { id: 3, url: 'https://placehold.co/1200x600.png', isSliderPhoto: true, uploadedAt: '2023-10-24T12:00:00Z', 'data-ai-hint': 'outdoor activity' },
-  { id: 4, url: 'https://placehold.co/1200x600.png', isSliderPhoto: true, uploadedAt: '2023-10-23T13:00:00Z', 'data-ai-hint': 'group meeting' },
-  { id: 5, url: 'https://placehold.co/1200x600.png', isSliderPhoto: true, uploadedAt: '2023-10-22T14:00:00Z', 'data-ai-hint': 'workshop session' },
+  { id: 1, url: 'https://placehold.co/1200x600.png', isSliderPhoto: true, uploadedAt: '2023-10-26T10:00:00Z', 'data-ai-hint': 'community event', description: 'A vibrant photo of our latest community event.' },
+  { id: 2, url: 'https://placehold.co/1200x600.png', isSliderPhoto: true, uploadedAt: '2023-10-25T11:00:00Z', 'data-ai-hint': 'team celebration', description: 'The team celebrating their recent victory.' },
+  { id: 3, url: 'https://placehold.co/1200x600.png', isSliderPhoto: true, uploadedAt: '2023-10-24T12:00:00Z', 'data-ai-hint': 'outdoor activity', description: 'Enjoying a beautiful day with an outdoor activity.' },
+  { id: 4, url: 'https://placehold.co/1200x600.png', isSliderPhoto: true, uploadedAt: '2023-10-23T13:00:00Z', 'data-ai-hint': 'group meeting', description: 'An important group meeting to plan for the future.' },
+  { id: 5, url: 'https://placehold.co/1200x600.png', isSliderPhoto: true, uploadedAt: '2023-10-22T14:00:00Z', 'data-ai-hint': 'workshop session', description: 'Members participating in an interactive workshop.' },
   { id: 6, url: 'https://placehold.co/600x400.png', isSliderPhoto: false, uploadedAt: '2023-10-21T15:00:00Z', 'data-ai-hint': 'charity drive' },
   { id: 7, url: 'https://placehold.co/600x400.png', isSliderPhoto: false, uploadedAt: '2023-10-20T16:00:00Z', 'data-ai-hint': 'sports day' },
   { id: 8, url: 'https://placehold.co/600x400.png', isSliderPhoto: false, uploadedAt: '2023-10-19T17:00:00Z', 'data-ai-hint': 'annual dinner' },

@@ -16,12 +16,14 @@ import { PlusCircle, Edit, Trash2, Image as ImageIcon } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Switch } from "@/components/ui/switch";
 import Image from 'next/image';
+import { Textarea } from '@/components/ui/textarea';
 
 const photoSchema = z.object({
   id: z.number().optional(),
   url: z.string().url({ message: "Please enter a valid URL." }),
   'data-ai-hint': z.string().optional(),
   isSliderPhoto: z.boolean().default(false),
+  description: z.string().optional(),
 });
 
 type PhotoFormValues = z.infer<typeof photoSchema>;
@@ -37,6 +39,7 @@ export default function GalleryManagementPage() {
       url: "https://placehold.co/600x400.png",
       isSliderPhoto: false,
       'data-ai-hint': '',
+      description: '',
     },
   });
 
@@ -81,6 +84,7 @@ export default function GalleryManagementPage() {
                     url: "https://placehold.co/600x400.png",
                     'data-ai-hint': '',
                     isSliderPhoto: false,
+                    description: '',
                   });
                   setIsDialogOpen(true);
                 }}>
@@ -101,6 +105,19 @@ export default function GalleryManagementPage() {
                         <FormLabel>Photo URL</FormLabel>
                         <FormControl>
                           <Input placeholder="https://placehold.co/600x400.png" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Description</FormLabel>
+                        <FormControl>
+                          <Textarea placeholder="A short description of the photo" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -152,7 +169,7 @@ export default function GalleryManagementPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Photo</TableHead>
-                <TableHead className="hidden md:table-cell">AI Hint</TableHead>
+                <TableHead className="hidden md:table-cell">Description</TableHead>
                 <TableHead className="hidden md:table-cell">On Slider</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
@@ -168,7 +185,7 @@ export default function GalleryManagementPage() {
                          <a href={photo.url} target="_blank" rel="noopener noreferrer" className="truncate text-sm font-medium hover:underline max-w-[200px]">{photo.url}</a>
                       </div>
                   </TableCell>
-                  <TableCell className="hidden md:table-cell">{photo['data-ai-hint'] || 'N/A'}</TableCell>
+                  <TableCell className="hidden md:table-cell">{photo.description || 'N/A'}</TableCell>
                    <TableCell className="hidden md:table-cell">
                      {photo.isSliderPhoto ? (
                        <span className="text-green-600 font-semibold">Yes</span>
