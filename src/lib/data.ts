@@ -11,7 +11,7 @@ export interface Event {
   title: string;
   description: string;
   date: string;
-  photoUrl: string;
+  photoUrl:string;
   'data-ai-hint'?: string;
 }
 
@@ -26,7 +26,8 @@ export interface Member {
 export interface Donation {
     id: number;
     title: string;
-    amount: number;
+    amount?: number;
+    item?: string;
     date: string;
 }
 
@@ -83,6 +84,7 @@ export const members: Member[] = [
 export const donations: Donation[] = [
     { id: 1, title: 'Corporate Sponsorship', amount: 500, date: '2023-08-01' },
     { id: 2, title: 'Member Contribution', amount: 50, date: '2023-09-15' },
+    { id: 3, title: 'Old Laptops for Charity', item: '5 Laptops', date: '2023-11-01' },
 ];
 
 export const collections: Collection[] = [
