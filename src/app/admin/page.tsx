@@ -34,12 +34,6 @@ export default function AdminDashboard() {
   const totalCollections = useMemo(() => collections.reduce((sum, c) => sum + c.amount, 0), [collections]);
   const totalExpenses = useMemo(() => expenses.reduce((sum, e) => sum + e.amount, 0), [expenses]);
   
-  const oldestAchievementYear = useMemo(() => {
-    if (achievements.length === 0) return new Date().getFullYear();
-    return Math.min(...achievements.map(a => new Date(a.date).getFullYear()));
-  }, [achievements]);
-  const clubExperienceYears = new Date().getFullYear() - oldestAchievementYear;
-
   const financialData = [
     { name: "Donations", value: totalDonations, fill: "hsl(var(--chart-1))" },
     { name: "Collections", value: totalCollections, fill: "hsl(var(--chart-2))" },
@@ -81,11 +75,11 @@ export default function AdminDashboard() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Club Experience</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Achievements</CardTitle>
             <Medal className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{clubExperienceYears}+ Years</div>
+            <div className="text-2xl font-bold">{achievements.length}</div>
             <p className="text-xs text-muted-foreground">{achievements.length} achievements recorded</p>
           </CardContent>
         </Card>

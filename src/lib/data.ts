@@ -100,6 +100,7 @@ export const expenses: Expense[] = [
 export const achievements: Achievement[] = [
     { id: 1, title: 'Club of the Year', description: 'Awarded by the regional committee for outstanding performance.', date: '2022-12-31' },
     { id: 2, title: '10 Years Anniversary', description: 'Celebrating a decade of community and service.', date: '2023-05-20' },
+    { id: 3, title: 'Regional Tournament Champions', description: 'Won the annual regional tournament.', date: '2023-08-15' },
 ];
 
 

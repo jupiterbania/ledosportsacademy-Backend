@@ -67,7 +67,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
     { href: '/admin/events', label: 'Events', icon: Calendar },
     { href: '/admin/members', label: 'Members', icon: Users },
     { href: '/admin/finances', label: 'Finances', icon: HandCoins },
-    { href: '/admin/experience', label: 'Experience', icon: Medal },
+    { href: '/admin/achievements', label: 'Achievements', icon: Medal },
     { href: '/admin/analytics', label: 'Analytics', icon: LineChart },
     { href: '/admin/export', label: 'PDF Export', icon: FileDown },
   ];

@@ -25,7 +25,7 @@ const achievementSchema = z.object({
 
 type AchievementFormValues = z.infer<typeof achievementSchema>;
 
-export default function ExperienceManagementPage() {
+export default function AchievementsManagementPage() {
   const [achievements, setAchievements] = useState<Achievement[]>(getAllAchievements());
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
@@ -70,7 +70,7 @@ export default function ExperienceManagementPage() {
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Experience Records</CardTitle>
+          <CardTitle>Achievements</CardTitle>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
                <Button onClick={() => {
@@ -82,12 +82,12 @@ export default function ExperienceManagementPage() {
                   });
                   setIsDialogOpen(true);
                 }}>
-                <PlusCircle className="mr-2 h-4 w-4" /> Add Record
+                <PlusCircle className="mr-2 h-4 w-4" /> Add Achievement
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-2xl">
               <DialogHeader>
-                <DialogTitle>{form.getValues("id") ? 'Edit Record' : 'Add New Record'}</DialogTitle>
+                <DialogTitle>{form.getValues("id") ? 'Edit Achievement' : 'Add New Achievement'}</DialogTitle>
               </DialogHeader>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -98,7 +98,7 @@ export default function ExperienceManagementPage() {
                       <FormItem>
                         <FormLabel>Title</FormLabel>
                         <FormControl>
-                          <Input placeholder="Club of the Year" {...field} />
+                          <Input placeholder="Tournament Champions" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -111,7 +111,7 @@ export default function ExperienceManagementPage() {
                       <FormItem>
                         <FormLabel>Description</FormLabel>
                         <FormControl>
-                          <Textarea placeholder="Awarded for outstanding community service..." {...field} />
+                          <Textarea placeholder="Won the regional tournament..." {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -134,7 +134,7 @@ export default function ExperienceManagementPage() {
                     <DialogClose asChild>
                       <Button type="button" variant="ghost">Cancel</Button>
                     </DialogClose>
-                    <Button type="submit">Save Record</Button>
+                    <Button type="submit">Save Achievement</Button>
                   </DialogFooter>
                 </form>
               </Form>
@@ -174,7 +174,7 @@ export default function ExperienceManagementPage() {
                             <AlertDialogHeader>
                               <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                               <AlertDialogDescription>
-                                This action cannot be undone. This will permanently delete the record.
+                                This action cannot be undone. This will permanently delete the achievement.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
