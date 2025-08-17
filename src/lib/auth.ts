@@ -9,9 +9,9 @@ import {
 } from "firebase/auth";
 import { auth, googleProvider } from "./firebase";
 
-// For demo purposes, we'll hardcode an admin UID.
+// For demo purposes, we'll hardcode an admin email.
 // In a real application, this would be managed via custom claims or a database role system.
-export const ADMIN_UID = "jD4a4t6y8rZp9sXcVbNfGhJlK7x1";
+export const ADMIN_EMAIL = "jupiterbania472@gmail.com";
 
 
 export const signInWithGoogle = async () => {

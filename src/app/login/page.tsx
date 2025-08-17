@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useToast } from "@/hooks/use-toast"
 import { Shield, User } from "lucide-react"
-import { signInWithGoogle, onAuthChange, ADMIN_UID } from "@/lib/auth";
+import { signInWithGoogle, ADMIN_EMAIL } from "@/lib/auth";
 import { useAuth } from "@/hooks/use-auth";
 import { useEffect } from "react";
 
@@ -22,7 +22,7 @@ export default function LoginPage() {
       // The onAuthChange listener in AuthProvider will handle redirection.
       // We just need to check the role here to provide immediate feedback.
       if (role === 'admin') {
-         if(user.uid === ADMIN_UID) {
+         if(user.email === ADMIN_EMAIL) {
             toast({
               title: "Admin Login Successful",
               description: "Redirecting to the admin dashboard...",
@@ -34,6 +34,7 @@ export default function LoginPage() {
               description: "You are not an authorized admin.",
               variant: "destructive"
             });
+            await signOut(); // Sign out the user if they are not an admin
             router.push('/');
          }
       } else {
