@@ -37,6 +37,7 @@ import { signOut } from '@/lib/auth';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import Image from 'next/image';
 
 function AdminLayout({ children }: { children: React.ReactNode }) {
   const { user, loading, isAdmin } = useAuth();
@@ -111,11 +112,11 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
             <Link href="/" className="flex items-center gap-2 font-semibold">
-              <Club className="h-6 w-6 text-primary" />
+              <Image src="https://iili.io/Fijeoxf.png" alt="LEDO SPORTS ACADEMY Logo" width={24} height={24} />
               <span className="">LEDO SPORTS ACADEMY</span>
             </Link>
           </div>
-          <div className="flex-1">
+          <div className="flex-1 overflow-auto">
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
               <SidebarMenu>
                   {menuItems.map((item) => (
@@ -242,7 +243,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
-        <main className="flex-1 overflow-auto p-4 sm:p-6">
+        <main className="flex flex-1 flex-col p-4 sm:p-6 overflow-auto">
             {children}
         </main>
       </div>
