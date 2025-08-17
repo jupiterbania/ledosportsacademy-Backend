@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useRouter } from "next/navigation";
@@ -5,22 +6,32 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useToast } from "@/hooks/use-toast"
 import { Shield, User } from "lucide-react"
-import { signInWithGoogle, ADMIN_EMAIL } from "@/lib/auth";
+import { signInWithGoogle, ADMIN_EMAIL, signOut } from "@/lib/auth";
 import { useAuth } from "@/hooks/use-auth";
 import { useEffect } from "react";
+import { isConfigComplete } from "@/lib/firebase";
+
 
 export default function LoginPage() {
   const { toast } = useToast();
   const router = useRouter();
   
   const handleLogin = async (role: 'admin' | 'member') => {
+    if (!isConfigComplete) {
+        toast({
+            title: "Login Unavailable",
+            description: "Firebase is not configured. Please check your environment variables.",
+            variant: "destructive"
+        });
+        return;
+    }
+
     try {
       const user = await signInWithGoogle();
       if (!user) {
-        throw new Error("Google sign-in failed.");
+        throw new Error("Google sign-in failed or was cancelled.");
       }
-      // The onAuthChange listener in AuthProvider will handle redirection.
-      // We just need to check the role here to provide immediate feedback.
+      
       if (role === 'admin') {
          if(user.email === ADMIN_EMAIL) {
             toast({

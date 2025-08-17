@@ -18,7 +18,8 @@ export const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
 export const signInWithGoogle = async () => {
   if (!isConfigComplete) {
     console.error("Firebase is not configured. Cannot sign in.");
-    throw new Error("Firebase is not properly configured.");
+    // Return null instead of throwing an error to be handled by the UI
+    return null;
   }
   try {
     const result = await signInWithPopup(auth, googleProvider);
