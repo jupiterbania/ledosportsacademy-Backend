@@ -15,6 +15,7 @@ import {
   LogOut,
   Settings,
   Club,
+  Menu,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -38,6 +39,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import Image from 'next/image';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 function AdminLayout({ children }: { children: React.ReactNode }) {
   const { user, loading, isAdmin } = useAuth();
@@ -106,9 +108,8 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
     </Link>
   )
 
-  return (
-    <div className="grid h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-      <div className="hidden border-r bg-muted/40 md:block">
+  const DesktopNav = () => (
+     <div className="hidden border-r bg-muted/40 md:block">
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
             <Link href="/" className="flex items-center gap-2 font-semibold">
@@ -219,8 +220,40 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       </div>
+  );
+
+  return (
+    <div className="grid h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+      <DesktopNav />
       <div className="flex flex-col">
         <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="icon" className="shrink-0 md:hidden">
+                <Menu className="h-5 w-5" />
+                <span className="sr-only">Toggle navigation menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="flex flex-col">
+                <nav className="grid gap-2 text-lg font-medium">
+                    <Link href="/" className="flex items-center gap-2 text-lg font-semibold mb-4">
+                        <Image src="https://iili.io/Fijeoxf.png" alt="LEDO SPORTS ACADEMY Logo" width={24} height={24} />
+                        <span className="">LEDO SPORTS ACADEMY</span>
+                    </Link>
+                    {menuItems.map((item) => <Link key={item.href} href={item.href} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"><item.icon className="h-4 w-4" />{item.label}</Link>)}
+                    <h3 className="px-3 py-2 font-semibold">Content</h3>
+                    {contentManagementItems.map((item) => <Link key={item.href} href={item.href} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"><item.icon className="h-4 w-4" />{item.label}</Link>)}
+                     <h3 className="px-3 py-2 font-semibold">Users</h3>
+                    {userManagementItems.map((item) => <Link key={item.href} href={item.href} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"><item.icon className="h-4 w-4" />{item.label}</Link>)}
+                     <h3 className="px-3 py-2 font-semibold">Financial</h3>
+                    {financialManagementItems.map((item) => <Link key={item.href} href={item.href} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"><item.icon className="h-4 w-4" />{item.label}</Link>)}
+                    <h3 className="px-3 py-2 font-semibold">Data</h3>
+                    {dataManagementItems.map((item) => <Link key={item.href} href={item.href} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"><item.icon className="h-4 w-4" />{item.label}</Link>)}
+                    <h3 className="px-3 py-2 font-semibold">General</h3>
+                    {settingsItems.map((item) => <Link key={item.href} href={item.href} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"><item.icon className="h-4 w-4" />{item.label}</Link>)}
+                </nav>
+            </SheetContent>
+          </Sheet>
            <div className="w-full flex-1">
              {/* Mobile Nav Trigger can go here if needed */}
           </div>
