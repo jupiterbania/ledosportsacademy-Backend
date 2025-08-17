@@ -60,7 +60,7 @@ export function Header() {
 
         <div className="hidden md:flex items-center">
             <Button onClick={handleAuthAction}>
-                {isAuthenticated ? 'Logout' : 'Admin Login'}
+                {isAuthenticated ? 'Logout' : 'Login'}
             </Button>
         </div>
 
@@ -87,7 +87,7 @@ export function Header() {
                   <Separator className="my-3" />
                   <SheetClose asChild>
                     <Button onClick={handleAuthAction} className="w-full">
-                      {isAuthenticated ? 'Logout' : 'Admin Login'}
+                      {isAuthenticated ? 'Logout' : 'Login'}
                     </Button>
                   </SheetClose>
                 </nav>

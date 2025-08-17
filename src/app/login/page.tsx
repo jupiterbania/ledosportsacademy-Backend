@@ -21,7 +21,7 @@ export default function LoginPage() {
     <div className="flex items-center justify-center min-h-[calc(100vh-12rem)] animate-fade-in">
       <Card className="w-full max-w-sm shadow-lg">
         <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold">Admin Login</CardTitle>
+          <CardTitle className="text-3xl font-bold">Login</CardTitle>
           <CardDescription className="pt-2">
             Sign in to access the club's dashboard.
           </CardDescription>
