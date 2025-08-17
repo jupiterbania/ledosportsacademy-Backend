@@ -31,7 +31,7 @@ const eventSchema = z.object({
 type EventFormValues = z.infer<typeof eventSchema>;
 
 export default function EventsManagementPage() {
-  const [events, setEvents] = useState<Event[]>(getAllEvents());
+  const [events, setEvents] = useState<Event[]>(() => getAllEvents().sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
 
@@ -47,10 +47,14 @@ export default function EventsManagementPage() {
     },
   });
 
+  const sortEvents = (events: Event[]) => {
+    return events.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  };
+
   const onSubmit = (data: EventFormValues) => {
     const isEditing = !!data.id;
     if (isEditing) {
-      setEvents(events.map(event => event.id === data.id ? { ...event, ...data } : event));
+      setEvents(prevEvents => sortEvents(prevEvents.map(event => event.id === data.id ? { ...event, ...data } : event)));
       toast({ title: "Event Updated", description: "The event has been successfully updated." });
     } else {
       const newEvent: Event = {
@@ -58,7 +62,7 @@ export default function EventsManagementPage() {
         id: events.length > 0 ? Math.max(...events.map(e => e.id)) + 1 : 1,
         'data-ai-hint': 'custom event'
       };
-      setEvents([...events, newEvent]);
+      setEvents(prevEvents => sortEvents([...prevEvents, newEvent]));
       toast({ title: "Event Created", description: "The new event has been added." });
     }
     setIsDialogOpen(false);
@@ -71,7 +75,7 @@ export default function EventsManagementPage() {
   };
   
   const handleDelete = (id: number) => {
-    setEvents(events.filter(event => event.id !== id));
+    setEvents(prevEvents => sortEvents(prevEvents.filter(event => event.id !== id)));
     toast({ title: "Event Deleted", description: "The event has been removed.", variant: "destructive" });
   };
 
