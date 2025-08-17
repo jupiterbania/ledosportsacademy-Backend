@@ -1,4 +1,5 @@
 
+
 export interface Photo {
   id: number;
   url: string;
@@ -16,6 +17,7 @@ export interface Event {
   photoUrl:string;
   'data-ai-hint'?: string;
   redirectUrl?: string;
+  showOnSlider?: boolean;
 }
 
 export interface Member {
@@ -60,9 +62,9 @@ export interface Achievement {
 export const photos: Photo[] = [
   { id: 1, url: 'https://placehold.co/1200x600.png', isSliderPhoto: true, uploadedAt: '2023-10-26T10:00:00Z', 'data-ai-hint': 'community event', description: 'A vibrant photo of our latest community event.' },
   { id: 2, url: 'https://placehold.co/1200x600.png', isSliderPhoto: true, uploadedAt: '2023-10-25T11:00:00Z', 'data-ai-hint': 'team celebration', description: 'The team celebrating their recent victory.' },
-  { id: 3, url: 'https://placehold.co/1200x600.png', isSliderPhoto: true, uploadedAt: '2023-10-24T12:00:00Z', 'data-ai-hint': 'outdoor activity', description: 'Enjoying a beautiful day with an outdoor activity.' },
-  { id: 4, url: 'https://placehold.co/1200x600.png', isSliderPhoto: true, uploadedAt: '2023-10-23T13:00:00Z', 'data-ai-hint': 'group meeting', description: 'An important group meeting to plan for the future.' },
-  { id: 5, url: 'https://placehold.co/1200x600.png', isSliderPhoto: true, uploadedAt: '2023-10-22T14:00:00Z', 'data-ai-hint': 'workshop session', description: 'Members participating in an interactive workshop.' },
+  { id: 3, url: 'https://placehold.co/1200x600.png', isSliderPhoto: false, uploadedAt: '2023-10-24T12:00:00Z', 'data-ai-hint': 'outdoor activity', description: 'Enjoying a beautiful day with an outdoor activity.' },
+  { id: 4, url: 'https://placehold.co/1200x600.png', isSliderPhoto: false, uploadedAt: '2023-10-23T13:00:00Z', 'data-ai-hint': 'group meeting', description: 'An important group meeting to plan for the future.' },
+  { id: 5, url: 'https://placehold.co/1200x600.png', isSliderPhoto: false, uploadedAt: '2023-10-22T14:00:00Z', 'data-ai-hint': 'workshop session', description: 'Members participating in an interactive workshop.' },
   { id: 6, url: 'https://placehold.co/600x400.png', isSliderPhoto: false, uploadedAt: '2023-10-21T15:00:00Z', 'data-ai-hint': 'charity drive' },
   { id: 7, url: 'https://placehold.co/600x400.png', isSliderPhoto: false, uploadedAt: '2023-10-20T16:00:00Z', 'data-ai-hint': 'sports day' },
   { id: 8, url: 'https://placehold.co/600x400.png', isSliderPhoto: false, uploadedAt: '2023-10-19T17:00:00Z', 'data-ai-hint': 'annual dinner' },
@@ -71,8 +73,8 @@ export const photos: Photo[] = [
 ];
 
 export const events: Event[] = [
-  { id: 1, title: 'Annual General Meeting', description: 'Join us for our annual general meeting to discuss the future of the club.', date: '2023-09-15', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'formal meeting', redirectUrl: 'https://example.com/agm-details' },
-  { id: 2, title: 'Charity Bake Sale', description: 'Help us raise funds for a good cause while enjoying delicious treats.', date: '2023-10-20', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'bake sale', redirectUrl: 'https://example.com/bake-sale-info' },
+  { id: 1, title: 'Annual General Meeting', description: 'Join us for our annual general meeting to discuss the future of the club.', date: '2023-09-15', photoUrl: 'https://placehold.co/1200x600.png', 'data-ai-hint': 'formal meeting', redirectUrl: 'https://example.com/agm-details', showOnSlider: true },
+  { id: 2, title: 'Charity Bake Sale', description: 'Help us raise funds for a good cause while enjoying delicious treats.', date: '2023-10-20', photoUrl: 'https://placehold.co/1200x600.png', 'data-ai-hint': 'bake sale', redirectUrl: 'https://example.com/bake-sale-info', showOnSlider: true },
   { id: 3, title: 'Holiday Party', description: 'Celebrate the holiday season with fellow club members.', date: '2023-12-10', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'holiday party' },
   { id: 4, title: 'Tech Workshop', description: 'A hands-on workshop on the latest technologies.', date: '2024-01-05', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'tech workshop', redirectUrl: 'https://example.com/tech-workshop-signup' },
   { id: 5, title: 'Spring Picnic', description: 'Enjoy a day out in the sun with food, games, and fun.', date: '2024-04-22', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'picnic park' },
@@ -108,8 +110,40 @@ export const achievements: Achievement[] = [
     { id: 3, title: 'Regional Tournament Champions', description: 'Won the annual regional tournament.', date: '2023-08-15', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'sports trophy' },
 ];
 
+export interface SlideshowItem {
+    id: string;
+    url: string;
+    title?: string;
+    description?: string;
+    'data-ai-hint'?: string;
+    date: string;
+}
 
-export const getSliderPhotos = () => photos.filter(p => p.isSliderPhoto).slice(0, 5);
+export const getSlideshowItems = (): SlideshowItem[] => {
+    const sliderPhotos: SlideshowItem[] = photos
+        .filter(p => p.isSliderPhoto)
+        .map(p => ({
+            id: `photo-${p.id}`,
+            url: p.url,
+            title: "Welcome to Club Central",
+            description: p.description,
+            'data-ai-hint': p['data-ai-hint'],
+            date: p.uploadedAt,
+        }));
+
+    const sliderEvents: SlideshowItem[] = events
+        .filter(e => e.showOnSlider)
+        .map(e => ({
+            id: `event-${e.id}`,
+            url: e.photoUrl,
+            title: e.title,
+            description: e.description,
+            'data-ai-hint': e['data-ai-hint'],
+            date: e.date,
+        }));
+    
+    return [...sliderPhotos, ...sliderEvents].sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+}
 
 export const getRecentPhotos = () => [...photos]
   .sort((a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime())

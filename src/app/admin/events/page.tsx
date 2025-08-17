@@ -16,6 +16,7 @@ import * as z from "zod";
 import { getAllEvents, Event } from "@/lib/data";
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Switch } from '@/components/ui/switch';
 
 const eventSchema = z.object({
   id: z.number().optional(),
@@ -24,6 +25,7 @@ const eventSchema = z.object({
   date: z.string().refine((val) => !isNaN(Date.parse(val)), { message: "Invalid date format" }),
   photoUrl: z.string().url({ message: "Please enter a valid URL." }),
   redirectUrl: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
+  showOnSlider: z.boolean().default(false),
 });
 
 type EventFormValues = z.infer<typeof eventSchema>;
@@ -41,6 +43,7 @@ export default function EventsManagementPage() {
       date: "",
       photoUrl: "https://placehold.co/600x400.png",
       redirectUrl: "",
+      showOnSlider: false,
     },
   });
 
@@ -87,6 +90,7 @@ export default function EventsManagementPage() {
                     date: "",
                     photoUrl: "https://placehold.co/600x400.png",
                     redirectUrl: "",
+                    showOnSlider: false,
                   });
                   setIsDialogOpen(true);
                 }}>
@@ -164,6 +168,23 @@ export default function EventsManagementPage() {
                       </FormItem>
                     )}
                   />
+                  <FormField
+                    control={form.control}
+                    name="showOnSlider"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                        <div className="space-y-0.5">
+                          <FormLabel>Show on Homepage Slider</FormLabel>
+                        </div>
+                        <FormControl>
+                          <Switch
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
                   <DialogFooter>
                     <DialogClose asChild>
                       <Button type="button" variant="ghost">Cancel</Button>
@@ -181,6 +202,7 @@ export default function EventsManagementPage() {
               <TableRow>
                 <TableHead>Title</TableHead>
                 <TableHead className="hidden md:table-cell">Date</TableHead>
+                <TableHead className="hidden md:table-cell">On Slider</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -189,6 +211,13 @@ export default function EventsManagementPage() {
                 <TableRow key={event.id}>
                   <TableCell className="font-medium">{event.title}</TableCell>
                   <TableCell className="hidden md:table-cell">{new Date(event.date).toLocaleDateString()}</TableCell>
+                   <TableCell className="hidden md:table-cell">
+                     {event.showOnSlider ? (
+                       <span className="text-green-600 font-semibold">Yes</span>
+                      ) : (
+                       <span className="text-muted-foreground">No</span>
+                      )}
+                    </TableCell>
                   <TableCell>
                     <div className="flex gap-2">
                        <Button variant="outline" size="icon" onClick={() => handleEdit(event)}>
