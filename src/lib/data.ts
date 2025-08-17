@@ -15,6 +15,14 @@ export interface Event {
   'data-ai-hint'?: string;
 }
 
+export interface Member {
+  id: number;
+  name: string;
+  email: string;
+  photoUrl: string;
+  joinDate: string;
+}
+
 export const photos: Photo[] = [
   { id: 1, url: 'https://placehold.co/1200x600.png', isSliderPhoto: true, uploadedAt: '2023-10-26T10:00:00Z', 'data-ai-hint': 'community event' },
   { id: 2, url: 'https://placehold.co/1200x600.png', isSliderPhoto: true, uploadedAt: '2023-10-25T11:00:00Z', 'data-ai-hint': 'team celebration' },
@@ -36,6 +44,14 @@ export const events: Event[] = [
   { id: 5, title: 'Spring Picnic', description: 'Enjoy a day out in the sun with food, games, and fun.', date: '2024-04-22', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'picnic park' },
 ];
 
+export const members: Member[] = [
+    { id: 1, name: 'Alice Johnson', email: 'alice.j@example.com', photoUrl: 'https://placehold.co/100x100.png', joinDate: '2022-03-12' },
+    { id: 2, name: 'Bob Williams', email: 'bob.w@example.com', photoUrl: 'https://placehold.co/100x100.png', joinDate: '2022-05-20' },
+    { id: 3, name: 'Charlie Brown', email: 'charlie.b@example.com', photoUrl: 'https://placehold.co/100x100.png', joinDate: '2023-01-10' },
+    { id: 4, name: 'Diana Miller', email: 'diana.m@example.com', photoUrl: 'https://placehold.co/100x100.png', joinDate: '2023-06-01' },
+    { id: 5, name: 'Ethan Davis', email: 'ethan.d@example.com', photoUrl: 'https://placehold.co/100x100.png', joinDate: '2023-09-18' },
+];
+
 export const getSliderPhotos = () => photos.filter(p => p.isSliderPhoto).slice(0, 5);
 
 export const getRecentPhotos = () => [...photos]
@@ -52,3 +68,6 @@ export const getRecentEvents = () => [...events]
 
 export const getAllEvents = () => [...events]
   .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+export const getAllMembers = () => [...members]
+    .sort((a, b) => new Date(b.joinDate).getTime() - new Date(a.joinDate).getTime());

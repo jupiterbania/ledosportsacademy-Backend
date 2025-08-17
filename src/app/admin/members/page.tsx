@@ -1,14 +1,204 @@
+"use client";
+
+import React, { useState } from 'react';
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { getAllMembers, Member } from "@/lib/data";
+import { PlusCircle, Edit, Trash2 } from 'lucide-react';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+
+const memberSchema = z.object({
+  id: z.number().optional(),
+  name: z.string().min(1, { message: "Name is required" }),
+  email: z.string().email({ message: "Invalid email address" }),
+  photoUrl: z.string().url({ message: "Please enter a valid URL." }),
+});
+
+type MemberFormValues = z.infer<typeof memberSchema>;
 
 export default function MembersManagementPage() {
+  const [members, setMembers] = useState<Member[]>(getAllMembers());
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { toast } = useToast();
+
+  const form = useForm<MemberFormValues>({
+    resolver: zodResolver(memberSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      photoUrl: "https://placehold.co/100x100.png",
+    },
+  });
+
+  const onSubmit = (data: MemberFormValues) => {
+    const isEditing = !!data.id;
+    if (isEditing) {
+      setMembers(members.map(member => member.id === data.id ? { ...member, ...data } : member));
+      toast({ title: "Member Updated", description: "The member's details have been updated." });
+    } else {
+      const newMember: Member = {
+        ...data,
+        id: members.length > 0 ? Math.max(...members.map(m => m.id)) + 1 : 1,
+        joinDate: new Date().toISOString().split('T')[0],
+      };
+      setMembers([newMember, ...members]);
+      toast({ title: "Member Added", description: "The new member has been added." });
+    }
+    setIsDialogOpen(false);
+    form.reset();
+  };
+
+  const handleEdit = (member: Member) => {
+    form.reset(member);
+    setIsDialogOpen(true);
+  };
+  
+  const handleDelete = (id: number) => {
+    setMembers(members.filter(member => member.id !== id));
+    toast({ title: "Member Removed", description: "The member has been removed from the club.", variant: "destructive" });
+  };
+
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
       <Card>
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Members Management</CardTitle>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+               <Button onClick={() => {
+                  form.reset({
+                    id: undefined,
+                    name: "",
+                    email: "",
+                    photoUrl: `https://placehold.co/100x100.png`,
+                  });
+                  setIsDialogOpen(true);
+                }}>
+                <PlusCircle className="mr-2 h-4 w-4" /> Add Member
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-xl">
+              <DialogHeader>
+                <DialogTitle>{form.getValues("id") ? 'Edit Member' : 'Add New Member'}</DialogTitle>
+              </DialogHeader>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="John Doe" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                   <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input placeholder="member@example.com" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="photoUrl"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Photo URL</FormLabel>
+                        <FormControl>
+                          <Input placeholder="https://placehold.co/100x100.png" {...field} />
+                        </FormControl>
+                         <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <DialogFooter>
+                    <DialogClose asChild>
+                      <Button type="button" variant="ghost">Cancel</Button>
+                    </DialogClose>
+                    <Button type="submit">Save Member</Button>
+                  </DialogFooter>
+                </form>
+              </Form>
+            </DialogContent>
+          </Dialog>
         </CardHeader>
         <CardContent>
-          <p>Manage your club members here.</p>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Member</TableHead>
+                <TableHead className="hidden md:table-cell">Join Date</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {members.map((member) => (
+                <TableRow key={member.id}>
+                  <TableCell>
+                      <div className="flex items-center gap-4">
+                         <Avatar>
+                           <AvatarImage src={member.photoUrl} alt={member.name} />
+                           <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
+                         </Avatar>
+                         <div>
+                            <div className="font-medium">{member.name}</div>
+                            <div className="text-sm text-muted-foreground">{member.email}</div>
+                         </div>
+                      </div>
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell">{new Date(member.joinDate).toLocaleDateString()}</TableCell>
+                  <TableCell>
+                    <div className="flex gap-2">
+                       <Button variant="outline" size="icon" onClick={() => handleEdit(member)}>
+                        <Edit className="h-4 w-4" />
+                         <span className="sr-only">Edit</span>
+                      </Button>
+                       <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                             <Button variant="destructive" size="icon">
+                                <Trash2 className="h-4 w-4" />
+                                <span className="sr-only">Delete</span>
+                              </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This action cannot be undone. This will permanently remove the member.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction onClick={() => handleDelete(member.id)}>Delete</AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
     </main>
