@@ -100,7 +100,7 @@ export default function AnalyticsDashboardPage() {
                     <HandCoins className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(totalDonations + totalCollections - totalExpenses)}</div>
+                    <div className="text-2xl font-bold">{new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(totalDonations + totalCollections - totalExpenses)}</div>
                     <p className="text-xs text-muted-foreground">Total income minus expenses</p>
                 </CardContent>
             </Card>

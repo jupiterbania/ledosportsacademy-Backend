@@ -49,7 +49,7 @@ export default function AdminDashboard() {
             <HandCoins className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(totalDonations)}</div>
+            <div className="text-2xl font-bold">{new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(totalDonations)}</div>
             <p className="text-xs text-muted-foreground">{donations.length} donations recorded</p>
           </CardContent>
         </Card>
@@ -59,7 +59,7 @@ export default function AdminDashboard() {
             <HandCoins className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(totalCollections)}</div>
+            <div className="text-2xl font-bold">{new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(totalCollections)}</div>
             <p className="text-xs text-muted-foreground">{collections.length} collections recorded</p>
           </CardContent>
         </Card>
@@ -69,7 +69,7 @@ export default function AdminDashboard() {
             <HandCoins className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(totalExpenses)}</div>
+            <div className="text-2xl font-bold">{new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(totalExpenses)}</div>
             <p className="text-xs text-muted-foreground">{expenses.length} expenses recorded</p>
           </CardContent>
         </Card>
@@ -102,7 +102,7 @@ export default function AdminDashboard() {
                     }}
                   />
                   <Legend />
-                  <Bar dataKey="value" name="Amount (USD)" />
+                  <Bar dataKey="value" name="Amount (INR)" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
