@@ -78,9 +78,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
         <SidebarContent>
           <SidebarHeader>
              <div className="flex items-center gap-2">
-                <Button variant="ghost" size="icon" className="md:hidden" onClick={() => toggleSidebar()}>
-                  <SidebarTrigger />
-                </Button>
+                <SidebarTrigger className="md:hidden" />
                 <Club className="w-6 h-6 text-primary" />
                 <h1 className="text-lg font-semibold">Club Central</h1>
              </div>
@@ -101,9 +99,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
       </Sidebar>
       <div className="flex flex-col flex-1">
         <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-background px-6">
-          <Button variant="ghost" size="icon" className="md:hidden" onClick={() => toggleSidebar()}>
-             <SidebarTrigger />
-          </Button>
+          <SidebarTrigger className="md:hidden" />
           <div className="flex-1">
             <h1 className="text-lg font-semibold">Welcome, Admin!</h1>
           </div>
