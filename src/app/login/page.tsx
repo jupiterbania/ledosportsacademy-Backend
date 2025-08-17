@@ -1,24 +1,37 @@
 "use client"
 
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useToast } from "@/hooks/use-toast"
 import { Shield, User } from "lucide-react"
+import { signInWithGoogle } from "@/lib/auth";
 
 export default function LoginPage() {
   const { toast } = useToast();
+  const router = useRouter();
 
-  const handleAdminLogin = () => {
-    toast({
-      title: "Admin Login Initiated",
-      description: "Redirecting for admin authentication...",
-    });
+  const handleAdminLogin = async () => {
+    const user = await signInWithGoogle();
+    if (user) {
+      toast({
+        title: "Admin Login Successful",
+        description: "Redirecting to the admin dashboard...",
+      });
+      router.push('/admin');
+    } else {
+       toast({
+        title: "Admin Login Failed",
+        description: "Could not authenticate with Google.",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleMemberLogin = () => {
     toast({
-      title: "Member Login Initiated",
-      description: "Redirecting for member authentication...",
+      title: "Member Login Not Yet Implemented",
+      description: "This feature is coming soon.",
     });
   };
 

@@ -1,13 +1,14 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Menu, Club, X } from 'lucide-react';
+import { Menu, Club } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
+import { useAuth } from '@/hooks/use-auth';
+import { signOut } from '@/lib/auth';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -17,16 +18,13 @@ const navLinks = [
 
 export function Header() {
   const router = useRouter();
-  // This is a mock authentication state. In a real app, you'd use a context provider.
-  const [isAuthenticated, setIsAuthenticated] = useState(false); 
+  const { user, loading } = useAuth();
 
-  const handleAuthAction = () => {
-    if (isAuthenticated) {
-      setIsAuthenticated(false);
-      // Here you would typically clear tokens, etc.
-    } else {
-      router.push('/login');
+  const handleAuthAction = async () => {
+    if (user) {
+      await signOut();
     }
+    router.push('/login');
   };
   
   const NavLink = ({ href, label }: { href: string, label: string }) => (
@@ -60,7 +58,7 @@ export function Header() {
 
         <div className="hidden md:flex items-center">
             <Button onClick={handleAuthAction}>
-                {isAuthenticated ? 'Logout' : 'Login'}
+                {user ? 'Logout' : 'Login'}
             </Button>
         </div>
 
@@ -87,7 +85,7 @@ export function Header() {
                   <Separator className="my-3" />
                   <SheetClose asChild>
                     <Button onClick={handleAuthAction} className="w-full">
-                      {isAuthenticated ? 'Logout' : 'Login'}
+                      {user ? 'Logout' : 'Login'}
                     </Button>
                   </SheetClose>
                 </nav>

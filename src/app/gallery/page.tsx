@@ -1,6 +1,7 @@
 import Image from "next/image"
 import { getAllPhotos } from "@/lib/data"
 import { Card, CardContent } from "@/components/ui/card"
+import { Header } from "@/components/layout/header"
 
 export const metadata = {
   title: "Gallery | Club Central",
@@ -10,6 +11,8 @@ export default function GalleryPage() {
   const photos = getAllPhotos()
 
   return (
+    <>
+    <Header />
     <div className="container py-8 md:py-12 animate-fade-in">
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">Photo Gallery</h1>
@@ -37,5 +40,6 @@ export default function GalleryPage() {
         ))}
       </div>
     </div>
+    </>
   )
 }
