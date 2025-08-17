@@ -6,16 +6,16 @@ import Image from "next/image"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from "@/components/ui/carousel"
 import { getSlideshowItems, SlideshowItem } from "@/lib/data"
 import { Card, CardContent } from "@/components/ui/card"
-import Autoplay from "embla-carousel-autoplay"
+// import Autoplay from "embla-carousel-autoplay"
 
 export function HomepageSlideshow() {
   const [api, setApi] = React.useState<CarouselApi>()
   const [current, setCurrent] = React.useState(0);
   const [slideshowItems, setSlideshowItems] = React.useState<SlideshowItem[]>([]);
 
-  const plugin = React.useRef(
-    Autoplay({ delay: 5000, stopOnInteraction: true })
-  )
+  // const plugin = React.useRef(
+  //   Autoplay({ delay: 5000, stopOnInteraction: true })
+  // )
 
   React.useEffect(() => {
     const fetchItems = async () => {
@@ -53,9 +53,6 @@ export function HomepageSlideshow() {
         setApi={setApi} 
         className="w-full" 
         opts={{ loop: true }}
-        plugins={[plugin.current]}
-        onMouseEnter={plugin.current.stop}
-        onMouseLeave={plugin.current.reset}
        >
         <CarouselContent>
           {slideshowItems.map((item, index) => (
