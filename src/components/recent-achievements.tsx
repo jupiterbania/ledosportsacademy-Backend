@@ -1,3 +1,6 @@
+
+"use client";
+
 import Link from "next/link"
 import Image from "next/image"
 import { Achievement } from "@/lib/data"
@@ -6,12 +9,16 @@ import { Button } from "@/components/ui/button"
 import { Medal, ArrowRight } from "lucide-react"
 
 export function RecentAchievements({ achievements }: { achievements: Achievement[] }) {
+  if (!achievements || achievements.length === 0) {
+    return null;
+  }
+  
   return (
     <section>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl font-bold">Recent Achievements</h2>
         <Button asChild variant="link" className="text-primary">
-          <Link href="/admin/achievements">
+          <Link href="/member/achievements">
             View All
             <ArrowRight className="w-4 h-4 ml-2" />
           </Link>
@@ -19,7 +26,7 @@ export function RecentAchievements({ achievements }: { achievements: Achievement
       </div>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {achievements.map((achievement) => (
-          <Link key={achievement.id} href="/admin/achievements" className="block group">
+          <Link key={achievement.id} href="/member/achievements" className="block group">
             <Card className="overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1.5 h-full flex flex-col border-2 border-transparent hover:border-primary">
               <div className="relative aspect-video w-full">
                 <Image

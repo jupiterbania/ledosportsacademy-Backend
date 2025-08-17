@@ -1,3 +1,6 @@
+
+"use client";
+
 import Link from "next/link"
 import Image from "next/image"
 import { Event } from "@/lib/data"
@@ -6,6 +9,9 @@ import { Button } from "@/components/ui/button"
 import { Calendar, ArrowRight } from "lucide-react"
 
 export function RecentEvents({ events }: { events: Event[] }) {
+  if (!events || events.length === 0) {
+    return null;
+  }
 
   const EventCardContent = ({ event }: { event: Event }) => (
     <Card className="overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1.5 h-full flex flex-col border-2 border-transparent hover:border-primary">

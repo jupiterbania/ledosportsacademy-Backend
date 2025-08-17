@@ -1,12 +1,21 @@
+
 import Link from "next/link"
 import Image from "next/image"
-import { getRecentEvents } from "@/lib/data"
+import { getRecentEvents, Event } from "@/lib/data"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Calendar, ArrowRight } from "lucide-react"
+import { useState, useEffect } from "react"
 
 export function RecentEvents() {
-  const events = getRecentEvents()
+  const [events, setEvents] = useState<Event[]>([]);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      setEvents(await getRecentEvents());
+    }
+    fetchEvents();
+  }, [])
 
   return (
     <section>

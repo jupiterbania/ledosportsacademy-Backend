@@ -1,3 +1,6 @@
+
+"use client";
+
 import Link from "next/link"
 import Image from "next/image"
 import { Photo } from "@/lib/data"
@@ -6,6 +9,10 @@ import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 
 export function RecentPhotos({ photos }: { photos: Photo[] }) {
+  if (!photos || photos.length === 0) {
+    return null;
+  }
+  
   return (
     <section>
       <div className="flex justify-between items-center mb-6">

@@ -1,14 +1,27 @@
 
+"use client";
+
+import { useState, useEffect } from 'react';
 import { HomepageSlideshow } from "@/components/homepage-slideshow";
 import { RecentPhotos } from "@/components/recent-photos";
 import { RecentEvents } from "@/components/recent-events";
 import { RecentAchievements } from "@/components/recent-achievements";
-import { getRecentEvents, getRecentAchievements, getRecentPhotos } from "@/lib/data";
+import { getRecentEvents, getRecentAchievements, getRecentPhotos, Event, Achievement, Photo } from "@/lib/data";
 
-export default async function Home() {
-  const recentEvents = await getRecentEvents();
-  const recentAchievements = await getRecentAchievements();
-  const recentPhotos = await getRecentPhotos();
+export default function Home() {
+  const [recentEvents, setRecentEvents] = useState<Event[]>([]);
+  const [recentAchievements, setRecentAchievements] = useState<Achievement[]>([]);
+  const [recentPhotos, setRecentPhotos] = useState<Photo[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setRecentEvents(await getRecentEvents());
+      setRecentAchievements(await getRecentAchievements());
+      setRecentPhotos(await getRecentPhotos());
+    };
+    fetchData();
+  }, []);
+
 
   return (
     

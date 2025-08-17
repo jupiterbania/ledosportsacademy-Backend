@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -12,7 +13,7 @@ export default function MemberAchievementsPage() {
   useEffect(() => {
     const fetchAchievements = async () => {
       const data = await getAllAchievements();
-      setAchievements(data);
+      setAchievements(data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
     };
     fetchAchievements();
   }, []);
@@ -26,16 +27,16 @@ export default function MemberAchievementsPage() {
         </CardHeader>
       </Card>
 
-      <div className="grid gap-8">
-        {achievements.map((achievement) => (
-          <Card key={achievement.id} className="overflow-hidden">
+      <div className="grid gap-8 md:grid-cols-2">
+        {achievements.map((achievement, index) => (
+          <Card key={achievement.id} className="overflow-hidden animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
              <div className="relative aspect-video w-full">
                 <Image
                   src={achievement.photoUrl}
                   alt={achievement.title}
                   fill
                   className="object-cover"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   data-ai-hint={achievement['data-ai-hint']}
                 />
               </div>

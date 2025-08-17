@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from "react"
@@ -5,14 +6,23 @@ import Image from "next/image"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from "@/components/ui/carousel"
 import { getSlideshowItems, SlideshowItem } from "@/lib/data"
 import { Card, CardContent } from "@/components/ui/card"
+import Autoplay from "embla-carousel-autoplay"
 
 export function HomepageSlideshow() {
   const [api, setApi] = React.useState<CarouselApi>()
   const [current, setCurrent] = React.useState(0);
   const [slideshowItems, setSlideshowItems] = React.useState<SlideshowItem[]>([]);
 
+  const plugin = React.useRef(
+    Autoplay({ delay: 5000, stopOnInteraction: true })
+  )
+
   React.useEffect(() => {
-    getSlideshowItems().then(setSlideshowItems);
+    const fetchItems = async () => {
+        const items = await getSlideshowItems();
+        setSlideshowItems(items);
+    }
+    fetchItems();
   }, []);
 
   React.useEffect(() => {
@@ -28,16 +38,7 @@ export function HomepageSlideshow() {
     
     api.on("select", handleSelect);
 
-    const interval = setInterval(() => {
-      api.scrollNext()
-    }, 5000)
-
-    api.on("pointerDown", () => {
-      clearInterval(interval);
-    });
-
     return () => {
-        clearInterval(interval);
         api.off("select", handleSelect);
     }
   }, [api])
@@ -48,7 +49,14 @@ export function HomepageSlideshow() {
 
   return (
     <section className="w-full relative">
-      <Carousel setApi={setApi} className="w-full" opts={{ loop: true }}>
+      <Carousel 
+        setApi={setApi} 
+        className="w-full" 
+        opts={{ loop: true }}
+        plugins={[plugin.current]}
+        onMouseEnter={plugin.current.stop}
+        onMouseLeave={plugin.current.reset}
+       >
         <CarouselContent>
           {slideshowItems.map((item, index) => (
             <CarouselItem key={item.id}>
