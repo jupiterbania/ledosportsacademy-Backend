@@ -29,11 +29,11 @@ export const photos: Photo[] = [
 ];
 
 export const events: Event[] = [
-  { id: 1, title: 'Annual General Meeting', description: 'Join us for our annual general meeting to discuss the future of the club.', date: '2024-09-15', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'formal meeting' },
-  { id: 2, title: 'Charity Bake Sale', description: 'Help us raise funds for a good cause while enjoying delicious treats.', date: '2024-10-20', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'bake sale' },
-  { id: 3, title: 'Holiday Party', description: 'Celebrate the holiday season with fellow club members.', date: '2024-12-10', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'holiday party' },
-  { id: 4, title: 'Tech Workshop', description: 'A hands-on workshop on the latest technologies.', date: '2025-01-05', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'tech workshop' },
-  { id: 5, title: 'Spring Picnic', description: 'Enjoy a day out in the sun with food, games, and fun.', date: '2025-04-22', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'picnic park' },
+  { id: 1, title: 'Annual General Meeting', description: 'Join us for our annual general meeting to discuss the future of the club.', date: '2023-09-15', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'formal meeting' },
+  { id: 2, title: 'Charity Bake Sale', description: 'Help us raise funds for a good cause while enjoying delicious treats.', date: '2023-10-20', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'bake sale' },
+  { id: 3, title: 'Holiday Party', description: 'Celebrate the holiday season with fellow club members.', date: '2023-12-10', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'holiday party' },
+  { id: 4, title: 'Tech Workshop', description: 'A hands-on workshop on the latest technologies.', date: '2024-01-05', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'tech workshop' },
+  { id: 5, title: 'Spring Picnic', description: 'Enjoy a day out in the sun with food, games, and fun.', date: '2024-04-22', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'picnic park' },
 ];
 
 export const getSliderPhotos = () => photos.filter(p => p.isSliderPhoto).slice(0, 5);
@@ -45,9 +45,9 @@ export const getRecentPhotos = () => [...photos]
 export const getAllPhotos = () => [...photos]
   .sort((a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime());
 
-export const getUpcomingEvents = () => [...events]
-  .filter(event => new Date(event.date) >= new Date())
-  .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+export const getRecentEvents = () => [...events]
+  .filter(event => new Date(event.date) < new Date())
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
   .slice(0, 3);
 
 export const getAllEvents = () => [...events]
