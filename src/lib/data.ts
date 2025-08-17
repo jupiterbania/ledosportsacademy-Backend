@@ -50,6 +50,8 @@ export interface Achievement {
     title: string;
     description: string;
     date: string;
+    photoUrl: string;
+    'data-ai-hint'?: string;
 }
 
 export const photos: Photo[] = [
@@ -98,9 +100,9 @@ export const expenses: Expense[] = [
 ];
 
 export const achievements: Achievement[] = [
-    { id: 1, title: 'Club of the Year', description: 'Awarded by the regional committee for outstanding performance.', date: '2022-12-31' },
-    { id: 2, title: '10 Years Anniversary', description: 'Celebrating a decade of community and service.', date: '2023-05-20' },
-    { id: 3, title: 'Regional Tournament Champions', description: 'Won the annual regional tournament.', date: '2023-08-15' },
+    { id: 1, title: 'Club of the Year', description: 'Awarded by the regional committee for outstanding performance.', date: '2022-12-31', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'award trophy' },
+    { id: 2, title: '10 Years Anniversary', description: 'Celebrating a decade of community and service.', date: '2023-05-20', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'celebration confetti' },
+    { id: 3, title: 'Regional Tournament Champions', description: 'Won the annual regional tournament.', date: '2023-08-15', photoUrl: 'https://placehold.co/600x400.png', 'data-ai-hint': 'sports trophy' },
 ];
 
 
@@ -132,6 +134,10 @@ export const getAllCollections = () => [...collections]
 
 export const getAllExpenses = () => [...expenses]
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+export const getRecentAchievements = () => [...achievements]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 3);
 
 export const getAllAchievements = () => [...achievements]
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());

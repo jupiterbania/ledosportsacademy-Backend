@@ -15,12 +15,15 @@ import * as z from "zod";
 import { getAllAchievements, Achievement } from "@/lib/data";
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import Image from 'next/image';
 
 const achievementSchema = z.object({
   id: z.number().optional(),
   title: z.string().min(1, { message: "Title is required" }),
   description: z.string().min(1, { message: "Description is required" }),
   date: z.string().refine((val) => !isNaN(Date.parse(val)), { message: "Invalid date format" }),
+  photoUrl: z.string().url({ message: "Please enter a valid URL." }),
+  'data-ai-hint': z.string().optional(),
 });
 
 type AchievementFormValues = z.infer<typeof achievementSchema>;
@@ -36,6 +39,8 @@ export default function AchievementsManagementPage() {
       title: "",
       description: "",
       date: "",
+      photoUrl: "https://placehold.co/600x400.png",
+      'data-ai-hint': "",
     },
   });
 
@@ -79,6 +84,8 @@ export default function AchievementsManagementPage() {
                     title: "",
                     description: "",
                     date: "",
+                    photoUrl: "https://placehold.co/600x400.png",
+                    'data-ai-hint': "",
                   });
                   setIsDialogOpen(true);
                 }}>
@@ -130,6 +137,32 @@ export default function AchievementsManagementPage() {
                       </FormItem>
                     )}
                   />
+                   <FormField
+                    control={form.control}
+                    name="photoUrl"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Photo URL</FormLabel>
+                        <FormControl>
+                          <Input placeholder="https://placehold.co/600x400.png" {...field} />
+                        </FormControl>
+                         <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                   <FormField
+                    control={form.control}
+                    name="data-ai-hint"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>AI Hint</FormLabel>
+                        <FormControl>
+                          <Input placeholder="e.g. 'award trophy'" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   <DialogFooter>
                     <DialogClose asChild>
                       <Button type="button" variant="ghost">Cancel</Button>
@@ -145,6 +178,7 @@ export default function AchievementsManagementPage() {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>Photo</TableHead>
                 <TableHead>Title</TableHead>
                 <TableHead>Description</TableHead>
                 <TableHead className="hidden md:table-cell">Date</TableHead>
@@ -154,6 +188,11 @@ export default function AchievementsManagementPage() {
             <TableBody>
               {achievements.map((achievement) => (
                 <TableRow key={achievement.id}>
+                    <TableCell>
+                         <div className="relative h-16 w-16 rounded-md overflow-hidden">
+                           <Image src={achievement.photoUrl} alt={`Photo for ${achievement.title}`} fill className="object-cover" sizes="64px" />
+                        </div>
+                    </TableCell>
                   <TableCell className="font-medium">{achievement.title}</TableCell>
                   <TableCell>{achievement.description}</TableCell>
                   <TableCell className="hidden md:table-cell">{new Date(achievement.date).toLocaleDateString()}</TableCell>
