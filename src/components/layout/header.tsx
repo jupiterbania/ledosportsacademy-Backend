@@ -1,24 +1,20 @@
 "use client"
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Menu, Club } from 'lucide-react';
+import { Menu, Club, LayoutDashboard, HandCoins, Medal, Users as UsersIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/hooks/use-auth';
 import { signOut } from '@/lib/auth';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
-const navLinks = [
-  { href: '/', label: 'Home' },
-  { href: '/gallery', label: 'Gallery' },
-  { href: '/events', label: 'Events' },
-];
 
 export function Header() {
   const router = useRouter();
-  const { user, loading } = useAuth();
+  const { user, isAdmin } = useAuth();
 
   const handleAuthAction = async () => {
     if (user) {
@@ -27,6 +23,19 @@ export function Header() {
     router.push('/login');
   };
   
+  const baseNavLinks = [
+    { href: '/', label: 'Home' },
+    { href: '/gallery', label: 'Gallery' },
+    { href: '/events', label: 'Events' },
+  ];
+  
+  const memberNavLinks = [
+    ...baseNavLinks,
+    { href: '/member/members', label: 'Members', icon: UsersIcon },
+    { href: '/member/finances', label: 'Finances', icon: HandCoins },
+    { href: '/member/achievements', label: 'Achievements', icon: Medal },
+  ];
+
   const NavLink = ({ href, label }: { href: string, label: string }) => (
     <Link 
       href={href} 
@@ -44,6 +53,13 @@ export function Header() {
     </SheetClose>
   );
 
+  const getNavLinks = () => {
+    if (user && !isAdmin) return memberNavLinks;
+    return baseNavLinks;
+  }
+  const navLinks = getNavLinks();
+
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
@@ -54,14 +70,20 @@ export function Header() {
         
         <nav className="hidden md:flex items-center gap-6 flex-grow">
           {navLinks.map((link) => <NavLink key={link.href} {...link} />)}
-          {user && <NavLink href="/admin" label="Admin Dashboard" />}
+          {isAdmin && <NavLink href="/admin" label="Admin Dashboard" />}
         </nav>
-
-        <div className="hidden md:flex items-center">
-            <Button onClick={handleAuthAction}>
-                {user ? 'Logout' : 'Login'}
-            </Button>
+        
+        <div className="hidden md:flex items-center ml-auto">
+          {user ? (
+             <div className="flex items-center gap-4">
+                <span className="text-sm text-muted-foreground">Hello, {user.displayName?.split(' ')[0]}!</span>
+                <Button onClick={handleAuthAction}>Logout</Button>
+            </div>
+          ) : (
+             <Button onClick={handleAuthAction}>Login</Button>
+          )}
         </div>
+
 
         <div className="md:hidden ml-auto">
           <Sheet>
@@ -83,7 +105,7 @@ export function Header() {
                   {navLinks.map((link) => (
                     <MobileNavLink key={link.href} {...link} />
                   ))}
-                  {user && <MobileNavLink href="/admin" label="Admin Dashboard" />}
+                  {isAdmin && <MobileNavLink href="/admin" label="Admin Dashboard" />}
                   <Separator className="my-3" />
                   <SheetClose asChild>
                     <Button onClick={handleAuthAction} className="w-full">

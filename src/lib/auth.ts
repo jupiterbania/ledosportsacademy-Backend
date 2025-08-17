@@ -9,6 +9,11 @@ import {
 } from "firebase/auth";
 import { auth, googleProvider } from "./firebase";
 
+// For demo purposes, we'll hardcode an admin UID.
+// In a real application, this would be managed via custom claims or a database role system.
+export const ADMIN_UID = "jD4a4t6y8rZp9sXcVbNfGhJlK7x1";
+
+
 export const signInWithGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, googleProvider);
@@ -22,7 +27,8 @@ export const signInWithGoogle = async () => {
 export const signOut = async () => {
   try {
     await firebaseSignOut(auth);
-  } catch (error) {
+  } catch (error)
+ {
     console.error("Error signing out: ", error);
   }
 };

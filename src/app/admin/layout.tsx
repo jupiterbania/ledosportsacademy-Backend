@@ -37,26 +37,30 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 function AdminLayout({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
+  const { user, loading, isAdmin } = useAuth();
   const router = useRouter();
   const { toggleSidebar } = useSidebar();
   const pathname = usePathname();
 
   useEffect(() => {
-    if (!loading && !user) {
-      router.push('/login');
+    if (!loading) {
+      if (!user) {
+        router.push('/login');
+      } else if (!isAdmin) {
+        router.push('/'); // Redirect non-admins to home page
+      }
     }
-  }, [user, loading, router]);
+  }, [user, loading, isAdmin, router]);
 
   const handleLogout = async () => {
     await signOut();
     router.push('/login');
   };
 
-  if (loading || !user) {
+  if (loading || !user || !isAdmin) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <div className="text-lg">Loading...</div>
+        <div className="text-lg">Loading or Access Denied...</div>
       </div>
     );
   }
