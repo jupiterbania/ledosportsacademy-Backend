@@ -31,6 +31,8 @@ function DonationsTable() {
           <TableHeader>
             <TableRow>
               <TableHead>Title</TableHead>
+              <TableHead>Donor</TableHead>
+              <TableHead>Description</TableHead>
               <TableHead>Value</TableHead>
               <TableHead>Date</TableHead>
             </TableRow>
@@ -39,6 +41,8 @@ function DonationsTable() {
             {items.map((item) => (
               <TableRow key={item.id}>
                 <TableCell className="font-medium">{item.title}</TableCell>
+                <TableCell>{item.donorName || 'N/A'}</TableCell>
+                <TableCell>{item.description || 'N/A'}</TableCell>
                 <TableCell>
                   {item.amount !== undefined ? `INR ${new Intl.NumberFormat('en-IN').format(item.amount)}` : item.item}
                 </TableCell>
@@ -134,3 +138,5 @@ export default function MemberFinancesPage() {
     </main>
   );
 }
+
+    

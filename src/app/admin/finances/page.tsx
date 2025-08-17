@@ -26,6 +26,8 @@ import { Textarea } from '@/components/ui/textarea';
 const donationSchema = z.object({
   id: z.string().optional(),
   title: z.string().min(1, { message: "Title is required" }),
+  donorName: z.string().optional(),
+  description: z.string().optional(),
   date: z.string().refine((val) => !isNaN(Date.parse(val)), { message: "Invalid date format" }),
   donationType: z.enum(['money', 'item']).default('money'),
   amount: z.coerce.number().optional(),
@@ -73,7 +75,9 @@ function DonationTable() {
       date: "",
       donationType: 'money',
       amount: 0,
-      item: ""
+      item: "",
+      donorName: "",
+      description: "",
     },
   });
 
@@ -134,7 +138,7 @@ function DonationTable() {
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button onClick={() => {
-              form.reset({ id: undefined, title: "", amount: 0, date: "", donationType: 'money', item: "" });
+              form.reset({ id: undefined, title: "", amount: 0, date: "", donationType: 'money', item: "", donorName: "", description: "" });
               setIsDialogOpen(true);
             }}>
               <PlusCircle className="mr-2 h-4 w-4" /> Add Donation
@@ -150,6 +154,13 @@ function DonationTable() {
                   <FormItem>
                     <FormLabel>Title</FormLabel>
                     <FormControl><Input placeholder={`Donation title`} {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                 <FormField control={form.control} name="donorName" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Donor Name</FormLabel>
+                    <FormControl><Input placeholder="John Doe or Anonymous" {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
@@ -201,7 +212,13 @@ function DonationTable() {
                     </FormItem>
                   )} />
                 )}
-
+                 <FormField control={form.control} name="description" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl><Textarea placeholder="A short description about the donation" {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
                 <FormField control={form.control} name="date" render={({ field }) => (
                   <FormItem>
                     <FormLabel>Date</FormLabel>
@@ -223,6 +240,8 @@ function DonationTable() {
           <TableHeader>
             <TableRow>
               <TableHead>Title</TableHead>
+              <TableHead>Donor</TableHead>
+              <TableHead>Description</TableHead>
               <TableHead className="text-right">Value</TableHead>
               <TableHead className="hidden md:table-cell">Date</TableHead>
               <TableHead>Actions</TableHead>
@@ -232,6 +251,8 @@ function DonationTable() {
             {items.map((item) => (
               <TableRow key={item.id}>
                 <TableCell className="font-medium">{item.title}</TableCell>
+                <TableCell>{item.donorName || 'N/A'}</TableCell>
+                <TableCell>{item.description || 'N/A'}</TableCell>
                 <TableCell className="text-right">
                   {item.amount !== undefined ? `INR ${new Intl.NumberFormat('en-IN').format(item.amount)}` : item.item}
                 </TableCell>
@@ -478,3 +499,5 @@ export default function FinancesPage() {
     </main>
   );
 }
+
+    

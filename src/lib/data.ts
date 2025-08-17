@@ -34,6 +34,8 @@ export interface Member extends BaseDocument {
 
 export interface Donation extends BaseDocument {
     title: string;
+    donorName?: string;
+    description?: string;
     amount?: number;
     item?: string;
     date: string;
@@ -218,9 +220,9 @@ const sampleData = {
         { name: 'Diana Prince', email: 'diana@example.com', photoUrl: 'https://placehold.co/100x100.png', joinDate: '2022-04-05' },
     ],
     donations: [
-        { title: 'Corporate Sponsorship', amount: 50000, date: '2024-05-15' },
-        { title: 'Anonymous Donor', amount: 10000, date: '2024-05-20' },
-        { title: 'Bake Sale Fundraiser', item: 'Various baked goods', date: '2024-06-01' },
+        { title: 'Corporate Sponsorship', donorName: 'Tech Corp Inc.', description: 'Annual sponsorship for club activities.', amount: 50000, date: '2024-05-15' },
+        { title: 'Anonymous Donor', donorName: 'Anonymous', description: 'A generous contribution.', amount: 10000, date: '2024-05-20' },
+        { title: 'Bake Sale Fundraiser', donorName: 'Club Members', description: 'Funds raised from the annual bake sale.', item: 'Various baked goods', date: '2024-06-01' },
     ],
     collections: [
         { title: 'Membership Fees Q2', amount: 25000, date: '2024-04-30' },
@@ -257,3 +259,5 @@ export async function seedDatabase() {
 
     await batch.commit();
 }
+
+    
