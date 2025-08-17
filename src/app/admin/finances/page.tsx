@@ -209,7 +209,7 @@ function DonationTable() {
                   <FormField control={form.control} name="amount" render={({ field }) => (
                     <FormItem>
                       <FormLabel>Amount</FormLabel>
-                      <FormControl><Input type="number" step="0.01" {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.valueAsNumber)} /></FormControl>
+                      <FormControl><Input type="number" step="0.01" {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} /></FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
@@ -217,7 +217,7 @@ function DonationTable() {
                   <FormField control={form.control} name="item" render={({ field }) => (
                     <FormItem>
                       <FormLabel>Item Description</FormLabel>
-                      <FormControl><Textarea placeholder="Describe the donated item(s)" {...field} /></FormControl>
+                      <FormControl><Textarea placeholder="Describe the donated item(s)" {...field} value={field.value ?? ''} /></FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
@@ -225,7 +225,7 @@ function DonationTable() {
                  <FormField control={form.control} name="description" render={({ field }) => (
                   <FormItem>
                     <FormLabel>Description</FormLabel>
-                    <FormControl><Textarea placeholder="A short description about the donation" {...field} /></FormControl>
+                    <FormControl><Textarea placeholder="A short description about the donation" {...field} value={field.value ?? ''} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
@@ -397,7 +397,7 @@ function FinanceTable<T extends Collection | Expense>({
                 <FormField control={form.control} name="amount" render={({ field }) => (
                   <FormItem>
                     <FormLabel>Amount</FormLabel>
-                    <FormControl><Input type="number" step="0.01" {...field} /></FormControl>
+                    <FormControl><Input type="number" step="0.01" {...field} onChange={e => field.onChange(+e.target.value)}/></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
@@ -509,3 +509,5 @@ export default function FinancesPage() {
     </main>
   );
 }
+
+    
