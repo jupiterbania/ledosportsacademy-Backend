@@ -111,7 +111,7 @@ export default function ExportPage() {
     try {
       // Main Title
       doc.setFontSize(22);
-      doc.text("Club Central - Full Analytics Report", 105, 20, { align: 'center' });
+      doc.text("LEDO SPORTS ACADEMY - Full Analytics Report", 105, 20, { align: 'center' });
       doc.setFontSize(12);
       doc.text(`Generated on: ${date}`, 105, 28, { align: 'center' });
 

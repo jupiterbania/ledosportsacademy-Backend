@@ -5,8 +5,8 @@ import { AuthProvider } from '@/components/auth/auth-provider';
 import { Header } from '@/components/layout/header';
 
 export const metadata: Metadata = {
-  title: 'Club Central',
-  description: 'Welcome to Club Central',
+  title: 'LEDO SPORTS ACADEMY',
+  description: 'Welcome to LEDO SPORTS ACADEMY',
 };
 
 export default function RootLayout({
