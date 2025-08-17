@@ -106,143 +106,145 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
   )
 
   return (
-    <div className="flex h-screen bg-muted/40">
-      <Sidebar collapsible="icon">
-          <SidebarHeader>
-             <div className="flex items-center gap-2">
-                <SidebarTrigger className="md:hidden" />
-                <Link href="/" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors">
-                  <Club className="w-6 h-6 text-primary" />
-                  <h1 className="text-lg font-semibold">Club Central</h1>
-                </Link>
-             </div>
-          </SidebarHeader>
-          <SidebarContent>
-            <SidebarMenu>
-                {menuItems.map((item) => (
-                  <SidebarMenuItem key={item.href}>
-                    <NavLink {...item} isActive={pathname === item.href} />
-                  </SidebarMenuItem>
-                ))}
-
-              <Collapsible className="w-full">
-                <CollapsibleTrigger className="w-full" asChild>
-                  <SidebarMenuButton className="w-full justify-start gap-2">
-                    <GalleryHorizontal />
-                    Content
-                  </SidebarMenuButton>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <SidebarMenuSub>
-                    {contentManagementItems.map((item) => (
-                      <SidebarMenuSubButton key={item.href} asChild isActive={pathname === item.href}>
-                        <Link href={item.href}>{item.label}</Link>
-                      </SidebarMenuSubButton>
-                    ))}
-                  </SidebarMenuSub>
-                </CollapsibleContent>
-              </Collapsible>
-              
-              <Collapsible className="w-full">
-                <CollapsibleTrigger className="w-full" asChild>
-                  <SidebarMenuButton className="w-full justify-start gap-2">
-                    <Users />
-                    Users
-                  </SidebarMenuButton>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <SidebarMenuSub>
-                    {userManagementItems.map((item) => (
-                      <SidebarMenuSubButton key={item.href} asChild isActive={pathname === item.href}>
-                        <Link href={item.href}>{item.label}</Link>
-                      </SidebarMenuSubButton>
-                    ))}
-                  </SidebarMenuSub>
-                </CollapsibleContent>
-              </Collapsible>
-              
-              <Collapsible className="w-full">
-                <CollapsibleTrigger className="w-full" asChild>
-                  <SidebarMenuButton className="w-full justify-start gap-2">
-                    <HandCoins />
-                    Financial
-                  </SidebarMenuButton>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <SidebarMenuSub>
-                    {financialManagementItems.map((item) => (
-                      <SidebarMenuSubButton key={item.href} asChild isActive={pathname === item.href}>
-                        <Link href={item.href}>{item.label}</Link>
-                      </SidebarMenuSubButton>
-                    ))}
-                  </SidebarMenuSub>
-                </CollapsibleContent>
-              </Collapsible>
-
-              <Collapsible className="w-full">
-                <CollapsibleTrigger className="w-full" asChild>
-                  <SidebarMenuButton className="w-full justify-start gap-2">
-                    <FileDown />
-                    Data
-                  </SidebarMenuButton>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <SidebarMenuSub>
-                    {dataManagementItems.map((item) => (
-                      <SidebarMenuSubButton key={item.href} asChild isActive={pathname === item.href}>
-                        <Link href={item.href}>{item.label}</Link>
-                      </SidebarMenuSubButton>
-                    ))}
-                  </SidebarMenuSub>
-                </CollapsibleContent>
-              </Collapsible>
-
-              <Collapsible className="w-full">
-                <CollapsibleTrigger className="w-full" asChild>
-                  <SidebarMenuButton className="w-full justify-start gap-2">
-                    <Settings />
-                    General
-                  </SidebarMenuButton>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <SidebarMenuSub>
-                    {settingsItems.map((item) => (
-                      <SidebarMenuSubButton key={item.href} asChild isActive={pathname === item.href}>
-                        <Link href={item.href}>{item.label}</Link>
-                      </SidebarMenuSubButton>
-                    ))}
-                  </SidebarMenuSub>
-                </CollapsibleContent>
-              </Collapsible>
-            </SidebarMenu>
-          </SidebarContent>
-      </Sidebar>
-      <div className="flex flex-col flex-1">
-        <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-background px-6 shrink-0">
-          <SidebarTrigger className="md:hidden" />
+    <div className="grid h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+      <div className="hidden border-r bg-muted/40 md:block">
+        <div className="flex h-full max-h-screen flex-col gap-2">
+          <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
+            <Link href="/" className="flex items-center gap-2 font-semibold">
+              <Club className="h-6 w-6 text-primary" />
+              <span className="">Club Central</span>
+            </Link>
+          </div>
           <div className="flex-1">
-            <h1 className="text-lg font-semibold">Welcome, Admin!</h1>
+            <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
+              <SidebarMenu>
+                  {menuItems.map((item) => (
+                    <SidebarMenuItem key={item.href}>
+                      <NavLink {...item} isActive={pathname === item.href} />
+                    </SidebarMenuItem>
+                  ))}
+
+                <Collapsible className="w-full">
+                  <CollapsibleTrigger className="w-full" asChild>
+                    <SidebarMenuButton className="w-full justify-start gap-2">
+                      <GalleryHorizontal />
+                      Content
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {contentManagementItems.map((item) => (
+                        <SidebarMenuSubButton key={item.href} asChild isActive={pathname === item.href}>
+                          <Link href={item.href}>{item.label}</Link>
+                        </SidebarMenuSubButton>
+                      ))}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </Collapsible>
+                
+                <Collapsible className="w-full">
+                  <CollapsibleTrigger className="w-full" asChild>
+                    <SidebarMenuButton className="w-full justify-start gap-2">
+                      <Users />
+                      Users
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {userManagementItems.map((item) => (
+                        <SidebarMenuSubButton key={item.href} asChild isActive={pathname === item.href}>
+                          <Link href={item.href}>{item.label}</Link>
+                        </SidebarMenuSubButton>
+                      ))}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </Collapsible>
+                
+                <Collapsible className="w-full">
+                  <CollapsibleTrigger className="w-full" asChild>
+                    <SidebarMenuButton className="w-full justify-start gap-2">
+                      <HandCoins />
+                      Financial
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {financialManagementItems.map((item) => (
+                        <SidebarMenuSubButton key={item.href} asChild isActive={pathname === item.href}>
+                          <Link href={item.href}>{item.label}</Link>
+                        </SidebarMenuSubButton>
+                      ))}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </Collapsible>
+
+                <Collapsible className="w-full">
+                  <CollapsibleTrigger className="w-full" asChild>
+                    <SidebarMenuButton className="w-full justify-start gap-2">
+                      <FileDown />
+                      Data
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {dataManagementItems.map((item) => (
+                        <SidebarMenuSubButton key={item.href} asChild isActive={pathname === item.href}>
+                          <Link href={item.href}>{item.label}</Link>
+                        </SidebarMenuSubButton>
+                      ))}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </Collapsible>
+
+                <Collapsible className="w-full">
+                  <CollapsibleTrigger className="w-full" asChild>
+                    <SidebarMenuButton className="w-full justify-start gap-2">
+                      <Settings />
+                      General
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {settingsItems.map((item) => (
+                        <SidebarMenuSubButton key={item.href} asChild isActive={pathname === item.href}>
+                          <Link href={item.href}>{item.label}</Link>
+                        </SidebarMenuSubButton>
+                      ))}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </Collapsible>
+              </SidebarMenu>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col">
+        <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+           <div className="w-full flex-1">
+             {/* Mobile Nav Trigger can go here if needed */}
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-full">
+              <Button variant="secondary" size="icon" className="rounded-full">
                 <Avatar>
                   <AvatarImage src={user.photoURL || undefined} alt={user.displayName || 'Admin'} />
                   <AvatarFallback>{user.displayName?.charAt(0) || 'A'}</AvatarFallback>
                 </Avatar>
+                <span className="sr-only">Toggle user menu</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => router.push('/admin/settings')}><Settings className="mr-2 h-4 w-4" />Settings</DropdownMenuItem>
-              <DropdownMenuItem onClick={handleLogout}><LogOut className="mr-2 h-4 w-4" />Logout</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push('/admin/settings')}>Settings</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
-        <div className="flex-1 overflow-auto">
-          <SidebarInset>{children}</SidebarInset>
-        </div>
+        <main className="flex-1 overflow-auto p-4 sm:p-6">
+            {children}
+        </main>
       </div>
     </div>
   );
