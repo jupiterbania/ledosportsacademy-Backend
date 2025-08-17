@@ -5,7 +5,7 @@ import Image from "next/image"
 import { getAllPhotos, Photo } from "@/lib/data"
 import { Card, CardContent } from "@/components/ui/card"
 import { Header } from "@/components/layout/header"
-import { Dialog, DialogContent, DialogTrigger, DialogClose } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger, DialogClose, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 
 export default function GalleryPage() {
   const photos = getAllPhotos()
@@ -55,6 +55,10 @@ export default function GalleryPage() {
              </DialogTrigger>
              {selectedPhoto && selectedPhoto.id === photo.id && (
                 <DialogContent className="p-0 border-0 max-w-4xl bg-transparent">
+                     <DialogTitle className="sr-only">{`Enlarged view of gallery photo ${selectedPhoto.id}`}</DialogTitle>
+                     <DialogDescription className="sr-only">
+                        A larger view of the selected photo from the gallery.
+                     </DialogDescription>
                     <Image
                         src={selectedPhoto.url}
                         alt={`Gallery photo ${selectedPhoto.id}`}
