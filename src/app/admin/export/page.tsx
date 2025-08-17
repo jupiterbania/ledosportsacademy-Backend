@@ -126,8 +126,8 @@ export default function ExportPage() {
       
       let startY = 40;
 
-      const addSection = (title: string, head: any[], body: any[][]) => {
-          if (doc.internal.pageSize.height - startY < 60) {
+      const addSection = (title: string, head: any[], body: any[][], newPage: boolean = true) => {
+          if (newPage && doc.internal.pageSize.height - startY < 60) {
             doc.addPage();
             startY = 20;
           }
@@ -145,6 +145,23 @@ export default function ExportPage() {
           startY = doc.autoTable.previous.finalY + 15;
       }
       
+      // Financial Summary
+      const totalDonations = donations.reduce((sum, d) => sum + (d.amount || 0), 0);
+      const totalCollections = collections.reduce((sum, c) => sum + c.amount, 0);
+      const totalExpenses = expenses.reduce((sum, e) => sum + e.amount, 0);
+      const netBalance = totalDonations + totalCollections - totalExpenses;
+      
+      const financialSummaryBody = [
+        ['Total Donations', `INR ${new Intl.NumberFormat('en-IN').format(totalDonations)}`],
+        ['Total Collections', `INR ${new Intl.NumberFormat('en-IN').format(totalCollections)}`],
+        ['Total Income', `INR ${new Intl.NumberFormat('en-IN').format(totalDonations + totalCollections)}`],
+        ['Total Expenses', `INR ${new Intl.NumberFormat('en-IN').format(totalExpenses)}`],
+        ['Net Balance', `INR ${new Intl.NumberFormat('en-IN').format(netBalance)}`],
+      ];
+
+      addSection("Financial Summary", [["Metric", "Amount"]], financialSummaryBody, false);
+
+
       // Donations
       addSection(
         "Donations",
