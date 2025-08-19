@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
@@ -282,12 +282,18 @@ export default function MembersManagementPage() {
                       <Calendar className="mr-2 h-4 w-4" />
                       <span>Joined: {new Date(member.joinDate).toLocaleDateString()}</span>
                    </div>
-                    <div className="flex items-center text-sm">
-                      <Badge variant="outline">Age: {member.age || 'N/A'}</Badge>
-                      <Badge variant="outline" className="ml-2 flex items-center">
-                        <Droplets className="mr-1 h-3 w-3 text-red-500" />
-                        {member.bloodGroup || 'N/A'}
-                      </Badge>
+                   <div className="flex items-center gap-4 text-sm">
+                      <div className="flex items-center">
+                        <span className="font-medium mr-2">Age:</span>
+                        <Badge variant="outline">{member.age || 'N/A'}</Badge>
+                      </div>
+                      <div className="flex items-center">
+                        <span className="font-medium mr-2">Blood:</span>
+                        <Badge variant="outline" className="flex items-center">
+                          <Droplets className="mr-1 h-3 w-3 text-red-500" />
+                          {member.bloodGroup || 'N/A'}
+                        </Badge>
+                      </div>
                    </div>
                 </CardContent>
                 <CardFooter className="flex justify-end">
