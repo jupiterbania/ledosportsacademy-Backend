@@ -25,21 +25,19 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body bg-background text-foreground antialiased min-h-screen flex flex-col">
-        <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-        >
-            <AuthProvider>
-                <Header />
-                <main className="flex-grow">{children}</main>
-                <Toaster />
-            </AuthProvider>
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+          >
+                  <Header />
+                  <main className="flex-grow">{children}</main>
+                  <Toaster />
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );
 }
-
-    

@@ -149,6 +149,14 @@ export const addMember = (data: Omit<Member, 'id'>) => addDocument<Member>('memb
 export const updateMember = (id: string, data: Partial<Member>) => updateDocument<Member>('members', id, data);
 export const deleteMember = (id: string) => deleteDocument('members', id);
 
+export const checkIfMemberExists = async (email: string): Promise<boolean> => {
+    if (!isConfigComplete) return false;
+    const q = query(collection(db, "members"), where("email", "==", email), limit(1));
+    const snapshot = await getDocs(q);
+    return !snapshot.empty;
+};
+
+
 // Donations
 export const getAllDonations = () => getCollection<Donation>('donations');
 export const addDonation = (data: Omit<Donation, 'id'>) => addDocument<Donation>('donations', data);
