@@ -113,7 +113,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
             <Link href="/" className="flex items-center gap-2 font-semibold">
-              <Image src="https://placehold.co/24x24.png" alt="LEDO SPORTS ACADEMY Logo" width={24} height={24} />
+              <Image src="https://iili.io/FpDNveV.png" alt="LEDO SPORTS ACADEMY Logo" width={24} height={24} />
               <span className="">LEDO SPORTS ACADEMY</span>
             </Link>
           </div>
@@ -241,7 +241,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                </SheetHeader>
                 <nav className="grid gap-2 text-lg font-medium">
                     <Link href="/" className="flex items-center gap-2 text-lg font-semibold mb-4">
-                        <Image src="https://placehold.co/24x24.png" alt="LEDO SPORTS ACADEMY Logo" width={24} height={24} />
+                        <Image src="https://iili.io/FpDNveV.png" alt="LEDO SPORTS ACADEMY Logo" width={24} height={24} />
                         <span className="">LEDO SPORTS ACADEMY</span>
                     </Link>
                     {menuItems.map((item) => <Link key={item.href} href={item.href} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"><item.icon className="h-4 w-4" />{item.label}</Link>)}
@@ -301,3 +301,5 @@ export default function AdminDashboardLayout({
     </SidebarProvider>
   )
 }
+
+    
