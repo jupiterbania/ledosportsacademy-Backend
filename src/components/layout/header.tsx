@@ -1,3 +1,4 @@
+
 "use client"
 
 import React from 'react';
@@ -5,7 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Menu, Club, LayoutDashboard, HandCoins, Medal, Users as UsersIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/hooks/use-auth';
 import { signOut } from '@/lib/auth';
@@ -88,6 +89,8 @@ export function Header() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+              <SheetTitle className="sr-only">Main Menu</SheetTitle>
+              <SheetDescription className="sr-only">A list of navigation links for the site.</SheetDescription>
                <div className="p-4">
                 <SheetClose asChild>
                   <Link href="/" className="flex items-center gap-2 mb-6">
@@ -114,3 +117,4 @@ export function Header() {
     </header>
   );
 }
+
