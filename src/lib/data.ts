@@ -13,6 +13,7 @@ export interface Photo extends BaseDocument {
   isSliderPhoto: boolean;
   uploadedAt: string;
   'data-ai-hint'?: string;
+  title?: string;
   description?: string;
 }
 
@@ -195,8 +196,8 @@ export const getSlideshowItems = async (): Promise<SlideshowItem[]> => {
         return {
             id: `photo-${doc.id}`,
             url: p.url,
-            title: p.description || '',
-            description: '',
+            title: p.title || '',
+            description: p.description || '',
             'data-ai-hint': p['data-ai-hint'],
             date: p.uploadedAt,
         };

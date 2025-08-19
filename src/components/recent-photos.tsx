@@ -4,7 +4,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Photo } from "@/lib/data"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 
@@ -24,15 +24,15 @@ export function RecentPhotos({ photos }: { photos: Photo[] }) {
           </Link>
         </Button>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {photos.map((photo, index) => (
           <Link key={photo.id} href="/gallery" className="block group">
-            <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border-2 border-transparent hover:border-primary animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+            <Card className="overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1.5 h-full flex flex-col border-2 border-transparent hover:border-primary animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
               <CardContent className="p-0">
                 <div className="relative aspect-[4/3] w-full">
                   <Image
                     src={photo.url}
-                    alt={`Gallery photo ${photo.id}`}
+                    alt={photo.title || `Gallery photo ${photo.id}`}
                     fill
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -41,6 +41,12 @@ export function RecentPhotos({ photos }: { photos: Photo[] }) {
                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
               </CardContent>
+               {(photo.title || photo.description) && (
+                <div className="p-4 flex-grow flex flex-col">
+                  {photo.title && <h3 className="font-bold text-lg group-hover:text-primary transition-colors">{photo.title}</h3>}
+                  {photo.description && <p className="text-sm text-muted-foreground mt-1 flex-grow">{photo.description}</p>}
+                </div>
+              )}
             </Card>
           </Link>
         ))}
@@ -48,5 +54,3 @@ export function RecentPhotos({ photos }: { photos: Photo[] }) {
     </section>
   )
 }
-
-    

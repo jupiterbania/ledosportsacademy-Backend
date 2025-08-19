@@ -48,7 +48,7 @@ export default function GalleryPage() {
                     <div className="relative aspect-square w-full">
                       <Image
                         src={photo.url}
-                        alt={`Gallery photo ${photo.id}`}
+                        alt={photo.title || `Gallery photo ${photo.id}`}
                         fill
                         className="object-cover transition-transform duration-300 group-hover:scale-105"
                         sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
@@ -63,17 +63,22 @@ export default function GalleryPage() {
              </DialogTrigger>
              {selectedPhoto && selectedPhoto.id === photo.id && (
                 <DialogContent className="p-0 border-0 max-w-4xl bg-transparent">
-                     <DialogTitle className="sr-only">{`Enlarged view of gallery photo ${selectedPhoto.id}`}</DialogTitle>
-                     <DialogDescription className="sr-only">
-                        A larger view of the selected photo from the gallery. {selectedPhoto.description}
-                     </DialogDescription>
-                    <Image
-                        src={selectedPhoto.url}
-                        alt={`Gallery photo ${selectedPhoto.id}`}
-                        width={1200}
-                        height={800}
-                        className="object-contain w-full h-auto rounded-lg"
-                    />
+                    <DialogTitle className="sr-only">{selectedPhoto.title || `Enlarged view of gallery photo ${selectedPhoto.id}`}</DialogTitle>
+                    <div className="relative">
+                        <Image
+                            src={selectedPhoto.url}
+                            alt={selectedPhoto.title || `Gallery photo ${selectedPhoto.id}`}
+                            width={1200}
+                            height={800}
+                            className="object-contain w-full h-auto rounded-lg"
+                        />
+                        {(selectedPhoto.title || selectedPhoto.description) && (
+                            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent p-6 text-white rounded-b-lg">
+                                {selectedPhoto.title && <h3 className="text-xl font-bold">{selectedPhoto.title}</h3>}
+                                {selectedPhoto.description && <DialogDescription className="text-white/90 mt-1">{selectedPhoto.description}</DialogDescription>}
+                            </div>
+                        )}
+                    </div>
                 </DialogContent>
              )}
           </Dialog>
@@ -83,5 +88,3 @@ export default function GalleryPage() {
     
   )
 }
-
-    

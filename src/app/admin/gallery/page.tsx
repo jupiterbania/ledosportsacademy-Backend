@@ -23,9 +23,10 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 const photoSchema = z.object({
   id: z.string().optional(),
   url: z.string().url({ message: "Please enter a valid URL." }),
+  title: z.string().optional(),
+  description: z.string().optional(),
   'data-ai-hint': z.string().optional(),
   isSliderPhoto: z.boolean().default(false),
-  description: z.string().optional(),
 });
 
 type PhotoFormValues = z.infer<typeof photoSchema>;
@@ -49,6 +50,7 @@ export default function GalleryManagementPage() {
     defaultValues: {
       url: "https://placehold.co/600x400.png",
       isSliderPhoto: false,
+      title: '',
       'data-ai-hint': '',
       description: '',
     },
@@ -104,6 +106,7 @@ export default function GalleryManagementPage() {
                     url: "https://placehold.co/600x400.png",
                     'data-ai-hint': '',
                     isSliderPhoto: false,
+                    title: '',
                     description: '',
                   });
                   setIsDialogOpen(true);
@@ -131,12 +134,25 @@ export default function GalleryManagementPage() {
                         </FormItem>
                       )}
                     />
+                     <FormField
+                      control={form.control}
+                      name="title"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Title (Optional)</FormLabel>
+                          <FormControl>
+                            <Input placeholder="A nice title for the photo" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                     <FormField
                       control={form.control}
                       name="description"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Description</FormLabel>
+                          <FormLabel>Description (Optional)</FormLabel>
                           <FormControl>
                             <Textarea placeholder="A short description of the photo" {...field} />
                           </FormControl>
@@ -202,9 +218,12 @@ export default function GalleryManagementPage() {
                    <TableCell>
                       <div className="flex items-center gap-4">
                         <div className="relative h-16 w-16 rounded-md overflow-hidden shrink-0">
-                           <Image src={photo.url} alt={`Photo ${photo.id}`} fill className="object-cover" sizes="64px" />
+                           <Image src={photo.url} alt={photo.title || `Photo ${photo.id}`} fill className="object-cover" sizes="64px" />
                         </div>
-                         <a href={photo.url} target="_blank" rel="noopener noreferrer" className="truncate text-sm font-medium hover:underline hidden sm:inline-block max-w-[150px] lg:max-w-[250px]">{photo.url}</a>
+                         <div className="flex flex-col">
+                            <span className="font-medium">{photo.title || 'Untitled'}</span>
+                            <a href={photo.url} target="_blank" rel="noopener noreferrer" className="truncate text-sm text-muted-foreground hover:underline hidden sm:inline-block max-w-[150px] lg:max-w-[250px]">{photo.url}</a>
+                         </div>
                       </div>
                   </TableCell>
                   <TableCell className="hidden md:table-cell">{photo.description || 'N/A'}</TableCell>
