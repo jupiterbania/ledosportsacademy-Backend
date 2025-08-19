@@ -14,7 +14,7 @@ export function RecentEvents({ events }: { events: Event[] }) {
   }
 
   const EventCardContent = ({ event, index }: { event: Event, index: number }) => (
-    <Card className="overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1.5 h-full flex flex-col border-2 border-transparent hover:border-primary animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+    <Card className="overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1.5 h-full flex flex-col border-2 border-transparent hover:border-primary animate-fade-in" style={{ animationDelay: `${index * 150}ms` }}>
       <div className="relative aspect-video w-full">
         <Image
           src={event.photoUrl}

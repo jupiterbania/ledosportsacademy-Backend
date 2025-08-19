@@ -27,7 +27,7 @@ export default function Home() {
     
       <div className="flex flex-col">
         <HomepageSlideshow />
-        <div className="container py-8 md:py-12 space-y-12 animate-fade-in">
+        <div className="container py-8 md:py-12 space-y-12">
           <RecentEvents events={recentEvents} />
           <RecentAchievements achievements={recentAchievements} />
           <RecentPhotos photos={recentPhotos} />
@@ -36,5 +36,3 @@ export default function Home() {
     
   );
 }
-
-    
