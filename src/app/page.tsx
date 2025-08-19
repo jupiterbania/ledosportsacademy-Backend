@@ -25,9 +25,9 @@ export default function Home() {
 
   return (
     
-      <div className="flex flex-col animate-fade-in">
+      <div className="flex flex-col">
         <HomepageSlideshow />
-        <div className="container py-8 md:py-12 space-y-12">
+        <div className="container py-8 md:py-12 space-y-12 animate-fade-in">
           <RecentEvents events={recentEvents} />
           <RecentAchievements achievements={recentAchievements} />
           <RecentPhotos photos={recentPhotos} />
