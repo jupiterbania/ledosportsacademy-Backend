@@ -51,7 +51,7 @@ export default function EventsPage() {
         <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">Club Events</h1>
         <p className="mt-4 text-lg text-muted-foreground">Join us for our upcoming activities and gatherings.</p>
       </div>
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {events.map((event, index) => (
           event.redirectUrl ? (
             <Link key={event.id} href={event.redirectUrl} target="_blank" rel="noopener noreferrer" className="block">

@@ -34,7 +34,7 @@ export default function GalleryPage() {
         <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">Photo Gallery</h1>
         <p className="mt-4 text-lg text-muted-foreground">A collection of moments from our club's journey.</p>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4">
         {photos.map((photo, index) => (
           <Dialog key={photo.id} onOpenChange={(isOpen) => !isOpen && handleDialogClose()}>
              <DialogTrigger asChild>
