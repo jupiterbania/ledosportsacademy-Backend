@@ -6,12 +6,13 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Menu, Club, LayoutDashboard, HandCoins, Medal, Users as UsersIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetTitle, SheetDescription } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetTitle, SheetDescription, SheetHeader } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/hooks/use-auth';
 import { signOut } from '@/lib/auth';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import Image from 'next/image';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 
 export function Header() {
@@ -68,7 +69,8 @@ export function Header() {
           {isAdmin && <NavLink href="/admin" label="Admin Dashboard" />}
         </nav>
         
-        <div className="hidden md:flex items-center ml-auto">
+        <div className="hidden md:flex items-center ml-auto gap-2">
+            <ThemeToggle />
           {user ? (
              <div className="flex items-center gap-4">
                 <span className="text-sm text-muted-foreground">Hello, {user.displayName?.split(' ')[0]}!</span>
@@ -80,7 +82,8 @@ export function Header() {
         </div>
 
 
-        <div className="md:hidden ml-auto">
+        <div className="md:hidden ml-auto flex items-center gap-2">
+           <ThemeToggle />
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
@@ -89,8 +92,10 @@ export function Header() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
-              <SheetTitle className="sr-only">Main Menu</SheetTitle>
-              <SheetDescription className="sr-only">A list of navigation links for the site.</SheetDescription>
+               <SheetHeader>
+                 <SheetTitle className="sr-only">Main Menu</SheetTitle>
+                 <SheetDescription className="sr-only">A list of navigation links for the site.</SheetDescription>
+               </SheetHeader>
                <div className="p-4">
                 <SheetClose asChild>
                   <Link href="/" className="flex items-center gap-2 mb-6">
@@ -117,4 +122,3 @@ export function Header() {
     </header>
   );
 }
-

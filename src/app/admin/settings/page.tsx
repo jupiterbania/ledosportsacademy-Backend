@@ -26,15 +26,7 @@ type SettingsFormValues = z.infer<typeof settingsSchema>;
 export default function SettingsPage() {
   const { toast } = useToast();
   const { user } = useAuth();
-  const { setTheme, theme } = useTheme();
-
-  const themes = [
-    { name: 'Default', value: 'light' },
-    { name: 'Dark', value: 'dark' },
-    { name: 'Green (Dark)', value: 'dark-green' },
-    { name: 'Orange (Dark)', value: 'dark-orange' },
-  ];
-
+  
   const form = useForm<SettingsFormValues>({
     resolver: zodResolver(settingsSchema),
     defaultValues: {
@@ -103,45 +95,6 @@ export default function SettingsPage() {
               </form>
             </Form>
           </CardContent>
-        </Card>
-
-        <Card className="mt-8">
-            <CardHeader>
-                <CardTitle>Theme</CardTitle>
-                <CardDescription>Customize the appearance of the application.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {themes.map((t) => (
-                         <Button
-                            key={t.value}
-                            variant="outline"
-                            className={cn(
-                                "h-24 justify-start p-4",
-                                theme === t.value && "border-2 border-primary"
-                            )}
-                            onClick={() => setTheme(t.value)}
-                        >
-                            <div className="flex items-start gap-4">
-                                <div
-                                className={cn(
-                                    "flex h-5 w-5 items-center justify-center rounded-full border",
-                                    theme === t.value ? "border-primary" : "border-muted-foreground"
-                                )}
-                                >
-                                {theme === t.value && (
-                                    <Check className="h-4 w-4 text-primary" />
-                                )}
-                                </div>
-                                <div className="text-left">
-                                     <p className="font-semibold">{t.name}</p>
-                                     <p className="text-xs text-muted-foreground">Apply theme</p>
-                                </div>
-                           </div>
-                       </Button>
-                    ))}
-                </div>
-            </CardContent>
         </Card>
       </div>
     </div>
