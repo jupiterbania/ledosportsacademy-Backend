@@ -24,7 +24,7 @@ export function RecentPhotos({ photos }: { photos: Photo[] }) {
           </Link>
         </Button>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {photos.map((photo) => (
           <Link key={photo.id} href="/gallery" className="block group">
             <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border-2 border-transparent hover:border-primary">
@@ -35,7 +35,7 @@ export function RecentPhotos({ photos }: { photos: Photo[] }) {
                     alt={`Gallery photo ${photo.id}`}
                     fill
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     data-ai-hint={photo['data-ai-hint']}
                   />
                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
