@@ -70,25 +70,27 @@ export function HomepageSlideshow() {
                       data-ai-hint={item['data-ai-hint']}
                       sizes="100vw"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
                   </div>
                 </CardContent>
               </Card>
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10 hidden md:flex bg-background/50 hover:bg-background/80" />
-        <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10 hidden md:flex bg-background/50 hover:bg-background/80" />
+        <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10 hidden md:flex bg-white/20 hover:bg-white/40 text-white" />
+        <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10 hidden md:flex bg-white/20 hover:bg-white/40 text-white" />
       </Carousel>
-       <div className="absolute bottom-10 left-0 right-0 text-center w-full z-10 px-4">
-            {slideshowItems[current]?.title && (
-              <h1 className="text-white text-4xl md:text-6xl font-bold drop-shadow-lg">{slideshowItems[current]?.title}</h1>
-            )}
-            {slideshowItems[current]?.description && (
-                 <p className="text-white/90 text-lg md:text-xl mt-2 drop-shadow-md transition-opacity duration-500 ease-in-out">
-                    {slideshowItems[current].description}
-                </p>
-            )}
+       <div className="absolute bottom-10 sm:bottom-20 left-4 sm:left-10 md:left-20 right-4 sm:right-10 md:right-20 z-10 px-4 text-left">
+            <div key={current} className="animate-in fade-in-0 slide-in-from-bottom-10 duration-700">
+                {slideshowItems[current]?.title && (
+                  <h1 className="text-white text-3xl md:text-5xl lg:text-6xl font-bold drop-shadow-2xl">{slideshowItems[current]?.title}</h1>
+                )}
+                {slideshowItems[current]?.description && (
+                     <p className="text-white/90 text-base md:text-lg max-w-2xl mt-2 drop-shadow-lg">
+                        {slideshowItems[current].description}
+                    </p>
+                )}
+            </div>
         </div>
     </section>
   )
