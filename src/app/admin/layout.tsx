@@ -239,7 +239,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                  <SheetTitle>Main Menu</SheetTitle>
                  <SheetDescription className="sr-only">A list of navigation links for the site.</SheetDescription>
                </SheetHeader>
-                <nav className="grid gap-2 text-lg font-medium">
+                <nav className="flex-1 overflow-y-auto grid gap-2 text-lg font-medium">
                     <Link href="/" className="flex items-center gap-2 text-lg font-semibold mb-4">
                         <Image src="https://iili.io/FpDNveV.png" alt="LEDO SPORTS ACADEMY Logo" width={24} height={24} />
                         <span className="">LEDO SPORTS ACADEMY</span>
