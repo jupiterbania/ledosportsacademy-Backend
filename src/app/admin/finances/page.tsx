@@ -175,11 +175,11 @@ function DonationTable() {
               <PlusCircle className="mr-2 h-4 w-4" /> Add Donation
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-lg max-h-[90vh]">
+          <DialogContent className="sm:max-w-lg max-h-[90vh] flex flex-col">
             <DialogHeader>
               <DialogTitle>{form.getValues("id") ? 'Edit' : 'Add'} Donation</DialogTitle>
             </DialogHeader>
-            <ScrollArea className="pr-4">
+            <div className="flex-grow overflow-y-auto pr-4">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                 <FormField control={form.control} name="title" render={({ field }) => (
@@ -258,13 +258,13 @@ function DonationTable() {
                     <FormMessage />
                   </FormItem>
                 )} />
-                <DialogFooter className="sticky bottom-0 bg-background py-4">
+                <DialogFooter className="sticky bottom-0 bg-background py-4 -mx-6 px-6 border-t">
                   <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
                   <Button type="submit">Save</Button>
                 </DialogFooter>
               </form>
             </Form>
-            </ScrollArea>
+            </div>
           </DialogContent>
         </Dialog>
       </CardHeader>
@@ -404,11 +404,11 @@ function FinanceTable<T extends Collection | Expense>({
               <PlusCircle className="mr-2 h-4 w-4" /> Add {title}
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-lg max-h-[90vh]">
+          <DialogContent className="sm:max-w-lg max-h-[90vh] flex flex-col">
             <DialogHeader>
               <DialogTitle>{form.getValues("id") ? 'Edit' : 'Add'} {title}</DialogTitle>
             </DialogHeader>
-             <ScrollArea className="pr-4">
+             <div className="flex-grow overflow-y-auto pr-4">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                   <FormField control={form.control} name="title" render={({ field }) => (
@@ -432,13 +432,13 @@ function FinanceTable<T extends Collection | Expense>({
                       <FormMessage />
                     </FormItem>
                   )} />
-                  <DialogFooter className="sticky bottom-0 bg-background py-4">
+                  <DialogFooter className="sticky bottom-0 bg-background py-4 -mx-6 px-6 border-t">
                     <DialogClose asChild><Button type="button" variant="ghost">Cancel</Button></DialogClose>
                     <Button type="submit">Save</Button>
                   </DialogFooter>
                 </form>
               </Form>
-            </ScrollArea>
+            </div>
           </DialogContent>
         </Dialog>
       </CardHeader>

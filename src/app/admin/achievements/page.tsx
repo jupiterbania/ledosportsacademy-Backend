@@ -109,11 +109,11 @@ export default function AchievementsManagementPage() {
                 <PlusCircle className="mr-2 h-4 w-4" /> Add Achievement
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-2xl max-h-[90vh]">
+            <DialogContent className="sm:max-w-2xl max-h-[90vh] flex flex-col">
               <DialogHeader>
                 <DialogTitle>{form.getValues("id") ? 'Edit Achievement' : 'Add New Achievement'}</DialogTitle>
               </DialogHeader>
-               <ScrollArea className="pr-4">
+               <div className="flex-grow overflow-y-auto pr-4">
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                     <FormField
@@ -181,7 +181,7 @@ export default function AchievementsManagementPage() {
                         </FormItem>
                       )}
                     />
-                    <DialogFooter className="sticky bottom-0 bg-background py-4">
+                    <DialogFooter className="sticky bottom-0 bg-background py-4 -mx-6 px-6 border-t">
                       <DialogClose asChild>
                         <Button type="button" variant="ghost">Cancel</Button>
                       </DialogClose>
@@ -189,7 +189,7 @@ export default function AchievementsManagementPage() {
                     </DialogFooter>
                   </form>
                 </Form>
-              </ScrollArea>
+              </div>
             </DialogContent>
           </Dialog>
         </CardHeader>

@@ -149,11 +149,11 @@ export default function MembersManagementPage() {
                 <PlusCircle className="mr-2 h-4 w-4" /> Add Member
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-xl max-h-[90vh]">
+            <DialogContent className="sm:max-w-xl max-h-[90vh] flex flex-col">
               <DialogHeader>
                 <DialogTitle>{form.getValues("id") ? 'Edit Member' : 'Add New Member'}</DialogTitle>
               </DialogHeader>
-               <ScrollArea className="pr-4">
+               <div className="flex-grow overflow-y-auto pr-4">
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                     <FormField
@@ -250,7 +250,7 @@ export default function MembersManagementPage() {
                         </FormItem>
                       )}
                     />
-                    <DialogFooter className="sticky bottom-0 bg-background py-4">
+                    <DialogFooter className="sticky bottom-0 bg-background py-4 -mx-6 px-6 border-t">
                       <DialogClose asChild>
                         <Button type="button" variant="ghost">Cancel</Button>
                       </DialogClose>
@@ -258,7 +258,7 @@ export default function MembersManagementPage() {
                     </DialogFooter>
                   </form>
                 </Form>
-              </ScrollArea>
+              </div>
             </DialogContent>
           </Dialog>
         </CardHeader>
@@ -340,5 +340,4 @@ export default function MembersManagementPage() {
     </div>
   );
 }
-
     
