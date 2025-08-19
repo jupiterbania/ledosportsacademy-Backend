@@ -195,8 +195,8 @@ export const getSlideshowItems = async (): Promise<SlideshowItem[]> => {
         return {
             id: `photo-${doc.id}`,
             url: p.url,
-            title: "Welcome to LEDO SPORTS ACADEMY",
-            description: p.description,
+            title: p.description || '',
+            description: '',
             'data-ai-hint': p['data-ai-hint'],
             date: p.uploadedAt,
         };

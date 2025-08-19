@@ -81,7 +81,9 @@ export function HomepageSlideshow() {
         <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10 hidden md:flex bg-background/50 hover:bg-background/80" />
       </Carousel>
        <div className="absolute bottom-10 left-0 right-0 text-center w-full z-10 px-4">
-            <h1 className="text-white text-4xl md:text-6xl font-bold drop-shadow-lg">{slideshowItems[current]?.title}</h1>
+            {slideshowItems[current]?.title && (
+              <h1 className="text-white text-4xl md:text-6xl font-bold drop-shadow-lg">{slideshowItems[current]?.title}</h1>
+            )}
             {slideshowItems[current]?.description && (
                  <p className="text-white/90 text-lg md:text-xl mt-2 drop-shadow-md transition-opacity duration-500 ease-in-out">
                     {slideshowItems[current].description}
