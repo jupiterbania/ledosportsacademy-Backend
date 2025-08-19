@@ -59,7 +59,7 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
         <Link href="/" className="flex items-center gap-2 mr-4">
-          <Image src="https://i.ibb.co/dG3PGx9/logo.png" alt="LEDO SPORTS ACADEMY Logo" width={32} height={32} />
+          <Image src="https://placehold.co/32x32.png" alt="LEDO SPORTS ACADEMY Logo" width={32} height={32} />
           <span className="font-bold sm:text-xl">LEDO SPORTS ACADEMY</span>
         </Link>
         
@@ -93,13 +93,13 @@ export function Header() {
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
                <SheetHeader>
-                 <SheetTitle className="sr-only">Main Menu</SheetTitle>
+                 <SheetTitle>Main Menu</SheetTitle>
                  <SheetDescription className="sr-only">A list of navigation links for the site.</SheetDescription>
                </SheetHeader>
                <div className="p-4">
                 <SheetClose asChild>
                   <Link href="/" className="flex items-center gap-2 mb-6">
-                     <Image src="https://i.ibb.co/dG3PGx9/logo.png" alt="LEDO SPORTS ACADEMY Logo" width={32} height={32} />
+                     <Image src="https://placehold.co/32x32.png" alt="LEDO SPORTS ACADEMY Logo" width={32} height={32} />
                     <span className="font-bold text-xl">LEDO SPORTS ACADEMY</span>
                   </Link>
                 </SheetClose>
@@ -122,7 +122,3 @@ export function Header() {
     </header>
   );
 }
-
-    
-
-    
