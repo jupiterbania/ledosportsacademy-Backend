@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
@@ -13,11 +13,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { getAllMembers, Member, addMember, updateMember, deleteMember } from "@/lib/data";
-import { PlusCircle, Edit, Trash2 } from 'lucide-react';
+import { PlusCircle, Edit, Trash2, Calendar, Droplets } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
 
 const memberSchema = z.object({
   id: z.string().optional(),
@@ -96,6 +97,35 @@ export default function MembersManagementPage() {
       toast({ title: "Error", description: "Something went wrong.", variant: "destructive" });
     }
   };
+
+  const MemberActions = ({ member }: { member: Member}) => (
+     <div className="flex gap-2">
+       <Button variant="outline" size="icon" onClick={() => handleEdit(member)}>
+        <Edit className="h-4 w-4" />
+          <span className="sr-only">Edit</span>
+      </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+              <Button variant="destructive" size="icon">
+                <Trash2 className="h-4 w-4" />
+                <span className="sr-only">Delete</span>
+              </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently remove the member.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={() => handleDelete(member.id)}>Delete</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+    </div>
+  );
 
   return (
     <div className="flex flex-1 flex-col gap-4 md:gap-8">
@@ -233,68 +263,82 @@ export default function MembersManagementPage() {
           </Dialog>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Member</TableHead>
-                <TableHead className="hidden sm:table-cell">Join Date</TableHead>
-                <TableHead className="hidden md:table-cell">Age</TableHead>
-                <TableHead className="hidden md:table-cell">Blood Group</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {members.map((member) => (
-                <TableRow key={member.id}>
-                  <TableCell>
-                      <div className="flex items-center gap-4">
-                         <Avatar>
-                           <AvatarImage src={member.photoUrl} alt={member.name} />
-                           <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
-                         </Avatar>
-                         <div>
-                            <div className="font-medium">{member.name}</div>
-                            <div className="text-sm text-muted-foreground truncate max-w-[150px] sm:max-w-none">{member.email}</div>
-                         </div>
-                      </div>
-                  </TableCell>
-                  <TableCell className="hidden sm:table-cell">{new Date(member.joinDate).toLocaleDateString()}</TableCell>
-                  <TableCell className="hidden md:table-cell">{member.age || 'N/A'}</TableCell>
-                  <TableCell className="hidden md:table-cell">{member.bloodGroup || 'N/A'}</TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                       <Button variant="outline" size="icon" onClick={() => handleEdit(member)}>
-                        <Edit className="h-4 w-4" />
-                         <span className="sr-only">Edit</span>
-                      </Button>
-                       <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                             <Button variant="destructive" size="icon">
-                                <Trash2 className="h-4 w-4" />
-                                <span className="sr-only">Delete</span>
-                              </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                              <AlertDialogDescription>
-                                This action cannot be undone. This will permanently remove the member.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction onClick={() => handleDelete(member.id)}>Delete</AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                    </div>
-                  </TableCell>
+          {/* Mobile View - Cards */}
+          <div className="grid gap-4 md:hidden">
+            {members.map((member) => (
+              <Card key={member.id}>
+                <CardHeader className="flex flex-row items-start gap-4 space-y-0">
+                  <Avatar className="h-12 w-12">
+                    <AvatarImage src={member.photoUrl} alt={member.name} />
+                    <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1">
+                    <CardTitle className="text-lg">{member.name}</CardTitle>
+                    <p className="text-sm text-muted-foreground truncate">{member.email}</p>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                   <div className="flex items-center text-sm text-muted-foreground">
+                      <Calendar className="mr-2 h-4 w-4" />
+                      <span>Joined: {new Date(member.joinDate).toLocaleDateString()}</span>
+                   </div>
+                    <div className="flex items-center text-sm">
+                      <Badge variant="outline">Age: {member.age || 'N/A'}</Badge>
+                      <Badge variant="outline" className="ml-2 flex items-center">
+                        <Droplets className="mr-1 h-3 w-3 text-red-500" />
+                        {member.bloodGroup || 'N/A'}
+                      </Badge>
+                   </div>
+                </CardContent>
+                <CardFooter className="flex justify-end">
+                   <MemberActions member={member} />
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+
+          {/* Desktop View - Table */}
+          <div className="hidden md:block">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Member</TableHead>
+                  <TableHead>Join Date</TableHead>
+                  <TableHead>Age</TableHead>
+                  <TableHead>Blood Group</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {members.map((member) => (
+                  <TableRow key={member.id}>
+                    <TableCell>
+                        <div className="flex items-center gap-4">
+                           <Avatar>
+                             <AvatarImage src={member.photoUrl} alt={member.name} />
+                             <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
+                           </Avatar>
+                           <div>
+                              <div className="font-medium">{member.name}</div>
+                              <div className="text-sm text-muted-foreground truncate">{member.email}</div>
+                           </div>
+                        </div>
+                    </TableCell>
+                    <TableCell>{new Date(member.joinDate).toLocaleDateString()}</TableCell>
+                    <TableCell>{member.age || 'N/A'}</TableCell>
+                    <TableCell>{member.bloodGroup || 'N/A'}</TableCell>
+                    <TableCell>
+                      <MemberActions member={member} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>
   );
 }
+
+    
