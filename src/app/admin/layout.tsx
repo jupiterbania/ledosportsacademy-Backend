@@ -39,7 +39,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import Image from 'next/image';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from '@/components/ui/sheet';
 
 function AdminLayout({ children }: { children: React.ReactNode }) {
   const { user, loading, isAdmin } = useAuth();
@@ -113,7 +113,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
             <Link href="/" className="flex items-center gap-2 font-semibold">
-              <Image src="https://iili.io/Fijeoxf.png" alt="LEDO SPORTS ACADEMY Logo" width={24} height={24} />
+              <Image src="https://i.ibb.co/3s03xGv/Screenshot-2024-07-26-at-12-07-16-PM.png" alt="LEDO SPORTS ACADEMY Logo" width={24} height={24} />
               <span className="">LEDO SPORTS ACADEMY</span>
             </Link>
           </div>
@@ -235,9 +235,13 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="flex flex-col">
+                <SheetHeader>
+                 <SheetTitle className="sr-only">Main Menu</SheetTitle>
+                 <SheetDescription className="sr-only">A list of navigation links for the site.</SheetDescription>
+               </SheetHeader>
                 <nav className="grid gap-2 text-lg font-medium">
                     <Link href="/" className="flex items-center gap-2 text-lg font-semibold mb-4">
-                        <Image src="https://iili.io/Fijeoxf.png" alt="LEDO SPORTS ACADEMY Logo" width={24} height={24} />
+                        <Image src="https://i.ibb.co/3s03xGv/Screenshot-2024-07-26-at-12-07-16-PM.png" alt="LEDO SPORTS ACADEMY Logo" width={24} height={24} />
                         <span className="">LEDO SPORTS ACADEMY</span>
                     </Link>
                     {menuItems.map((item) => <Link key={item.href} href={item.href} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"><item.icon className="h-4 w-4" />{item.label}</Link>)}
