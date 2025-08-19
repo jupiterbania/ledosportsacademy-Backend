@@ -24,7 +24,7 @@ export function RecentPhotos({ photos }: { photos: Photo[] }) {
           </Link>
         </Button>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
         {photos.map((photo) => (
           <Link key={photo.id} href="/gallery" className="block group">
             <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border-2 border-transparent hover:border-primary">

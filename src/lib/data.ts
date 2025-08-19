@@ -119,7 +119,7 @@ export const deletePhoto = (id: string) => deleteDocument('photos', id);
 
 export const getRecentPhotos = async () => {
     if (!isConfigComplete) return [];
-    const q = query(collection(db, "photos"), orderBy("uploadedAt", "desc"), limit(5));
+    const q = query(collection(db, "photos"), orderBy("uploadedAt", "desc"), limit(6));
     const snapshot = await getDocs(q);
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Photo));
 };
