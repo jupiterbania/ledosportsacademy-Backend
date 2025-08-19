@@ -24,10 +24,10 @@ export function RecentPhotos({ photos }: { photos: Photo[] }) {
           </Link>
         </Button>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {photos.map((photo) => (
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {photos.map((photo, index) => (
           <Link key={photo.id} href="/gallery" className="block group">
-            <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border-2 border-transparent hover:border-primary">
+            <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border-2 border-transparent hover:border-primary animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
               <CardContent className="p-0">
                 <div className="relative aspect-[4/3] w-full">
                   <Image
@@ -48,3 +48,5 @@ export function RecentPhotos({ photos }: { photos: Photo[] }) {
     </section>
   )
 }
+
+    

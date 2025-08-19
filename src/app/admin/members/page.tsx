@@ -276,8 +276,8 @@ export default function MembersManagementPage() {
         <CardContent>
           {/* Mobile View - Cards */}
           <div className="grid gap-4 md:hidden">
-            {members.map((member) => (
-              <Card key={member.id}>
+            {members.map((member, index) => (
+              <Card key={member.id} className="animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
                 <CardHeader className="flex flex-row items-start gap-4 space-y-0">
                   <Avatar className="h-12 w-12">
                     <AvatarImage src={member.photoUrl} alt={member.name} />
@@ -357,4 +357,6 @@ export default function MembersManagementPage() {
     </div>
   );
 }
+    
+
     

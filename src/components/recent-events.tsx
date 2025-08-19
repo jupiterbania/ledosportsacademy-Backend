@@ -13,8 +13,8 @@ export function RecentEvents({ events }: { events: Event[] }) {
     return null;
   }
 
-  const EventCardContent = ({ event }: { event: Event }) => (
-    <Card className="overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1.5 h-full flex flex-col border-2 border-transparent hover:border-primary">
+  const EventCardContent = ({ event, index }: { event: Event, index: number }) => (
+    <Card className="overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1.5 h-full flex flex-col border-2 border-transparent hover:border-primary animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
       <div className="relative aspect-video w-full">
         <Image
           src={event.photoUrl}
@@ -50,14 +50,14 @@ export function RecentEvents({ events }: { events: Event[] }) {
         </Button>
       </div>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {events.map((event) => {
+        {events.map((event, index) => {
           const href = event.redirectUrl || "/events";
           const target = event.redirectUrl ? "_blank" : undefined;
           const rel = event.redirectUrl ? "noopener noreferrer" : undefined;
 
           return (
             <Link key={event.id} href={href} target={target} rel={rel} className="block group">
-              <EventCardContent event={event} />
+              <EventCardContent event={event} index={index} />
             </Link>
           )
         })}
@@ -65,3 +65,5 @@ export function RecentEvents({ events }: { events: Event[] }) {
     </section>
   )
 }
+
+    
