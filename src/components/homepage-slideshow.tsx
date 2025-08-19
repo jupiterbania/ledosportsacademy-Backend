@@ -14,7 +14,7 @@ export function HomepageSlideshow() {
   const [slideshowItems, setSlideshowItems] = React.useState<SlideshowItem[]>([]);
 
   const plugin = React.useRef(
-    Autoplay({ delay: 5000, stopOnInteraction: true })
+    Autoplay({ delay: 3000, stopOnInteraction: true })
   )
 
   React.useEffect(() => {
