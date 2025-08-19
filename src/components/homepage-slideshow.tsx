@@ -7,6 +7,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { getSlideshowItems, SlideshowItem } from "@/lib/data"
 import { Card, CardContent } from "@/components/ui/card"
 import Autoplay from "embla-carousel-autoplay"
+import { cn } from "@/lib/utils"
 
 export function HomepageSlideshow() {
   const [api, setApi] = React.useState<CarouselApi>()
@@ -30,8 +31,6 @@ export function HomepageSlideshow() {
       return
     }
 
-    setCurrent(api.selectedScrollSnap());
-
     const handleSelect = () => {
       setCurrent(api.selectedScrollSnap());
     };
@@ -43,23 +42,26 @@ export function HomepageSlideshow() {
     }
   }, [api])
 
+  const scrollTo = React.useCallback((index: number) => {
+    api?.scrollTo(index);
+  }, [api]);
+
   if (slideshowItems.length === 0) {
     return null;
   }
 
   return (
-    <section className="w-full relative">
-      <Carousel 
-        setApi={setApi} 
-        className="w-full" 
-        opts={{ loop: true }}
-        plugins={[plugin.current]}
-       >
-        <CarouselContent>
-          {slideshowItems.map((item, index) => (
-            <CarouselItem key={item.id}>
-              <Card className="border-none rounded-none">
-                <CardContent className="p-0">
+    <section className="w-full py-6 md:py-8 lg:py-12">
+      <div className="container">
+        <Carousel 
+          setApi={setApi} 
+          className="w-full group rounded-xl overflow-hidden shadow-2xl border" 
+          opts={{ loop: true }}
+          plugins={[plugin.current]}
+        >
+          <CarouselContent>
+            {slideshowItems.map((item, index) => (
+              <CarouselItem key={item.id}>
                   <div className="relative h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] w-full">
                     <Image
                       src={item.url}
@@ -72,26 +74,42 @@ export function HomepageSlideshow() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
                   </div>
-                </CardContent>
-              </Card>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10 hidden md:flex bg-white/20 hover:bg-white/40 text-white" />
-        <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10 hidden md:flex bg-white/20 hover:bg-white/40 text-white" />
-      </Carousel>
-       <div className="absolute bottom-10 sm:bottom-20 left-4 sm:left-10 md:left-20 right-4 sm:right-10 md:right-20 z-10 px-4 text-left">
-            <div key={current} className="animate-in fade-in-0 slide-in-from-bottom-10 duration-700">
-                {slideshowItems[current]?.title && (
-                  <h1 className="text-white text-3xl md:text-5xl lg:text-6xl font-bold drop-shadow-2xl">{slideshowItems[current]?.title}</h1>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10 hidden md:flex bg-white/20 hover:bg-white/40 text-white" />
+          <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10 hidden md:flex bg-white/20 hover:bg-white/40 text-white" />
+          
+           <div className="absolute bottom-10 sm:bottom-20 left-4 sm:left-10 md:left-20 right-4 sm:right-10 md:right-20 z-10 px-4 text-left">
+              <div key={current} className="animate-in fade-in-0 slide-in-from-bottom-10 duration-700">
+                  {slideshowItems[current]?.title && (
+                    <h1 className="text-white text-3xl md:text-5xl lg:text-6xl font-bold drop-shadow-2xl">{slideshowItems[current]?.title}</h1>
+                  )}
+                  {slideshowItems[current]?.description && (
+                       <p className="text-white/90 text-base md:text-lg max-w-2xl mt-2 drop-shadow-lg">
+                          {slideshowItems[current].description}
+                      </p>
+                  )}
+              </div>
+          </div>
+          
+          <div className="absolute bottom-4 left-0 right-0 z-20 flex items-center justify-center gap-2">
+            {slideshowItems.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => scrollTo(index)}
+                className={cn(
+                  "h-2 w-2 rounded-full bg-white/50 transition-all",
+                  "hover:bg-white/80 hover:scale-110",
+                  current === index ? "w-4 bg-white" : "bg-white/50"
                 )}
-                {slideshowItems[current]?.description && (
-                     <p className="text-white/90 text-base md:text-lg max-w-2xl mt-2 drop-shadow-lg">
-                        {slideshowItems[current].description}
-                    </p>
-                )}
-            </div>
-        </div>
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
+
+        </Carousel>
+      </div>
     </section>
   )
 }
