@@ -65,5 +65,3 @@ export function RecentEvents({ events }: { events: Event[] }) {
     </section>
   )
 }
-
-    

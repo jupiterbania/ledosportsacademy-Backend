@@ -55,5 +55,3 @@ export function RecentAchievements({ achievements }: { achievements: Achievement
     </section>
   )
 }
-
-    
