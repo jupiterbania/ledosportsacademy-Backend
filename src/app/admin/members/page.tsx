@@ -26,11 +26,22 @@ const memberSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
   photoUrl: z.string().url({ message: "Please enter a valid URL." }),
   phone: z.string().optional(),
-  age: z.coerce.number().positive().int().optional().or(z.literal('')),
+  dob: z.string().optional(),
   bloodGroup: z.string().optional(),
 });
 
 type MemberFormValues = z.infer<typeof memberSchema>;
+
+function calculateAge(dob: string) {
+  const birthDate = new Date(dob);
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+}
 
 export default function MembersManagementPage() {
   const [members, setMembers] = useState<Member[]>([]);
@@ -53,7 +64,7 @@ export default function MembersManagementPage() {
       email: "",
       photoUrl: "https://placehold.co/100x100.png",
       phone: "",
-      age: '',
+      dob: "",
       bloodGroup: "",
     },
   });
@@ -83,7 +94,7 @@ export default function MembersManagementPage() {
   const handleEdit = (member: Member) => {
     form.reset({
       ...member,
-      age: member.age || '',
+      dob: member.dob || '',
     });
     setIsDialogOpen(true);
   };
@@ -141,7 +152,7 @@ export default function MembersManagementPage() {
                     email: "",
                     photoUrl: `https://placehold.co/100x100.png`,
                     phone: "",
-                    age: '',
+                    dob: "",
                     bloodGroup: "",
                   });
                   setIsDialogOpen(true);
@@ -198,12 +209,12 @@ export default function MembersManagementPage() {
                     <div className="grid grid-cols-2 gap-4">
                         <FormField
                         control={form.control}
-                        name="age"
+                        name="dob"
                         render={({ field }) => (
                             <FormItem>
-                            <FormLabel>Age</FormLabel>
+                            <FormLabel>Date of Birth</FormLabel>
                             <FormControl>
-                                <Input type="number" placeholder="25" {...field} />
+                                <Input type="date" {...field} />
                             </FormControl>
                             <FormMessage />
                             </FormItem>
@@ -285,7 +296,7 @@ export default function MembersManagementPage() {
                    <div className="flex items-center gap-4 text-sm">
                       <div className="flex items-center">
                         <span className="font-medium mr-2">Age:</span>
-                        <Badge variant="outline">{member.age || 'N/A'}</Badge>
+                        <Badge variant="outline">{member.dob ? calculateAge(member.dob) : 'N/A'}</Badge>
                       </div>
                       <div className="flex items-center">
                         <span className="font-medium mr-2">Blood:</span>
@@ -331,7 +342,7 @@ export default function MembersManagementPage() {
                         </div>
                     </TableCell>
                     <TableCell>{new Date(member.joinDate).toLocaleDateString()}</TableCell>
-                    <TableCell>{member.age || 'N/A'}</TableCell>
+                    <TableCell>{member.dob ? calculateAge(member.dob) : 'N/A'}</TableCell>
                     <TableCell>{member.bloodGroup || 'N/A'}</TableCell>
                     <TableCell>
                       <MemberActions member={member} />

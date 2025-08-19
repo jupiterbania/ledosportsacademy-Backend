@@ -32,7 +32,7 @@ export interface Member extends BaseDocument {
   photoUrl: string;
   joinDate: string;
   phone?: string;
-  age?: number;
+  dob?: string;
   bloodGroup?: string;
 }
 

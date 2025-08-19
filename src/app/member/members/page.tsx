@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useMemo, useEffect } from 'react';
@@ -7,6 +8,17 @@ import { Input } from "@/components/ui/input";
 import { getAllMembers, Member } from "@/lib/data";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Search } from 'lucide-react';
+
+function calculateAge(dob: string) {
+  const birthDate = new Date(dob);
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+}
 
 export default function MemberMembersPage() {
   const [allMembers, setAllMembers] = useState<Member[]>([]);
@@ -55,6 +67,7 @@ export default function MemberMembersPage() {
               <TableRow>
                 <TableHead>Member</TableHead>
                 <TableHead>Join Date</TableHead>
+                <TableHead>Age</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -73,6 +86,7 @@ export default function MemberMembersPage() {
                       </div>
                   </TableCell>
                   <TableCell>{new Date(member.joinDate).toLocaleDateString()}</TableCell>
+                   <TableCell>{member.dob ? calculateAge(member.dob) : 'N/A'}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
