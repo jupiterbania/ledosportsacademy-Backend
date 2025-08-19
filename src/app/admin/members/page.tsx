@@ -98,7 +98,7 @@ export default function MembersManagementPage() {
   };
 
   return (
-    <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
+    <div className="flex flex-1 flex-col gap-4 md:gap-8">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Members Management</CardTitle>
@@ -295,6 +295,6 @@ export default function MembersManagementPage() {
           </Table>
         </CardContent>
       </Card>
-    </main>
+    </div>
   );
 }

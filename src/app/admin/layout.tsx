@@ -225,8 +225,8 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="grid h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <DesktopNav />
-      <div className="flex flex-col">
-        <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+      <div className="flex flex-col overflow-hidden">
+        <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6 shrink-0">
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon" className="shrink-0 md:hidden">
@@ -276,8 +276,10 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
-        <main className="flex flex-1 flex-col p-4 sm:p-6 overflow-auto">
+        <main className="flex-1 overflow-y-auto">
+          <div className="p-4 sm:p-6">
             {children}
+          </div>
         </main>
       </div>
     </div>
