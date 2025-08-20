@@ -93,15 +93,15 @@ export function HomepageSlideshow() {
                   {currentItem?.description && (
                        <div>
                          <p className={cn(
-                           "text-white/90 text-xs md:text-sm max-w-2xl mt-2 drop-shadow-lg transition-all duration-300",
-                           !isDescriptionExpanded && "line-clamp-3"
+                           "text-white/90 text-sm md:text-base max-w-2xl mt-2 drop-shadow-lg transition-all duration-300",
+                           !isDescriptionExpanded && "line-clamp-1"
                          )}>
                             {currentItem.description}
                         </p>
-                        {currentItem.description.length > 150 && ( // Rough estimate for 3 lines
+                        {currentItem.description.length > 80 && ( // Rough estimate for 1 line
                            <Button 
                               variant="link" 
-                              className="p-0 mt-1 text-white/90 hover:text-white"
+                              className="p-0 mt-1 text-white/90 hover:text-white text-sm md:text-base"
                               onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
                             >
                               {isDescriptionExpanded ? "Show Less" : "Read More"}
