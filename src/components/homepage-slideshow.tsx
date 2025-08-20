@@ -85,15 +85,15 @@ export function HomepageSlideshow() {
           <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10 hidden md:flex bg-white/20 hover:bg-white/40 text-white" />
           <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10 hidden md:flex bg-white/20 hover:bg-white/40 text-white" />
           
-           <div className="absolute bottom-10 sm:bottom-20 left-4 sm:left-10 md:left-20 right-4 sm:right-10 md:right-20 z-10 px-4 text-left">
-              <div key={current} className="animate-in fade-in-0 slide-in-from-bottom-10 duration-700">
+           <div className="absolute bottom-10 sm:bottom-16 md:bottom-20 left-0 right-0 z-10 px-4 sm:px-8 md:px-16 text-left">
+              <div key={current} className="max-w-4xl mx-auto animate-in fade-in-0 slide-in-from-bottom-10 duration-700">
                   {currentItem?.title && (
-                    <h1 className="text-white text-2xl md:text-4xl lg:text-5xl font-bold drop-shadow-2xl line-clamp-2">{currentItem.title}</h1>
+                    <h1 className="text-white text-xl md:text-3xl lg:text-4xl font-bold drop-shadow-2xl line-clamp-2">{currentItem.title}</h1>
                   )}
                   {currentItem?.description && (
                        <div>
                          <p className={cn(
-                           "text-white/90 text-sm md:text-base max-w-2xl mt-2 drop-shadow-lg transition-all duration-300",
+                           "text-white/90 text-xs md:text-sm max-w-2xl mt-2 drop-shadow-lg transition-all duration-300",
                            !isDescriptionExpanded && "line-clamp-3"
                          )}>
                             {currentItem.description}
