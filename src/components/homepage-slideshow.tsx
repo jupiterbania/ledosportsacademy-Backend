@@ -8,11 +8,13 @@ import { getSlideshowItems, SlideshowItem } from "@/lib/data"
 import { Card, CardContent } from "@/components/ui/card"
 import Autoplay from "embla-carousel-autoplay"
 import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
 
 export function HomepageSlideshow() {
   const [api, setApi] = React.useState<CarouselApi>()
   const [current, setCurrent] = React.useState(0);
   const [slideshowItems, setSlideshowItems] = React.useState<SlideshowItem[]>([]);
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = React.useState(false);
 
   const plugin = React.useRef(
     Autoplay({ delay: 3000, stopOnInteraction: true })
@@ -33,6 +35,7 @@ export function HomepageSlideshow() {
 
     const handleSelect = () => {
       setCurrent(api.selectedScrollSnap());
+      setIsDescriptionExpanded(false); // Reset on slide change
     };
     
     api.on("select", handleSelect);
@@ -49,6 +52,8 @@ export function HomepageSlideshow() {
   if (slideshowItems.length === 0) {
     return null;
   }
+  
+  const currentItem = slideshowItems[current];
 
   return (
     <section className="w-full py-6 md:py-8 lg:py-12">
@@ -82,13 +87,27 @@ export function HomepageSlideshow() {
           
            <div className="absolute bottom-10 sm:bottom-20 left-4 sm:left-10 md:left-20 right-4 sm:right-10 md:right-20 z-10 px-4 text-left">
               <div key={current} className="animate-in fade-in-0 slide-in-from-bottom-10 duration-700">
-                  {slideshowItems[current]?.title && (
-                    <h1 className="text-white text-3xl md:text-5xl lg:text-6xl font-bold drop-shadow-2xl">{slideshowItems[current]?.title}</h1>
+                  {currentItem?.title && (
+                    <h1 className="text-white text-3xl md:text-5xl lg:text-6xl font-bold drop-shadow-2xl line-clamp-2">{currentItem.title}</h1>
                   )}
-                  {slideshowItems[current]?.description && (
-                       <p className="text-white/90 text-base md:text-lg max-w-2xl mt-2 drop-shadow-lg">
-                          {slideshowItems[current].description}
-                      </p>
+                  {currentItem?.description && (
+                       <div>
+                         <p className={cn(
+                           "text-white/90 text-base md:text-lg max-w-2xl mt-2 drop-shadow-lg transition-all duration-300",
+                           !isDescriptionExpanded && "line-clamp-3"
+                         )}>
+                            {currentItem.description}
+                        </p>
+                        {currentItem.description.length > 150 && ( // Rough estimate for 3 lines
+                           <Button 
+                              variant="link" 
+                              className="p-0 mt-1 text-white/90 hover:text-white"
+                              onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                            >
+                              {isDescriptionExpanded ? "Show Less" : "Read More"}
+                           </Button>
+                        )}
+                       </div>
                   )}
               </div>
           </div>
