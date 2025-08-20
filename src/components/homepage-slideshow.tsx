@@ -88,12 +88,12 @@ export function HomepageSlideshow() {
            <div className="absolute bottom-10 sm:bottom-20 left-4 sm:left-10 md:left-20 right-4 sm:right-10 md:right-20 z-10 px-4 text-left">
               <div key={current} className="animate-in fade-in-0 slide-in-from-bottom-10 duration-700">
                   {currentItem?.title && (
-                    <h1 className="text-white text-3xl md:text-5xl lg:text-6xl font-bold drop-shadow-2xl line-clamp-2">{currentItem.title}</h1>
+                    <h1 className="text-white text-2xl md:text-4xl lg:text-5xl font-bold drop-shadow-2xl line-clamp-2">{currentItem.title}</h1>
                   )}
                   {currentItem?.description && (
                        <div>
                          <p className={cn(
-                           "text-white/90 text-base md:text-lg max-w-2xl mt-2 drop-shadow-lg transition-all duration-300",
+                           "text-white/90 text-sm md:text-base max-w-2xl mt-2 drop-shadow-lg transition-all duration-300",
                            !isDescriptionExpanded && "line-clamp-3"
                          )}>
                             {currentItem.description}
