@@ -135,7 +135,6 @@ export const getRecentEvents = async () => {
     if (!isConfigComplete) return [];
     const q = query(
         collection(db, "events"), 
-        where("date", "<=", new Date().toISOString().split('T')[0]),
         orderBy("date", "desc"), 
         limit(3)
     );
