@@ -40,7 +40,7 @@ export default function GalleryPage() {
           <Dialog key={photo.id} onOpenChange={(isOpen) => !isOpen && handleDialogClose()}>
              <DialogTrigger asChild>
                 <Card 
-                  className="overflow-hidden group transition-all duration-300 hover:shadow-lg hover:-translate-y-1 animate-fade-in cursor-pointer" 
+                  className="group overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 animate-fade-in cursor-pointer" 
                   style={{ animationDelay: `${index * 50}ms` }}
                   onClick={() => handlePhotoClick(photo)}
                 >
