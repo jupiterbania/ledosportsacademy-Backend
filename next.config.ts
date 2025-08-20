@@ -28,6 +28,12 @@ const nextConfig: NextConfig = {
         hostname: 'i.ibb.co',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'photos.app.goo.gl',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
