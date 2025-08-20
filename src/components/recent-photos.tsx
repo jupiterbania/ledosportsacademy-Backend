@@ -14,7 +14,7 @@ export function RecentPhotos({ photos }: { photos: Photo[] }) {
   }
   
   return (
-    <section>
+    <section className="animate-fade-in">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl font-bold">Recent in Gallery</h2>
         <Button asChild variant="link" className="text-primary">

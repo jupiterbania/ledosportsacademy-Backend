@@ -39,7 +39,7 @@ export function RecentEvents({ events }: { events: Event[] }) {
   );
 
   return (
-    <section>
+    <section className="animate-fade-in">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl font-bold">Recent Events</h2>
         <Button asChild variant="link" className="text-primary">
