@@ -75,7 +75,7 @@ export default function LoginPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <CardHeader className="text-center">
-                    <div className="mx-auto bg-primary/10 text-primary rounded-full p-4 w-20 h-20 flex items-center justify-center mb-4">
+                    <div className="mx-auto bg-gradient-to-br from-primary/20 to-primary/5 text-primary rounded-full p-4 w-20 h-20 flex items-center justify-center mb-4">
                         <Shield className="w-10 h-10" />
                     </div>
                     <CardTitle className="text-2xl font-bold">Admin Login</CardTitle>
@@ -93,7 +93,7 @@ export default function LoginPage() {
 
             <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <CardHeader className="text-center">
-                    <div className="mx-auto bg-primary/10 text-primary rounded-full p-4 w-20 h-20 flex items-center justify-center mb-4">
+                     <div className="mx-auto bg-gradient-to-br from-primary/20 to-primary/5 text-primary rounded-full p-4 w-20 h-20 flex items-center justify-center mb-4">
                         <User className="w-10 h-10" />
                     </div>
                     <CardTitle className="text-2xl font-bold">Member Login</CardTitle>
@@ -113,5 +113,3 @@ export default function LoginPage() {
     </div>
   )
 }
-
-    

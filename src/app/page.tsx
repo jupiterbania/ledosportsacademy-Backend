@@ -15,9 +15,9 @@ export default function Home() {
 
   useEffect(() => {
     const fetchData = async () => {
-      setRecentEvents(await getRecentEvents());
-      setRecentAchievements(await getRecentAchievements());
-      setRecentPhotos(await getRecentPhotos());
+      setRecentEvents(await getRecentEvents(5));
+      setRecentAchievements(await getRecentAchievements(3));
+      setRecentPhotos(await getRecentPhotos(6));
     };
     fetchData();
   }, []);
@@ -27,7 +27,7 @@ export default function Home() {
     
       <div className="flex flex-col">
         <HomepageSlideshow />
-        <div className="container py-8 md:py-12 space-y-12">
+        <div className="container py-12 md:py-16 lg:py-20 space-y-16 md:space-y-20 lg:space-y-24">
           <RecentEvents events={recentEvents} />
           <RecentAchievements achievements={recentAchievements} />
           <RecentPhotos photos={recentPhotos} />
