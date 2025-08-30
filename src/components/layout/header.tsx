@@ -21,10 +21,11 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from '@/components/ui/dialog';
 
 
-function NotificationContent({ notifications }: { notifications: Notification[] }) {
+function NotificationContent({ notifications, onLinkClick }: { notifications: Notification[], onLinkClick: () => void }) {
     const router = useRouter();
 
     const handleNotificationClick = (link: string | undefined) => {
+        onLinkClick();
         if (link) {
             router.push(link);
         }
@@ -66,6 +67,7 @@ function NotificationContent({ notifications }: { notifications: Notification[] 
 function NotificationBell() {
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [hasUnread, setHasUnread] = useState(false);
+    const [isPopoverOpen, setIsPopoverOpen] = useState(false);
     const isMobile = useIsMobile();
 
     useEffect(() => {
@@ -75,7 +77,7 @@ function NotificationBell() {
             if (fetchedNotifications.length > 0) {
               const latestTimestamp = new Date((fetchedNotifications[0].createdAt as any).seconds * 1000).getTime();
               const lastSeenTimestamp = localStorage.getItem('lastSeenNotificationTimestamp');
-              if (!lastSeenTimestamp || latestTimestamp > parseInt(lastSeenTimestamp)) {
+              if (!lastSeenTimestamp || latestTimestamp > parseInt(lastSeenTimestamp, 10)) {
                 setHasUnread(true);
               }
             }
@@ -84,6 +86,7 @@ function NotificationBell() {
     }, []);
 
     const handleOpenChange = (open: boolean) => {
+        setIsPopoverOpen(open);
         if (open && hasUnread) {
             setHasUnread(false);
             if (notifications.length > 0) {
@@ -91,6 +94,10 @@ function NotificationBell() {
                  localStorage.setItem('lastSeenNotificationTimestamp', latestTimestamp.toString());
             }
         }
+    };
+
+    const handleLinkClick = () => {
+        setIsPopoverOpen(false);
     };
 
     const triggerButton = (
@@ -103,24 +110,24 @@ function NotificationBell() {
 
     if (isMobile) {
         return (
-            <Sheet onOpenChange={handleOpenChange}>
+            <Sheet open={isPopoverOpen} onOpenChange={handleOpenChange}>
                 <SheetTrigger asChild>
                     {triggerButton}
                 </SheetTrigger>
-                <SheetContent className="w-[85vw] max-w-sm p-0 flex flex-col" side="right">
-                    <NotificationContent notifications={notifications} />
+                <SheetContent className="w-[85vw] max-w-sm p-0 flex flex-col h-full" side="right">
+                    <NotificationContent notifications={notifications} onLinkClick={handleLinkClick} />
                 </SheetContent>
             </Sheet>
         )
     }
 
     return (
-        <Popover onOpenChange={handleOpenChange}>
+        <Popover open={isPopoverOpen} onOpenChange={handleOpenChange}>
             <PopoverTrigger asChild>
                 {triggerButton}
             </PopoverTrigger>
             <PopoverContent className="w-80 p-0 aurora-card" align="end">
-                <NotificationContent notifications={notifications} />
+                <NotificationContent notifications={notifications} onLinkClick={handleLinkClick}/>
             </PopoverContent>
         </Popover>
     )
