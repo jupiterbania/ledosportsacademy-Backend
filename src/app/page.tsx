@@ -48,8 +48,9 @@ const FocusSection = () => {
             description: "Nurturing the next generation of athletes with top-tier coaching and mentorship programs.",
             icon: (
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="m9.5 13.5 4-4" />
-                    <path d="M16.5 7.5a4.47 4.47 0 0 0-6.33-6.33 4.47 4.47 0 0 0-6.34 6.33L1.17 20.17a2.5 2.5 0 0 0 3.54 3.54l2.66-2.66a4.47 4.47 0 0 0 6.33 0 4.47 4.47 0 0 0 0-6.33l-2.66-2.66a4.47 4.47 0 0 0 6.33-6.33 4.47 4.47 0 0 0-6.33-6.33" />
+                   <circle cx="12" cy="12" r="10" />
+                   <path d="M12 2a5 5 0 0 0-5 5 5 5 0 0 0 5 5 5 5 0 0 0 5-5 5 5 0 0 0-5-5z" />
+                   <path d="M12 12a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5z" />
                 </svg>
             )
         },
