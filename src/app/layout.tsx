@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   description: 'Welcome to LEDO SPORTS ACADEMY',
   manifest: '/manifest.webmanifest',
   icons: {
-    icon: 'https://iili.io/FpDNveV.png',
+    icon: '/icon.png',
   },
 };
 
@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="https://iili.io/FpDNveV.png" />
+        <link rel="icon" href="/icon.png" />
       </head>
       <body className={`${spaceGrotesk.variable} font-body bg-background text-foreground antialiased min-h-screen flex flex-col`}>
         <AuthProvider>
