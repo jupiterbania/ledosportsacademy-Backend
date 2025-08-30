@@ -94,7 +94,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
            <span className="text-lg hidden group-data-[collapsible=icon]:hidden">LEDO SPORTS ACADEMY</span>
         </Link>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="flex-1 overflow-y-auto">
         <SidebarMenu>
           {menuItems.map((item) => (
             <NavLink key={item.href} {...item} isActive={pathname === item.href} />
