@@ -24,23 +24,11 @@ const GenerateContentOutputSchema = z.object({
 export type GenerateContentOutput = z.infer<typeof GenerateContentOutputSchema>;
 
 
-const prompt = ai.definePrompt({
-  name: 'generateContentPrompt',
-  input: { schema: GenerateContentInputSchema },
-  output: { schema: GenerateContentOutputSchema },
-  prompt: `
-    You are an expert copywriter for a sports academy.
-    Your task is to {{#if existingContent}}enhance the existing {{contentType}}{{else}}write a new, brief, and engaging {{contentType}}{{/if}}.
-    
-    Context: "{{context}}"
-
-    {{#if existingContent}}
-    Existing {{contentType}}: "{{{existingContent}}}"
-    Enhanced {{contentType}}:
-    {{else}}
-    New {{contentType}}:
-    {{/if}}
-  `,
+const simplePrompt = ai.definePrompt({
+    name: 'simpleContentPrompt',
+    input: { schema: z.object({ prompt: z.string() }) },
+    output: { schema: GenerateContentOutputSchema },
+    prompt: `{{prompt}}`
 });
 
 const generateContentFlow = ai.defineFlow(
@@ -50,7 +38,33 @@ const generateContentFlow = ai.defineFlow(
     outputSchema: GenerateContentOutputSchema,
   },
   async (input) => {
-    const { output } = await prompt(input);
+    let finalPrompt: string;
+
+    if (input.existingContent) {
+      // Enhance existing content
+      finalPrompt = `
+        You are an expert copywriter for a sports academy.
+        Your task is to enhance the existing ${input.contentType}.
+        Make it more brief and engaging.
+        
+        Context: "${input.context}"
+        Existing ${input.contentType}: "${input.existingContent}"
+        
+        Provide only the enhanced ${input.contentType} as a raw string.
+      `;
+    } else {
+      // Generate new content
+      finalPrompt = `
+        You are an expert copywriter for a sports academy.
+        Your task is to write a new, brief, and engaging ${input.contentType}.
+        
+        The content should be about: "${input.context}"
+
+        Provide only the new ${input.contentType} as a raw string.
+      `;
+    }
+
+    const { output } = await simplePrompt({ prompt: finalPrompt });
     return output!;
   }
 );
