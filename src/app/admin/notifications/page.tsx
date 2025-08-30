@@ -162,14 +162,14 @@ export default function NotificationsManagementPage() {
                 <TableRow key={notification.id}>
                   <TableCell>
                       <div className="flex items-start gap-4">
-                        <div className="p-2 bg-muted rounded-full">
+                        <div className="p-2 bg-muted rounded-full shrink-0">
                            <Bell className="h-4 w-4 text-muted-foreground" />
                         </div>
-                        <div>
-                            <p className="font-medium">{notification.title}</p>
-                            <p className="text-sm text-muted-foreground">{notification.description}</p>
+                        <div className="flex-1 min-w-0">
+                            <p className="font-medium break-words">{notification.title}</p>
+                            <p className="text-sm text-muted-foreground break-words">{notification.description}</p>
                             {notification.link && (
-                                <a href={notification.link} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline">
+                                <a href={notification.link} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline break-all">
                                     View Link
                                 </a>
                             )}
