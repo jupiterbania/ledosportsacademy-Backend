@@ -9,6 +9,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { RecentEvents } from '@/components/recent-events';
 
 const SectionSeparator = () => (
    <div className="my-16 md:my-24 h-px w-full bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
@@ -163,11 +164,13 @@ const EventsCTASection = () => (
 
 
 export default function Home() {
+  const [recentEvents, setRecentEvents] = useState<Event[]>([]);
   const [recentAchievements, setRecentAchievements] = useState<Achievement[]>([]);
   const [recentPhotos, setRecentPhotos] = useState<Photo[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
+      setRecentEvents(await getRecentEvents(2));
       setRecentAchievements(await getRecentAchievements(1));
       setRecentPhotos(await getRecentPhotos(4));
     };
@@ -182,6 +185,8 @@ export default function Home() {
         <FocusSection />
         <SectionSeparator />
         <FeaturedAchievementSection achievements={recentAchievements} />
+        <SectionSeparator />
+        <RecentEvents events={recentEvents} />
         <SectionSeparator />
         <GalleryPreviewSection photos={recentPhotos} />
         <SectionSeparator />
