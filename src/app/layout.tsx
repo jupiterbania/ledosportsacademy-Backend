@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   description: 'Welcome to LEDO SPORTS ACADEMY',
   manifest: '/manifest.webmanifest',
   icons: {
-    icon: '/icon.png',
+    icon: '/favicon.ico',
   },
 };
 
@@ -32,7 +32,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/icon.png" />
       </head>
       <body className={`${spaceGrotesk.variable} font-body bg-background text-foreground antialiased min-h-screen flex flex-col`}>
         <AuthProvider>
