@@ -15,7 +15,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { getMemberByEmail, updateMemberByEmail, Member } from '@/lib/data';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Loader2 } from 'lucide-react';
 
 
 const profileSchema = z.object({
@@ -87,7 +86,7 @@ export default function ProfilePage() {
     if (loading || !user || !member) {
         return (
           <div className="flex items-center justify-center min-h-[calc(100vh-8rem)]">
-            <Loader2 className="h-8 w-8 animate-spin" />
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-muted border-t-primary" />
           </div>
         );
     }
@@ -176,7 +175,7 @@ export default function ProfilePage() {
                                     />
                                 </div>
                                 <Button type="submit" className="w-full" disabled={isSubmitting}>
-                                     {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                     {isSubmitting && <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-background border-t-transparent" />}
                                     Save Changes
                                 </Button>
                             </form>
