@@ -6,7 +6,6 @@ import Image from "next/image"
 import { Achievement } from "@/lib/data"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Medal, ArrowRight } from "lucide-react"
 
 export function RecentAchievements({ achievements }: { achievements: Achievement[] }) {
   if (!achievements || achievements.length === 0) {
@@ -20,7 +19,6 @@ export function RecentAchievements({ achievements }: { achievements: Achievement
         <Button asChild variant="link" className="text-cyan-300 hover:text-cyan-200">
           <Link href="/member/achievements">
             View All
-            <ArrowRight className="w-4 h-4 ml-2" />
           </Link>
         </Button>
       </div>
@@ -42,7 +40,6 @@ export function RecentAchievements({ achievements }: { achievements: Achievement
               <CardHeader>
                 <CardTitle className="aurora-text-gradient group-hover:drop-shadow-[0_0_8px_hsl(var(--primary)/0.5)] transition-all duration-300">{achievement.title}</CardTitle>
                 <div className="flex items-center gap-2 text-muted-foreground text-sm pt-2">
-                  <Medal className="w-4 h-4" />
                   <span>{new Date(achievement.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                 </div>
               </CardHeader>

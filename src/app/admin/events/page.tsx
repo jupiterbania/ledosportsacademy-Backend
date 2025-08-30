@@ -14,7 +14,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { getAllEvents, Event, addEvent, updateEvent, deleteEvent, addNotification } from "@/lib/data";
-import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
@@ -120,7 +119,7 @@ export default function EventsManagementPage() {
                   });
                   setIsDialogOpen(true);
                 }}>
-                <PlusCircle className="mr-2 h-4 w-4" /> Add Event
+                Add Event
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-2xl max-h-[90vh] flex flex-col">
@@ -268,15 +267,13 @@ export default function EventsManagementPage() {
                     </TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                       <Button variant="outline" size="icon" onClick={() => handleEdit(event)}>
-                        <Edit className="h-4 w-4" />
-                         <span className="sr-only">Edit</span>
+                       <Button variant="outline" size="sm" onClick={() => handleEdit(event)}>
+                         Edit
                       </Button>
                        <AlertDialog>
                           <AlertDialogTrigger asChild>
-                             <Button variant="destructive" size="icon">
-                                <Trash2 className="h-4 w-4" />
-                                <span className="sr-only">Delete</span>
+                             <Button variant="destructive" size="sm">
+                                Delete
                               </Button>
                           </AlertDialogTrigger>
                           <AlertDialogContent>

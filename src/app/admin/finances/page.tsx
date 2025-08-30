@@ -17,7 +17,6 @@ import {
   getAllCollections, Collection, addCollection, updateCollection, deleteCollection,
   getAllExpenses, Expense, addExpense, updateExpense, deleteExpense
 } from "@/lib/data";
-import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -170,7 +169,7 @@ function DonationTable() {
         }}>
           <DialogTrigger asChild>
             <Button size="sm">
-              <PlusCircle className="mr-2 h-4 w-4" /> Add Donation
+              Add Donation
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-lg max-h-[90vh] flex flex-col">
@@ -290,9 +289,9 @@ function DonationTable() {
                 <TableCell className="hidden md:table-cell">{new Date(item.date).toLocaleDateString()}</TableCell>
                 <TableCell>
                   <div className="flex gap-2">
-                    <Button variant="outline" size="icon" onClick={() => handleEdit(item)}><Edit className="h-4 w-4" /><span className="sr-only">Edit</span></Button>
+                    <Button variant="outline" size="sm" onClick={() => handleEdit(item)}>Edit</Button>
                     <AlertDialog>
-                      <AlertDialogTrigger asChild><Button variant="destructive" size="icon"><Trash2 className="h-4 w-4" /><span className="sr-only">Delete</span></Button></AlertDialogTrigger>
+                      <AlertDialogTrigger asChild><Button variant="destructive" size="sm">Delete</Button></AlertDialogTrigger>
                       <AlertDialogContent>
                         <AlertDialogHeader>
                           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
@@ -399,7 +398,7 @@ function FinanceTable<T extends Collection | Expense>({
               form.reset({ id: undefined, title: "", amount: 0, date: "" });
               setIsDialogOpen(true);
             }}>
-              <PlusCircle className="mr-2 h-4 w-4" /> Add {title}
+              Add {title}
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-lg max-h-[90vh] flex flex-col">
@@ -458,9 +457,9 @@ function FinanceTable<T extends Collection | Expense>({
                 <TableCell className="hidden md:table-cell">{new Date(item.date).toLocaleDateString()}</TableCell>
                 <TableCell>
                   <div className="flex gap-2">
-                    <Button variant="outline" size="icon" onClick={() => handleEdit(item)}><Edit className="h-4 w-4" /><span className="sr-only">Edit</span></Button>
+                    <Button variant="outline" size="sm" onClick={() => handleEdit(item)}>Edit</Button>
                     <AlertDialog>
-                      <AlertDialogTrigger asChild><Button variant="destructive" size="icon"><Trash2 className="h-4 w-4" /><span className="sr-only">Delete</span></Button></AlertDialogTrigger>
+                      <AlertDialogTrigger asChild><Button variant="destructive" size="sm">Delete</Button></AlertDialogTrigger>
                       <AlertDialogContent>
                         <AlertDialogHeader>
                           <AlertDialogTitle>Are you sure?</AlertDialogTitle>

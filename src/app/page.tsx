@@ -4,7 +4,6 @@
 import { useState, useEffect } from 'react';
 import { HomepageSlideshow } from "@/components/homepage-slideshow";
 import { getRecentEvents, getRecentAchievements, getRecentPhotos, Event, Achievement, Photo } from "@/lib/data";
-import { ArrowRight, Medal, Users, Zap, Target } from "lucide-react";
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -33,17 +32,14 @@ const WelcomeSection = () => (
 const FocusSection = () => {
     const focusItems = [
         {
-            icon: <Users className="w-10 h-10" />,
             title: "Community Building",
             description: "Creating a strong, supportive network for all our members, fostering teamwork and collaboration.",
         },
         {
-            icon: <Zap className="w-10 h-10" />,
             title: "Youth Development",
             description: "Nurturing the next generation of athletes with top-tier coaching and mentorship programs.",
         },
         {
-            icon: <Target className="w-10 h-10" />,
             title: "Competitive Excellence",
             description: "Striving for victory and celebrating our achievements on and off the field.",
         }
@@ -58,7 +54,6 @@ const FocusSection = () => {
                  {focusItems.map((item, index) => (
                     <Card key={index} className="aurora-card text-center p-6 flex flex-col items-center transition-all duration-300 hover:shadow-cyan-500/20 hover:-translate-y-2 animate-fade-in" style={{ animationDelay: `${index * 150}ms` }}>
                          <div className="mb-4 text-primary bg-gradient-to-br from-primary/20 to-primary/5 rounded-full p-4 ring-2 ring-primary/30 aurora-glow">
-                           {item.icon}
                         </div>
                         <CardTitle className="mb-2 text-xl">{item.title}</CardTitle>
                         <CardDescription>{item.description}</CardDescription>
@@ -92,7 +87,6 @@ const FeaturedAchievementSection = ({ achievements }: { achievements: Achievemen
               </div>
               <div className="p-8 flex flex-col justify-center">
                   <div className="flex items-center gap-2 text-muted-foreground text-sm mb-2">
-                      <Medal className="w-4 h-4" />
                       <span>{new Date(featured.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                   </div>
                   <CardTitle className="text-3xl mb-4">{featured.title}</CardTitle>
@@ -100,7 +94,6 @@ const FeaturedAchievementSection = ({ achievements }: { achievements: Achievemen
                    <Button asChild variant="link" className="text-cyan-300 hover:text-cyan-200 justify-start p-0 mt-4">
                       <Link href="/member/achievements">
                         View All Achievements
-                        <ArrowRight className="w-4 h-4 ml-2" />
                       </Link>
                     </Button>
               </div>
@@ -137,7 +130,6 @@ const GalleryPreviewSection = ({ photos }: { photos: Photo[] }) => {
                  <Button asChild size="lg">
                     <Link href="/gallery">
                         Explore Full Gallery
-                        <ArrowRight className="w-4 h-4 ml-2" />
                     </Link>
                 </Button>
             </div>
@@ -155,7 +147,6 @@ const EventsCTASection = () => (
              <Button asChild size="lg">
                 <Link href="/events">
                     View Upcoming Events
-                    <ArrowRight className="w-4 h-4 ml-2" />
                 </Link>
             </Button>
         </Card>

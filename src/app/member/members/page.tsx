@@ -7,7 +7,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Input } from "@/components/ui/input";
 import { getAllMembers, Member } from "@/lib/data";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Search } from 'lucide-react';
 
 function calculateAge(dob: string) {
   const birthDate = new Date(dob);
@@ -48,7 +47,6 @@ export default function MemberMembersPage() {
         </CardHeader>
         <CardContent>
           <div className="relative">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
               placeholder="Search by name..."
@@ -96,5 +94,3 @@ export default function MemberMembersPage() {
     </main>
   );
 }
-
-    

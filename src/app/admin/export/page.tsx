@@ -4,7 +4,6 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { FileDown } from "lucide-react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { 
@@ -245,19 +244,15 @@ export default function ExportPage() {
           <p>Select the data you would like to export. Clicking a button will start the PDF download.</p>
           <div className="flex flex-wrap gap-4">
             <Button onClick={() => generatePdf('Donations')}>
-              <FileDown className="mr-2 h-4 w-4" />
               Export Donations
             </Button>
             <Button onClick={() => generatePdf('Collections')}>
-              <FileDown className="mr-2 h-4 w-4" />
               Export Collections
             </Button>
             <Button onClick={() => generatePdf('Expenses')}>
-              <FileDown className="mr-2 h-4 w-4" />
               Export Expenses
             </Button>
             <Button onClick={generateFullAnalyticsPdf}>
-              <FileDown className="mr-2 h-4 w-4" />
               Export Full Analytics
             </Button>
           </div>

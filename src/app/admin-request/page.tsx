@@ -14,7 +14,6 @@ import { useToast } from '@/hooks/use-toast';
 import { addAdminRequest, getAdminRequestByEmail, AdminRequest } from '@/lib/data';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Textarea } from '@/components/ui/textarea';
-import { Loader2, CheckCircle, Clock } from 'lucide-react';
 
 
 const requestSchema = z.object({
@@ -76,7 +75,7 @@ export default function AdminRequestPage() {
     if (loading || !user) {
         return (
           <div className="flex items-center justify-center h-screen">
-            <Loader2 className="h-8 w-8 animate-spin" />
+            Loading...
           </div>
         );
     }
@@ -87,8 +86,6 @@ export default function AdminRequestPage() {
                 <Card className="w-full max-w-md mx-4 aurora-card">
                     <CardHeader className="text-center">
                         <div className="mx-auto w-24 h-24 mb-4">
-                             {existingRequest.status === 'pending' && <Clock className="w-24 h-24 text-amber-400" />}
-                             {existingRequest.status === 'approved' && <CheckCircle className="w-24 h-24 text-green-500" />}
                         </div>
                         <CardTitle>Request Status: <span className="capitalize">{existingRequest.status}</span></CardTitle>
                         <CardDescription>
@@ -135,8 +132,8 @@ export default function AdminRequestPage() {
                                 )}
                             />
                             <Button type="submit" className="w-full" disabled={isSubmitting}>
-                                {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                Submit Request
+                                {isSubmitting && "Submitting..."}
+                                {!isSubmitting && "Submit Request"}
                             </Button>
                         </form>
                     </Form>

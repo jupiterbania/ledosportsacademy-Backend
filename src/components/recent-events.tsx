@@ -6,7 +6,6 @@ import Image from "next/image"
 import { Event } from "@/lib/data"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Calendar, ArrowRight } from "lucide-react"
 
 export function RecentEvents({ events }: { events: Event[] }) {
   if (!events || events.length === 0) {
@@ -29,7 +28,6 @@ export function RecentEvents({ events }: { events: Event[] }) {
       <CardHeader>
         <CardTitle className="aurora-text-gradient group-hover:drop-shadow-[0_0_8px_hsl(var(--primary)/0.5)] transition-all duration-300">{event.title}</CardTitle>
         <div className="flex items-center gap-2 text-muted-foreground text-sm pt-2">
-          <Calendar className="w-4 h-4" />
           <span>{new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
         </div>
       </CardHeader>
@@ -46,7 +44,6 @@ export function RecentEvents({ events }: { events: Event[] }) {
         <Button asChild variant="link" className="text-cyan-300 hover:text-cyan-200">
           <Link href="/events">
             View All
-            <ArrowRight className="w-4 h-4 ml-2" />
           </Link>
         </Button>
       </div>

@@ -4,7 +4,6 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { getAllAchievements, Achievement } from "@/lib/data";
-import { Medal } from 'lucide-react';
 import Image from 'next/image';
 
 export default function MemberAchievementsPage() {
@@ -43,7 +42,6 @@ export default function MemberAchievementsPage() {
             <CardHeader>
               <CardTitle>{achievement.title}</CardTitle>
                <div className="flex items-center gap-2 text-muted-foreground text-sm pt-2">
-                  <Medal className="w-4 h-4" />
                   <span>{new Date(achievement.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                 </div>
             </CardHeader>
@@ -56,5 +54,3 @@ export default function MemberAchievementsPage() {
     </main>
   );
 }
-
-    

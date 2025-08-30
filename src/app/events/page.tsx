@@ -6,7 +6,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { getAllEvents, Event } from "@/lib/data";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Calendar } from "lucide-react";
 
 
 export default function EventsPage() {
@@ -36,7 +35,6 @@ export default function EventsPage() {
       <CardHeader>
         <CardTitle className="aurora-text-gradient group-hover:drop-shadow-[0_0_8px_hsl(var(--primary)/0.5)] transition-all duration-300">{event.title}</CardTitle>
         <div className="flex items-center gap-2 text-muted-foreground text-sm pt-2">
-          <Calendar className="w-4 h-4" />
           <span>{new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
         </div>
       </CardHeader>

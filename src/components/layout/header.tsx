@@ -4,7 +4,6 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Menu, Club, LayoutDashboard, HandCoins, Medal, Users as UsersIcon, User, Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
@@ -103,7 +102,6 @@ function NotificationBell() {
     const triggerButton = (
         <Button variant="ghost" size="icon" className="relative">
             {hasUnread && <span className="absolute top-2 right-2.5 h-2 w-2 rounded-full bg-primary ring-2 ring-background" />}
-            <Bell className="h-5 w-5" />
             <span className="sr-only">Notifications</span>
         </Button>
     );
@@ -149,9 +147,9 @@ export function Header() {
   ];
   
   const memberNavLinks = [
-    { href: '/member/members', label: 'Members', icon: UsersIcon },
-    { href: '/member/finances', label: 'Finances', icon: HandCoins },
-    { href: '/member/achievements', label: 'Achievements', icon: Medal },
+    { href: '/member/members', label: 'Members' },
+    { href: '/member/finances', label: 'Finances' },
+    { href: '/member/achievements', label: 'Achievements' },
   ];
 
   const NavLink = ({ href, label }: { href: string, label: string }) => (
@@ -242,7 +240,6 @@ export function Header() {
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
-                <Menu className="h-6 w-6" />
                 <span className="sr-only">Open menu</span>
               </Button>
             </SheetTrigger>

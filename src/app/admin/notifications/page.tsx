@@ -15,7 +15,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { getAllNotifications, Notification, addNotification, deleteNotification } from "@/lib/data";
-import { PlusCircle, Trash2, Bell, Image as ImageIcon } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { formatDistanceToNow } from 'date-fns';
 
@@ -95,7 +94,6 @@ export default function NotificationsManagementPage() {
                 }}
                 className="shrink-0"
                 >
-                <PlusCircle className="mr-2 h-4 w-4" /> 
                 <span className="hidden sm:inline">New Announcement</span>
               </Button>
             </DialogTrigger>
@@ -184,9 +182,7 @@ export default function NotificationsManagementPage() {
                 <TableRow key={notification.id}>
                   <TableCell>
                       <div className="flex items-start gap-4">
-                        <div className="p-2 bg-muted rounded-full shrink-0 mt-1">
-                           <Bell className="h-4 w-4 text-muted-foreground" />
-                        </div>
+                        <div className="p-2 bg-muted rounded-full shrink-0 mt-1" />
                         <div className="flex-1 min-w-0">
                             {notification.imageUrl && (
                                 <div className="relative aspect-video w-full max-w-sm rounded-md overflow-hidden mb-2">
@@ -209,9 +205,8 @@ export default function NotificationsManagementPage() {
                   <TableCell>
                      <AlertDialog>
                         <AlertDialogTrigger asChild>
-                           <Button variant="destructive" size="icon">
-                              <Trash2 className="h-4 w-4" />
-                              <span className="sr-only">Delete</span>
+                           <Button variant="destructive" size="sm">
+                              Delete
                             </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent>

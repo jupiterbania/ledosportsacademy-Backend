@@ -9,7 +9,6 @@ import { useToast } from "@/hooks/use-toast";
 import { getAllAdminRequests, updateAdminRequestStatus, AdminRequest } from "@/lib/data";
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Check, X, ShieldOff } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -71,8 +70,8 @@ export default function AdminRequestsPage() {
           <>
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button size="icon" variant="outline" className="text-green-500 border-green-500 hover:bg-green-500/10 hover:text-green-600">
-                  <Check className="h-4 w-4" /> <span className="sr-only">Approve</span>
+                <Button size="sm" variant="outline" className="text-green-500 border-green-500 hover:bg-green-500/10 hover:text-green-600">
+                  Approve
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
@@ -81,7 +80,7 @@ export default function AdminRequestsPage() {
               </AlertDialogContent>
             </AlertDialog>
             <AlertDialog>
-              <AlertDialogTrigger asChild><Button size="icon" variant="destructive"><X className="h-4 w-4" /><span className="sr-only">Reject</span></Button></AlertDialogTrigger>
+              <AlertDialogTrigger asChild><Button size="sm" variant="destructive">Reject</Button></AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader><AlertDialogTitle>Reject Request?</AlertDialogTitle><AlertDialogDescription>This will reject the admin access request for {request.name}. Are you sure?</AlertDialogDescription></AlertDialogHeader>
                 <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleUpdateRequest(request.id, 'rejected')}>Reject</AlertDialogAction></AlertDialogFooter>
@@ -91,7 +90,7 @@ export default function AdminRequestsPage() {
         )}
         {request.status === 'approved' && (
           <AlertDialog>
-            <AlertDialogTrigger asChild><Button size="icon" variant="destructive"><ShieldOff className="h-4 w-4" /><span className="sr-only">Revoke</span></Button></AlertDialogTrigger>
+            <AlertDialogTrigger asChild><Button size="sm" variant="destructive">Revoke</Button></AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader><AlertDialogTitle>Revoke Admin Access?</AlertDialogTitle><AlertDialogDescription>This will remove admin privileges from {request.name}. Are you sure?</AlertDialogDescription></AlertDialogHeader>
               <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleUpdateRequest(request.id, 'rejected')}>Revoke</AlertDialogAction></AlertDialogFooter>
@@ -101,8 +100,8 @@ export default function AdminRequestsPage() {
         {request.status === 'rejected' && (
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button size="icon" variant="outline" className="text-green-500 border-green-500 hover:bg-green-500/10 hover:text-green-600">
-                <Check className="h-4 w-4" /><span className="sr-only">Approve</span>
+              <Button size="sm" variant="outline" className="text-green-500 border-green-500 hover:bg-green-500/10 hover:text-green-600">
+                Approve
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>

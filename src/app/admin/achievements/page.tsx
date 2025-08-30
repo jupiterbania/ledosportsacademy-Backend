@@ -14,7 +14,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { getAllAchievements, Achievement, addAchievement, updateAchievement, deleteAchievement } from "@/lib/data";
-import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import Image from 'next/image';
 
@@ -102,7 +101,7 @@ export default function AchievementsManagementPage() {
                   });
                   setIsDialogOpen(true);
                 }}>
-                <PlusCircle className="mr-2 h-4 w-4" /> Add Achievement
+                Add Achievement
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-2xl max-h-[90vh] flex flex-col">
@@ -200,15 +199,13 @@ export default function AchievementsManagementPage() {
                   <TableCell className="hidden lg:table-cell">{new Date(achievement.date).toLocaleDateString()}</TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                       <Button variant="outline" size="icon" onClick={() => handleEdit(achievement)}>
-                        <Edit className="h-4 w-4" />
-                         <span className="sr-only">Edit</span>
+                       <Button variant="outline" size="sm" onClick={() => handleEdit(achievement)}>
+                         Edit
                       </Button>
                        <AlertDialog>
                           <AlertDialogTrigger asChild>
-                             <Button variant="destructive" size="icon">
-                                <Trash2 className="h-4 w-4" />
-                                <span className="sr-only">Delete</span>
+                             <Button variant="destructive" size="sm">
+                                Delete
                               </Button>
                           </AlertDialogTrigger>
                           <AlertDialogContent>

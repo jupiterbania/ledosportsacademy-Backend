@@ -6,7 +6,6 @@ import Image from "next/image"
 import { getAllPhotos, Photo } from "@/lib/data"
 import { Card, CardContent } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Eye, Download } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -137,7 +136,6 @@ export default function GalleryPage() {
                         
                       />
                       <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <Eye className="text-white w-8 h-8" />
                       </div>
                     </div>
                   </CardContent>
@@ -162,9 +160,8 @@ export default function GalleryPage() {
                             {user && (
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
-                                        <Button variant="outline" size="icon">
-                                            <Download className="h-4 w-4" />
-                                            <span className="sr-only">Download</span>
+                                        <Button variant="outline" size="sm">
+                                            Download
                                         </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end" className="aurora-card">

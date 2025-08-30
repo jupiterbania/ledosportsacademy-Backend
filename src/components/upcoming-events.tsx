@@ -4,7 +4,6 @@ import Image from "next/image"
 import { getRecentEvents, Event } from "@/lib/data"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Calendar, ArrowRight } from "lucide-react"
 import { useState, useEffect } from "react"
 
 export function RecentEvents() {
@@ -24,7 +23,6 @@ export function RecentEvents() {
         <Button asChild variant="link" className="text-primary">
           <Link href="/events">
             View All
-            <ArrowRight className="w-4 h-4 ml-2" />
           </Link>
         </Button>
       </div>
@@ -45,7 +43,6 @@ export function RecentEvents() {
               <CardHeader>
                 <CardTitle className="group-hover:text-primary transition-colors">{event.title}</CardTitle>
                 <div className="flex items-center gap-2 text-muted-foreground text-sm pt-2">
-                  <Calendar className="w-4 h-4" />
                   <span>{new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                 </div>
               </CardHeader>

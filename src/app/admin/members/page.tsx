@@ -13,7 +13,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { getAllMembers, Member, addMember, updateMember, deleteMember } from "@/lib/data";
-import { PlusCircle, Edit, Trash2, Calendar, Droplets } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -110,15 +109,13 @@ export default function MembersManagementPage() {
 
   const MemberActions = ({ member }: { member: Member}) => (
      <div className="flex gap-2">
-       <Button variant="outline" size="icon" onClick={() => handleEdit(member)}>
-        <Edit className="h-4 w-4" />
-          <span className="sr-only">Edit</span>
+       <Button variant="outline" size="sm" onClick={() => handleEdit(member)}>
+        Edit
       </Button>
         <AlertDialog>
           <AlertDialogTrigger asChild>
-              <Button variant="destructive" size="icon">
-                <Trash2 className="h-4 w-4" />
-                <span className="sr-only">Delete</span>
+              <Button variant="destructive" size="sm">
+                Delete
               </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
@@ -156,7 +153,7 @@ export default function MembersManagementPage() {
                   });
                   setIsDialogOpen(true);
                 }}>
-                <PlusCircle className="mr-2 h-4 w-4" /> Add Member
+                Add Member
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-xl max-h-[90vh] flex flex-col">
@@ -289,7 +286,6 @@ export default function MembersManagementPage() {
                 </CardHeader>
                 <CardContent className="space-y-2">
                    <div className="flex items-center text-sm text-muted-foreground">
-                      <Calendar className="mr-2 h-4 w-4" />
                       <span>Joined: {new Date(member.joinDate).toLocaleDateString()}</span>
                    </div>
                    <div className="flex items-center gap-4 text-sm">
@@ -300,7 +296,6 @@ export default function MembersManagementPage() {
                       <div className="flex items-center">
                         <span className="font-medium mr-2">Blood:</span>
                         <Badge variant="outline" className="flex items-center">
-                          <Droplets className="mr-1 h-3 w-3 text-red-500" />
                           {member.bloodGroup || 'N/A'}
                         </Badge>
                       </div>

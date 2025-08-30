@@ -6,7 +6,6 @@ import Image from "next/image"
 import { Photo } from "@/lib/data"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
 
 export function RecentPhotos({ photos }: { photos: Photo[] }) {
   if (!photos || photos.length === 0) {
@@ -20,7 +19,6 @@ export function RecentPhotos({ photos }: { photos: Photo[] }) {
         <Button asChild variant="link" className="text-cyan-300 hover:text-cyan-200">
           <Link href="/gallery">
             View All
-            <ArrowRight className="w-4 h-4 ml-2" />
           </Link>
         </Button>
       </div>

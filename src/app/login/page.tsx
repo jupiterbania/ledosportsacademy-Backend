@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useToast } from "@/hooks/use-toast"
-import { Shield, User } from "lucide-react"
 import { signInWithGoogle, ADMIN_EMAIL, signOut } from "@/lib/auth";
 import { useAuth } from "@/hooks/use-auth";
 import { useEffect } from "react";
@@ -77,7 +76,6 @@ export default function LoginPage() {
             <Card className="aurora-card transition-all duration-300 hover:shadow-cyan-500/20 hover:-translate-y-1.5">
                 <CardHeader className="text-center">
                     <div className="mx-auto bg-gradient-to-br from-primary/20 to-primary/5 text-primary rounded-full p-4 w-20 h-20 flex items-center justify-center mb-4 ring-2 ring-primary/30 aurora-glow">
-                        <Shield className="w-10 h-10" />
                     </div>
                     <CardTitle className="text-2xl font-bold">Admin Login</CardTitle>
                     <CardDescription>
@@ -95,7 +93,6 @@ export default function LoginPage() {
             <Card className="aurora-card transition-all duration-300 hover:shadow-cyan-500/20 hover:-translate-y-1.5">
                 <CardHeader className="text-center">
                      <div className="mx-auto bg-gradient-to-br from-primary/20 to-primary/5 text-primary rounded-full p-4 w-20 h-20 flex items-center justify-center mb-4 ring-2 ring-primary/30 aurora-glow">
-                        <User className="w-10 h-10" />
                     </div>
                     <CardTitle className="text-2xl font-bold">Member Login</CardTitle>
                     <CardDescription>

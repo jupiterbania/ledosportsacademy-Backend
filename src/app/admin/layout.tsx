@@ -4,20 +4,6 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
-  Home,
-  GalleryHorizontal,
-  Calendar,
-  Users,
-  HandCoins,
-  Medal,
-  LineChart,
-  FileDown,
-  User,
-  Menu,
-  ShieldCheck,
-  Bell,
-} from 'lucide-react';
-import {
   Sidebar,
   SidebarProvider,
   SidebarContent,
@@ -25,7 +11,6 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarInset,
 } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -66,29 +51,28 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
   }
 
   const baseMenuItems = [
-    { href: '/admin', label: 'Dashboard', icon: Home },
-    { href: '/admin/analytics', label: 'Analytics', icon: LineChart },
-    { href: '/admin/gallery', label: 'Gallery', icon: GalleryHorizontal },
-    { href: '/admin/events', label: 'Events', icon: Calendar },
-    { href: '/admin/achievements', label: 'Achievements', icon: Medal },
-    { href: '/admin/members', label: 'Members', icon: Users },
-    { href: '/admin/finances', label: 'Finances', icon: HandCoins },
-    { href: '/admin/notifications', label: 'Notifications', icon: Bell },
-    { href: '/admin/export', label: 'PDF Export', icon: FileDown },
+    { href: '/admin', label: 'Dashboard' },
+    { href: '/admin/analytics', label: 'Analytics' },
+    { href: '/admin/gallery', label: 'Gallery' },
+    { href: '/admin/events', label: 'Events' },
+    { href: '/admin/achievements', label: 'Achievements' },
+    { href: '/admin/members', label: 'Members' },
+    { href: '/admin/finances', label: 'Finances' },
+    { href: '/admin/notifications', label: 'Notifications' },
+    { href: '/admin/export', label: 'PDF Export' },
   ];
 
   const superAdminMenuItems = [
-     { href: '/admin/requests', label: 'Admin Requests', icon: ShieldCheck },
+     { href: '/admin/requests', label: 'Admin Requests' },
   ];
 
   const menuItems = isSuperAdmin ? [...baseMenuItems, ...superAdminMenuItems] : baseMenuItems;
 
 
-  const NavLink = ({ href, label, icon: Icon, isActive }: { href: string; label: string; icon: React.ElementType; isActive: boolean; }) => (
+  const NavLink = ({ href, label, isActive }: { href: string; label: string; isActive: boolean; }) => (
     <SidebarMenuItem>
       <Link href={href} passHref>
         <SidebarMenuButton tooltip={label} isActive={isActive} size="lg" className="justify-center md:justify-start">
-          <Icon />
           <span className="md:inline hidden">{label}</span>
         </SidebarMenuButton>
       </Link>
@@ -121,7 +105,6 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon" className="shrink-0 md:hidden">
-                <Menu className="h-5 w-5" />
                 <span className="sr-only">Toggle navigation menu</span>
               </Button>
             </SheetTrigger>
@@ -137,12 +120,10 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
               <nav className="flex-1 overflow-y-auto grid gap-2 text-lg font-medium mt-4">
                 {menuItems.map((item) => (
                   <Link key={item.href} href={item.href} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
-                    <item.icon className="h-4 w-4" />
                     {item.label}
                   </Link>
                 ))}
                  <Link href="/admin/profile" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
-                    <User className="h-4 w-4" />
                     Profile
                   </Link>
               </nav>
