@@ -17,7 +17,6 @@ import { getAllAchievements, Achievement, addAchievement, updateAchievement, del
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import Image from 'next/image';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
 const achievementSchema = z.object({
   id: z.string().optional(),

@@ -22,8 +22,6 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from '@/components/ui/textarea';
-import { ScrollArea } from '@/components/ui/scroll-area';
-
 
 const donationSchema = z.object({
   id: z.string().optional(),
@@ -534,5 +532,3 @@ export default function FinancesPage() {
     </div>
   );
 }
-
-    

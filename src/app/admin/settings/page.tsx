@@ -4,7 +4,6 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,9 +11,6 @@ import * as z from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useAuth } from "@/hooks/use-auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useTheme } from "next-themes";
-import { Check } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 const settingsSchema = z.object({
   displayName: z.string().min(1, "Display name is required"),
@@ -45,7 +41,7 @@ export default function SettingsPage() {
 
   return (
     <div className="flex flex-1 flex-col gap-4 md:gap-8">
-      <div className="max-w-3xl mx-auto w-full">
+      <div className="max-w-3xl w-full">
         <Card>
           <CardHeader>
             <CardTitle>Account Settings</CardTitle>

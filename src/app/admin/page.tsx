@@ -8,12 +8,11 @@ import {
   getAllCollections, Collection,
   getAllExpenses, Expense,
   getAllAchievements, Achievement,
-  seedDatabase,
   getAllMembers, Member,
   getAllEvents, Event,
 } from "@/lib/data";
 import { useMemo, useState, useEffect } from "react";
-import { Bar, BarChart, CartesianGrid, XAxis, ResponsiveContainer, Tooltip, Legend, YAxis, LineChart, Line } from "recharts";
+import { LineChart, Line, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from "recharts";
 import {
   Timeline,
   TimelineItem,
@@ -21,11 +20,9 @@ import {
   TimelineHeader,
   TimelineIcon,
   TimelineTitle,
-  TimelineDescription,
   TimelineContent,
 } from "@/components/ui/timeline";
 import { useToast } from "@/hooks/use-toast";
-import Link from 'next/link';
 
 export default function AdminDashboard() {
   const [donations, setDonations] = useState<Donation[]>([]);
@@ -55,7 +52,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [toast]);
 
   const totalDonations = useMemo(() => donations.reduce((sum, d) => sum + (d.amount || 0), 0), [donations]);
   const totalCollections = useMemo(() => collections.reduce((sum, c) => sum + c.amount, 0), [collections]);

@@ -17,7 +17,6 @@ import { getAllEvents, Event, addEvent, updateEvent, deleteEvent } from "@/lib/d
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Switch } from '@/components/ui/switch';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
 const eventSchema = z.object({
   id: z.string().optional(),

@@ -16,7 +16,6 @@ import { getAllMembers, Member, addMember, updateMember, deleteMember } from "@/
 import { PlusCircle, Edit, Trash2, Calendar, Droplets } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 
@@ -357,6 +356,3 @@ export default function MembersManagementPage() {
     </div>
   );
 }
-    
-
-    
