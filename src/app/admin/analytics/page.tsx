@@ -59,6 +59,7 @@ export default function AnalyticsDashboardPage() {
 
   const monthlyFinancials = useMemo(() => {
     const data: { [key: string]: { month: string, donations: number, collections: number, expenses: number } } = {};
+    const monetaryDonations = donations.filter(d => typeof d.amount === 'number');
 
     const processItems = (items: any[], type: 'donations' | 'collections' | 'expenses') => {
         items.forEach(item => {
@@ -70,7 +71,7 @@ export default function AnalyticsDashboardPage() {
         });
     };
     
-    processItems(donations, 'donations');
+    processItems(monetaryDonations, 'donations');
     processItems(collections, 'collections');
     processItems(expenses, 'expenses');
     

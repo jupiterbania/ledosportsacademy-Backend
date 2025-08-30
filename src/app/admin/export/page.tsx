@@ -164,7 +164,8 @@ export default function ExportPage() {
       }
       
       // Financial Summary
-      const totalDonations = donations.reduce((sum, d) => sum + (d.amount || 0), 0);
+      const monetaryDonations = donations.filter(d => typeof d.amount === 'number');
+      const totalDonations = monetaryDonations.reduce((sum, d) => sum + (d.amount || 0), 0);
       const totalCollections = collections.reduce((sum, c) => sum + c.amount, 0);
       const totalExpenses = expenses.reduce((sum, e) => sum + e.amount, 0);
       const netBalance = totalDonations + totalCollections - totalExpenses;
