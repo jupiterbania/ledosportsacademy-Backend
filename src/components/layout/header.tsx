@@ -4,7 +4,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Menu, Club, LayoutDashboard, HandCoins, Medal, Users as UsersIcon, User } from 'lucide-react';
+import { Menu, Club, LayoutDashboard, HandCoins, Medal, Users as UsersIcon, User, Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
@@ -12,7 +12,6 @@ import { useAuth } from '@/hooks/use-auth';
 import { signOut } from '@/lib/auth';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import Image from 'next/image';
-import { ThemeToggle } from '@/components/theme-toggle';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
 
 
@@ -69,7 +68,10 @@ export function Header() {
         </nav>
         
         <div className="hidden md:flex items-center ml-auto gap-2">
-            <ThemeToggle />
+            <Button variant="ghost" size="icon">
+                <Bell className="h-5 w-5" />
+                <span className="sr-only">Notifications</span>
+            </Button>
           {user ? (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -113,7 +115,10 @@ export function Header() {
 
 
         <div className="md:hidden ml-auto flex items-center gap-2">
-           <ThemeToggle />
+           <Button variant="ghost" size="icon">
+              <Bell className="h-5 w-5" />
+              <span className="sr-only">Notifications</span>
+            </Button>
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
