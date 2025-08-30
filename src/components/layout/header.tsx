@@ -18,6 +18,8 @@ import { getAllNotifications, Notification } from '@/lib/data';
 import { ScrollArea } from '../ui/scroll-area';
 import { formatDistanceToNow } from 'date-fns';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+
 
 function NotificationContent({ notifications }: { notifications: Notification[] }) {
     return (
@@ -141,11 +143,22 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-background/5 backdrop-blur-lg">
       <div className="container flex h-16 items-center">
-        <Link href="/" className="flex items-center gap-2 mr-4">
-          <Image src="https://iili.io/KFLBPv1.png" alt="LEDO SPORTS ACADEMY Logo" width={32} height={32} />
-           <span className="font-bold sm:hidden text-xl">LSA</span>
-          <span className="font-bold hidden sm:inline sm:text-xl">LEDO SPORTS ACADEMY</span>
-        </Link>
+        <div className="flex items-center gap-2 mr-4">
+          <Dialog>
+            <DialogTrigger asChild>
+              <button className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-full">
+                <Image src="https://iili.io/KFLBPv1.png" alt="LEDO SPORTS ACADEMY Logo" width={32} height={32} />
+              </button>
+            </DialogTrigger>
+            <DialogContent className="p-0 bg-transparent border-0 shadow-none max-w-xs">
+              <Image src="https://iili.io/KFLBPv1.png" alt="LEDO SPORTS ACADEMY Logo" width={400} height={400} className="rounded-lg w-full h-auto" />
+            </DialogContent>
+          </Dialog>
+           <Link href="/" className="flex items-center gap-2">
+              <span className="font-bold sm:hidden text-xl">LSA</span>
+              <span className="font-bold hidden sm:inline sm:text-xl">LEDO SPORTS ACADEMY</span>
+           </Link>
+        </div>
         
         <nav className="hidden md:flex items-center gap-6 flex-grow">
           {baseNavLinks.map((link) => <NavLink key={link.href} {...link} />)}
