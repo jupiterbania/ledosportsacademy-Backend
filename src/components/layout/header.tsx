@@ -22,36 +22,44 @@ import { Dialog, DialogContent, DialogTrigger, DialogTitle } from '@/components/
 
 
 function NotificationContent({ notifications }: { notifications: Notification[] }) {
+    const router = useRouter();
+
+    const handleNotificationClick = (link: string | undefined) => {
+        if (link) {
+            router.push(link);
+        }
+    }
+
     return (
-        <>
-            <div className="p-4">
+        <div className="h-full flex flex-col">
+            <div className="p-4 border-b">
               <h4 className="font-medium text-sm">Notifications</h4>
             </div>
-            <ScrollArea className="h-[300px]">
+            <ScrollArea className="flex-1">
                 {notifications.length === 0 ? (
                     <p className="text-center text-sm text-muted-foreground py-8">No new notifications</p>
                 ) : (
                     <div className="flex flex-col">
                         {notifications.map(notif => (
-                            <Link key={notif.id} href={notif.link || '#'} className="block hover:bg-accent" passHref>
+                           <div key={notif.id} onClick={() => handleNotificationClick(notif.link)} className="block hover:bg-accent cursor-pointer">
                                 <div className="p-4 border-b">
+                                     {notif.imageUrl && (
+                                        <div className="relative aspect-video w-full rounded-md overflow-hidden mb-2">
+                                             <Image src={notif.imageUrl} alt={notif.title} fill className="object-cover" sizes="(max-width: 640px) 100vw, 384px"/>
+                                        </div>
+                                    )}
                                     <p className="font-semibold text-sm">{notif.title}</p>
                                     <p className="text-xs text-muted-foreground">{notif.description}</p>
                                     <p className="text-xs text-muted-foreground mt-1">
                                         {notif.createdAt ? formatDistanceToNow(new Date((notif.createdAt as any).seconds * 1000), { addSuffix: true }) : ''}
                                     </p>
                                 </div>
-                            </Link>
+                            </div>
                         ))}
                     </div>
                 )}
             </ScrollArea>
-            <div className="p-2 border-t text-center">
-                <Button variant="link" size="sm" asChild>
-                   <Link href="#">View all notifications</Link>
-                </Button>
-            </div>
-        </>
+        </div>
     )
 }
 
@@ -99,7 +107,7 @@ function NotificationBell() {
                 <SheetTrigger asChild>
                     {triggerButton}
                 </SheetTrigger>
-                <SheetContent className="w-[300px] p-0" side="right">
+                <SheetContent className="w-[85vw] max-w-sm p-0" side="right">
                     <NotificationContent notifications={notifications} />
                 </SheetContent>
             </Sheet>
