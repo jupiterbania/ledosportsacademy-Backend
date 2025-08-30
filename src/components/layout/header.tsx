@@ -142,7 +142,7 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-background/5 backdrop-blur-lg">
       <div className="container flex h-16 items-center">
         <Link href="/" className="flex items-center gap-2 mr-4">
-          <Image src="/icon.png" alt="LEDO SPORTS ACADEMY Logo" width={32} height={32} />
+          <Image src="https://iili.io/KFLBPv1.png" alt="LEDO SPORTS ACADEMY Logo" width={32} height={32} />
            <span className="font-bold sm:hidden text-xl">LSA</span>
           <span className="font-bold hidden sm:inline sm:text-xl">LEDO SPORTS ACADEMY</span>
         </Link>
@@ -214,7 +214,7 @@ export function Header() {
                <div className="p-4">
                 <SheetClose asChild>
                   <Link href="/" className="flex items-center gap-2 mb-6">
-                     <Image src="/icon.png" alt="LEDO SPORTS ACADEMY Logo" width={32} height={32} />
+                     <Image src="https://iili.io/KFLBPv1.png" alt="LEDO SPORTS ACADEMY Logo" width={32} height={32} />
                     <span className="font-bold text-xl">LEDO SPORTS ACADEMY</span>
                   </Link>
                 </SheetClose>

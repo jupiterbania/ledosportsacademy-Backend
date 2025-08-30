@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   description: 'Welcome to LEDO SPORTS ACADEMY',
   manifest: '/manifest.webmanifest',
   icons: {
-    icon: '/favicon.ico',
+    icon: 'https://iili.io/KFLBPv1.png',
   },
 };
 

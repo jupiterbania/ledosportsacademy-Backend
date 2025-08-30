@@ -100,7 +100,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
     <Sidebar collapsible="icon" variant="sidebar" className="border-r border-white/10 bg-black/10 backdrop-blur-lg">
       <SidebarHeader>
         <Link href="/" className="flex items-center gap-2 font-semibold">
-           <Image src="/icon.png" alt="LEDO SPORTS ACADEMY Logo" width={32} height={32} />
+           <Image src="https://iili.io/KFLBPv1.png" alt="LEDO SPORTS ACADEMY Logo" width={32} height={32} />
            <span className="text-lg hidden group-data-[collapsible=icon]:hidden">LEDO SPORTS ACADEMY</span>
         </Link>
       </SidebarHeader>
@@ -130,7 +130,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
               <SheetHeader>
                 <SheetTitle>
                   <Link href="/" className="flex items-center gap-2">
-                    <Image src="/icon.png" alt="LEDO SPORTS ACADEMY Logo" width={24} height={24} />
+                    <Image src="https://iili.io/KFLBPv1.png" alt="LEDO SPORTS ACADEMY Logo" width={24} height={24} />
                     <span>LEDO SPORTS ACADEMY</span>
                   </Link>
                 </SheetTitle>
