@@ -34,7 +34,7 @@ const getBase64Image = async (url: string): Promise<string> => {
 
 export default function ExportPage() {
   const { toast } = useToast();
-  const logoUrl = 'https://iili.io/KFLBPv1.png';
+  const logoUrl = 'https://iili.io/KFtnPMg.png';
 
   const generatePdf = async (dataType: string) => {
     toast({
