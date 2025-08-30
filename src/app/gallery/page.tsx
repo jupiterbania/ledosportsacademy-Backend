@@ -17,6 +17,7 @@ export default function GalleryPage() {
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
   const { user } = useAuth();
   const { toast } = useToast();
+  const logoUrl = 'https://iili.io/KFtnPMg.png';
 
   useEffect(() => {
     const fetchPhotos = async () => {
@@ -34,61 +35,74 @@ export default function GalleryPage() {
     setSelectedPhoto(null);
   };
 
+  const loadImg = (src: string): Promise<HTMLImageElement> => {
+    return new Promise((resolve, reject) => {
+        const img = new window.Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = src;
+    });
+  }
+
   const handleDownload = async (photo: Photo, quality: 'high' | 'medium' | 'low') => {
     toast({ title: "Preparing Download", description: `Downloading ${photo.title || 'image'} in ${quality} quality...` });
 
     try {
-      const response = await fetch(photo.url);
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      
-      const fileName = `${photo.title || photo.id}_${quality}.jpg`;
+        const [mainImage, logoImage] = await Promise.all([
+            loadImg(photo.url),
+            loadImg(logoUrl)
+        ]);
 
-      if (quality === 'high') {
-          link.download = fileName;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          URL.revokeObjectURL(url);
-          toast({ title: "Download Started", description: "High quality image is downloading." });
-          return;
-      }
-
-      const image = new window.Image();
-      image.crossOrigin = "anonymous";
-      image.src = url;
-      image.onload = () => {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
-        if (!ctx) {
-            throw new Error('Could not get canvas context');
-        }
+        if (!ctx) throw new Error('Could not get canvas context');
 
         let scale = 1;
         if (quality === 'medium') scale = 0.5;
         if (quality === 'low') scale = 0.25;
 
-        canvas.width = image.width * scale;
-        canvas.height = image.height * scale;
-        
-        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+        const canvasWidth = mainImage.width * scale;
+        const canvasHeight = mainImage.height * scale;
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
 
+        // Draw main image
+        ctx.drawImage(mainImage, 0, 0, canvasWidth, canvasHeight);
+
+        // Draw watermark
+        const logoAspectRatio = logoImage.width / logoImage.height;
+        let logoHeight = canvasHeight * 0.1; // Logo height is 10% of canvas height
+        let logoWidth = logoHeight * logoAspectRatio;
+        
+        // Ensure logo is not too big
+        if (logoWidth > canvasWidth * 0.3) {
+            logoWidth = canvasWidth * 0.3;
+            logoHeight = logoWidth / logoAspectRatio;
+        }
+
+        const padding = canvasWidth * 0.02;
+        const logoX = canvasWidth - logoWidth - padding;
+        const logoY = canvasHeight - logoHeight - padding;
+
+        ctx.globalAlpha = 0.8;
+        ctx.drawImage(logoImage, logoX, logoY, logoWidth, logoHeight);
+        ctx.globalAlpha = 1.0;
+        
         canvas.toBlob((blob) => {
             if (blob) {
-                const canvasUrl = URL.createObjectURL(blob);
-                link.href = canvasUrl;
-                link.download = fileName;
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `${photo.title || photo.id}_${quality}.jpg`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-                URL.revokeObjectURL(canvasUrl);
-                URL.revokeObjectURL(url); // Revoke original blob url
-                toast({ title: "Download Started", description: `${quality} quality image is downloading.` });
+                URL.revokeObjectURL(url);
+                toast({ title: "Download Started", description: `Watermarked ${quality} quality image is downloading.` });
             }
         }, 'image/jpeg', 0.9);
-      };
+
     } catch (error) {
         console.error("Download failed:", error);
         toast({ title: "Download Failed", description: "Could not download the image.", variant: "destructive" });
