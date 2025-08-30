@@ -14,6 +14,7 @@ import {
   FileDown,
   Settings,
   Menu,
+  ShieldCheck,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -36,7 +37,7 @@ import Image from 'next/image';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
 function AdminLayout({ children }: { children: React.ReactNode }) {
-  const { user, loading, isAdmin } = useAuth();
+  const { user, loading, isAdmin, isSuperAdmin } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -63,7 +64,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
     );
   }
 
-  const menuItems = [
+  const baseMenuItems = [
     { href: '/admin', label: 'Dashboard', icon: Home },
     { href: '/admin/analytics', label: 'Analytics', icon: LineChart },
     { href: '/admin/gallery', label: 'Gallery', icon: GalleryHorizontal },
@@ -72,8 +73,15 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
     { href: '/admin/members', label: 'Members', icon: Users },
     { href: '/admin/finances', label: 'Finances', icon: HandCoins },
     { href: '/admin/export', label: 'PDF Export', icon: FileDown },
-    { href: '/admin/settings', label: 'Settings', icon: Settings },
   ];
+
+  const superAdminMenuItems = [
+     { href: '/admin/requests', label: 'Admin Requests', icon: ShieldCheck },
+     { href: '/admin/settings', label: 'Settings', icon: Settings },
+  ];
+
+  const menuItems = isSuperAdmin ? [...baseMenuItems, ...superAdminMenuItems] : baseMenuItems;
+
 
   const NavLink = ({ href, label, icon: Icon, isActive }: { href: string; label: string; icon: React.ElementType; isActive: boolean; }) => (
     <SidebarMenuItem>

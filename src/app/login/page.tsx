@@ -10,6 +10,7 @@ import { signInWithGoogle, ADMIN_EMAIL, signOut } from "@/lib/auth";
 import { useAuth } from "@/hooks/use-auth";
 import { useEffect } from "react";
 import { isConfigComplete } from "@/lib/firebase";
+import { getMemberByEmail } from "@/lib/data";
 
 
 export default function LoginPage() {
@@ -33,20 +34,20 @@ export default function LoginPage() {
       }
       
       if (role === 'admin') {
-         if(user.email === ADMIN_EMAIL) {
+         const member = await getMemberByEmail(user.email!);
+         if(user.email === ADMIN_EMAIL || member?.isAdmin) {
             toast({
               title: "Admin Login Successful",
               description: "Redirecting to the admin dashboard...",
             });
             router.push('/admin');
          } else {
+            // Not a recognized admin, redirect to request page
             toast({
-              title: "Access Denied",
-              description: "You are not an authorized admin.",
-              variant: "destructive"
+              title: "Admin Access Required",
+              description: "Please request access to the admin dashboard.",
             });
-            await signOut(); // Sign out the user if they are not an admin
-            router.push('/');
+            router.push('/admin-request');
          }
       } else {
         toast({

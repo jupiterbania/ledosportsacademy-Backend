@@ -1,6 +1,6 @@
 
 import { db, isConfigComplete } from './firebase';
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy, limit, where, writeBatch, getDoc } from 'firebase/firestore';
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy, limit, where, writeBatch, getDoc, serverTimestamp, FieldValue } from 'firebase/firestore';
 
 // Base types
 export interface BaseDocument {
@@ -35,6 +35,8 @@ export interface Member extends BaseDocument {
   phone?: string;
   dob?: string;
   bloodGroup?: string;
+  isAdmin?: boolean;
+  isSuperAdmin?: boolean;
 }
 
 export interface Donation extends BaseDocument {
@@ -73,6 +75,15 @@ export interface SlideshowItem {
     description?: string;
     'data-ai-hint'?: string;
     date: string;
+}
+
+export interface AdminRequest extends BaseDocument {
+  name: string;
+  email: string;
+  photoUrl: string;
+  reason: string;
+  status: 'pending' | 'approved' | 'rejected';
+  requestedAt: FieldValue;
 }
 
 
@@ -244,6 +255,43 @@ export const getSlideshowItems = async (): Promise<SlideshowItem[]> => {
     });
     
     return [...sliderPhotos, ...sliderEvents].sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+};
+
+// Admin Requests
+export const addAdminRequest = async (data: Omit<AdminRequest, 'id' | 'status' | 'requestedAt'>) => {
+    if (!isConfigComplete) throw new Error("Firebase not configured");
+    const requestData = {
+        ...data,
+        status: 'pending' as const,
+        requestedAt: serverTimestamp(),
+    };
+    return await addDocument<AdminRequest>('adminRequests', requestData);
+};
+
+export const getAdminRequestByEmail = async (email: string): Promise<AdminRequest | null> => {
+    if (!isConfigComplete) return null;
+    const q = query(collection(db, "adminRequests"), where("email", "==", email), limit(1));
+    const snapshot = await getDocs(q);
+    if (snapshot.empty) return null;
+    const docData = snapshot.docs[0];
+    return { id: docData.id, ...docData.data() } as AdminRequest;
+}
+
+export const getAllAdminRequests = () => getCollection<AdminRequest>('adminRequests', 'requestedAt', 'desc');
+
+export const updateAdminRequestStatus = async (id: string, status: 'approved' | 'rejected') => {
+    if (!isConfigComplete) return;
+    const requestRef = doc(db, 'adminRequests', id);
+    await updateDoc(requestRef, { status });
+
+    if (status === 'approved') {
+        const requestSnap = await getDoc(requestRef);
+        const requestData = requestSnap.data() as AdminRequest;
+        const member = await getMemberByEmail(requestData.email);
+        if (member) {
+            await updateMember(member.id, { isAdmin: true });
+        }
+    }
 };
 
 
