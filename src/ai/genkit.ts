@@ -1,8 +1,7 @@
 
 'use server';
-import {genkit} from 'genkit';
+import {genkit, configureGenkit} from 'genkit';
 import {openAI} from 'genkitx-openai';
-import {configureGenkit} from 'genkit/config';
 
 configureGenkit({
   plugins: [openAI({apiKey: process.env.OPENAI_API_KEY})],
