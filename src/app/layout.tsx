@@ -40,6 +40,7 @@ export default function RootLayout({
               defaultTheme="dark"
               enableSystem
               disableTransitionOnChange
+              themes={['light', 'dark', 'system', 'football']}
           >       
                   <Background />
                   <Header />

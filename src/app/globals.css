@@ -73,6 +73,28 @@
     --sidebar-border: 217.2 32.6% 17.5%;
     --sidebar-ring: 212.7 26.8% 83.9%;
   }
+
+  .football {
+    --background: 120 50% 5%;
+    --foreground: 210 20% 98%;
+    --card: 224 71.4% 4.1%;
+    --card-foreground: 210 20% 98%;
+    --popover: 224 71.4% 4.1%;
+    --popover-foreground: 210 20% 98%;
+    --primary: 120 80% 40%;
+    --primary-foreground: 224 71.4% 4.1%;
+    --secondary: 215 27.9% 16.9%;
+    --secondary-foreground: 210 20% 98%;
+    --muted: 215 27.9% 16.9%;
+    --muted-foreground: 217.9 10.6% 64.9%;
+    --accent: 215 27.9% 16.9%;
+    --accent-foreground: 210 20% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 355.7 100% 97.3%;
+    --border: 215 27.9% 16.9%;
+    --input: 215 27.9% 16.9%;
+    --ring: 120 80% 40%;
+  }
 }
 
 @layer base {
@@ -103,7 +125,7 @@
     }
   }
   
-  .dark .aurora-card {
+  .dark .aurora-card, .football .aurora-card {
     @apply bg-white/5 border border-white/10 backdrop-blur-lg shadow-lg shadow-cyan-500/10;
   }
 
@@ -134,6 +156,10 @@
    .light .aurora-text-gradient {
       @apply bg-gradient-to-r from-cyan-600 to-blue-700 text-transparent bg-clip-text;
   }
+
+  .football .aurora-text-gradient {
+      @apply bg-gradient-to-r from-lime-400 to-green-300 text-transparent bg-clip-text;
+  }
 }
 
 /* Background Animation */
@@ -149,12 +175,12 @@
 @keyframes shooting-star-1 {
   0% { transform: translateX(-100vw) translateY(-20vh) scale(0); opacity: 1; }
   70% { opacity: 1; }
-  100% { transform: translateX(100vw) translateY(80vh) scale(0.6); opacity: 0; }
+  100% { transform: translateX(100vw) translateY(80vh) scale(0.4); opacity: 0; }
 }
 @keyframes shooting-star-2 {
   0% { transform: translateX(50vw) translateY(-20vh) scale(0); opacity: 1; }
   70% { opacity: 1; }
-  100% { transform: translateX(-50vw) translateY(80vh) scale(0.4); opacity: 0; }
+  100% { transform: translateX(-50vw) translateY(80vh) scale(0.3); opacity: 0; }
 }
 
 #star-container {
@@ -170,12 +196,12 @@
   width: 200%;
   height: 200%;
   background-image:
-    radial-gradient(1px 1px at 20px 30px, #999, rgba(0,0,0,0)),
-    radial-gradient(0.5px 0.5px at 40px 70px, #fff, rgba(0,0,0,0)),
-    radial-gradient(0.5px 0.5px at 50px 160px, #aaa, rgba(0,0,0,0)),
-    radial-gradient(1px 1px at 90px 40px, #fff, rgba(0,0,0,0)),
-    radial-gradient(0.5px 0.5px at 130px 80px, #fff, rgba(0,0,0,0)),
-    radial-gradient(0.5px 0.5px at 160px 120px, #999, rgba(0,0,0,0));
+    radial-gradient(0.5px 0.5px at 20px 30px, #ccc, rgba(0,0,0,0)),
+    radial-gradient(0.25px 0.25px at 40px 70px, #fff, rgba(0,0,0,0)),
+    radial-gradient(0.25px 0.25px at 50px 160px, #ddd, rgba(0,0,0,0)),
+    radial-gradient(0.5px 0.5px at 90px 40px, #fff, rgba(0,0,0,0)),
+    radial-gradient(0.25px 0.25px at 130px 80px, #fff, rgba(0,0,0,0)),
+    radial-gradient(0.25px 0.25px at 160px 120px, #ccc, rgba(0,0,0,0));
   background-repeat: repeat;
   background-size: 250px 250px;
   animation: move-background 320s linear infinite;
@@ -186,7 +212,7 @@
     height: 1px;
     background: linear-gradient(-45deg, #4da8bd, rgba(0, 0, 255, 0));
     border-radius: 999px;
-    filter: drop-shadow(0 0 2px #58D6F5);
+    filter: drop-shadow(0 0 1px #58D6F5);
     animation: shooting-star-1 20s ease-in-out infinite;
 }
 .shooting-star:nth-child(2) {
@@ -201,101 +227,100 @@
   position: absolute;
   top: 5%;
   right: 5%;
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
   background: #fde68a;
   border-radius: 50%;
-  box-shadow: 0 0 15px #fde68a, 0 0 30px #fcd34d, 0 0 60px #fbbf24;
+  box-shadow: 0 0 10px #fde68a, 0 0 20px #fcd34d, 0 0 40px #fbbf24;
   animation: pulse 6s infinite ease-in-out;
 }
 
 .cloud {
   position: absolute;
-  background: #f3f4f6;
+  background: #f3f4f6e6; /* Added some transparency */
   border-radius: 100px;
-  opacity: 0.6;
-  filter: drop-shadow(0 0 8px rgba(0,0,0,0.03));
+  opacity: 0.5;
+  filter: drop-shadow(0 0 5px rgba(0,0,0,0.03));
   animation: move-clouds 80s linear infinite;
 }
 
 .cloud::before, .cloud::after {
   content: '';
   position: absolute;
-  background: #e5e7eb;
+  background: #e5e7ebe6; /* Added some transparency */
   border-radius: 50%;
 }
 
 .cloud-1 {
-  width: 160px;
-  height: 45px;
+  width: 140px;
+  height: 40px;
   top: 15%;
   left: -250px;
   animation-duration: 60s;
 }
 .cloud-1::before {
-  width: 80px;
-  height: 80px;
-  top: -35px;
-  left: 20px;
+  width: 70px;
+  height: 70px;
+  top: -30px;
+  left: 18px;
 }
 .cloud-1::after {
-  width: 100px;
-  height: 100px;
-  top: -45px;
-  right: 10px;
+  width: 90px;
+  height: 90px;
+  top: -40px;
+  right: 9px;
 }
 
 .cloud-2 {
-  width: 220px;
-  height: 60px;
+  width: 200px;
+  height: 55px;
   top: 30%;
   left: -400px;
   animation-duration: 90s;
   animation-delay: -15s;
 }
 .cloud-2::before {
-  width: 110px;
-  height: 110px;
-  top: -50px;
-  left: 30px;
+  width: 100px;
+  height: 100px;
+  top: -45px;
+  left: 28px;
 }
 .cloud-2::after {
-  width: 130px;
-  height: 130px;
-  top: -70px;
-  right: 20px;
+  width: 120px;
+  height: 120px;
+  top: -65px;
+  right: 18px;
 }
 
 .cloud-3 {
-  width: 110px;
-  height: 35px;
+  width: 100px;
+  height: 30px;
   top: 50%;
   left: -200px;
   animation-duration: 50s;
   animation-delay: -25s;
 }
 .cloud-3::before {
-  width: 60px;
-  height: 60px;
-  top: -25px;
-  left: 15px;
+  width: 55px;
+  height: 55px;
+  top: -22px;
+  left: 14px;
 }
 .cloud-3::after {
-  width: 80px;
-  height: 80px;
-  top: -35px;
-  right: 10px;
+  width: 70px;
+  height: 70px;
+  top: -30px;
+  right: 9px;
 }
-
 
 @keyframes pulse {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 0 15px #fde68a, 0 0 30px #fcd34d, 0 0 60px #fbbf24;
+    box-shadow: 0 0 10px #fde68a, 0 0 20px #fcd34d, 0 0 40px #fbbf24;
   }
   50% {
     transform: scale(1.02);
-    box-shadow: 0 0 20px #fef3c7, 0 0 40px #fde68a, 0 0 80px #fcd34d;
+    box-shadow: 0 0 15px #fef3c7, 0 0 30px #fde68a, 0 0 60px #fcd34d;
   }
 }
 
@@ -306,4 +331,25 @@
   to {
     transform: translateX(calc(100vw + 400px));
   }
+}
+
+
+/* Football theme */
+.football-theme-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: url('https://images.pexels.com/photos/274422/pexels-photo-274422.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1280&dpr=2');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: opacity 1s ease-in-out;
+}
+
+.football-theme-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 10, 0, 0.7); /* Dark green overlay */
+  z-index: 0;
 }
