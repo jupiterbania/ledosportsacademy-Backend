@@ -90,6 +90,7 @@ export interface Notification extends BaseDocument {
   title: string;
   description: string;
   link?: string;
+  imageUrl?: string;
   createdAt: FieldValue;
 }
 
@@ -180,8 +181,23 @@ export const getMemberByEmail = async (email: string): Promise<Member | null> =>
     if (snapshot.empty) {
         return null;
     }
-    const doc = snapshot.docs[0];
-    return { id: doc.id, ...doc.data() } as Member;
+    const memberDoc = snapshot.docs[0];
+    const memberData = { id: memberDoc.id, ...memberDoc.data() } as Member;
+
+    if (memberData.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+        memberData.isSuperAdmin = true;
+        memberData.isAdmin = true;
+    }
+
+    if (memberData.isAdmin) {
+        const adminRequestQ = query(collection(db, "adminRequests"), where("email", "==", email), where("status", "==", "approved"), limit(1));
+        const adminRequestSnap = await getDocs(adminRequestQ);
+        if(adminRequestSnap.empty && !memberData.isSuperAdmin) {
+            memberData.isAdmin = false;
+        }
+    }
+    
+    return memberData;
 };
 
 export const updateMemberByEmail = async (email: string, data: Partial<Omit<Member, 'id' | 'email'>>) => {
@@ -272,7 +288,7 @@ export const addAdminRequest = async (data: Omit<AdminRequest, 'id' | 'status' |
         status: 'pending' as const,
         requestedAt: serverTimestamp(),
     };
-    return await addDocument<AdminRequest>('adminRequests', requestData);
+    return await addDocument<Omit<AdminRequest,'id'>>('adminRequests', requestData);
 };
 
 export const getAdminRequestByEmail = async (email: string): Promise<AdminRequest | null> => {
@@ -289,8 +305,7 @@ export const getAllAdminRequests = () => getCollection<AdminRequest>('adminReque
 export const updateAdminRequestStatus = async (id: string, status: 'approved' | 'rejected') => {
     if (!isConfigComplete) return;
     const requestRef = doc(db, 'adminRequests', id);
-    await updateDoc(requestRef, { status });
-
+    
     const requestSnap = await getDoc(requestRef);
     if (!requestSnap.exists()) return;
     const requestData = requestSnap.data() as AdminRequest;
@@ -298,12 +313,13 @@ export const updateAdminRequestStatus = async (id: string, status: 'approved' | 
     const member = await getMemberByEmail(requestData.email);
     if (member) {
         await updateMember(member.id, { isAdmin: status === 'approved' });
+        await updateDoc(requestRef, { status });
     }
 };
 
 // Notifications
 export const getAllNotifications = () => getCollection<Notification>('notifications', 'createdAt', 'desc');
-export const addNotification = (data: Omit<Notification, 'id' | 'createdAt'>) => addDocument<Notification>('notifications', { ...data, createdAt: serverTimestamp() });
+export const addNotification = (data: Omit<Notification, 'id' | 'createdAt'>) => addDocument<Omit<Notification, 'id'>>('notifications', { ...data, createdAt: serverTimestamp() });
 export const deleteNotification = (id: string) => deleteDocument('notifications', id);
 
 

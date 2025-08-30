@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -14,7 +15,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { getAllNotifications, Notification, addNotification, deleteNotification } from "@/lib/data";
-import { PlusCircle, Trash2, Bell } from 'lucide-react';
+import { PlusCircle, Trash2, Bell, Image as ImageIcon } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { formatDistanceToNow } from 'date-fns';
 
@@ -22,6 +23,7 @@ const notificationSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
   description: z.string().min(1, { message: "Description is required" }),
   link: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
+  imageUrl: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
 });
 
 type NotificationFormValues = z.infer<typeof notificationSchema>;
@@ -46,6 +48,7 @@ export default function NotificationsManagementPage() {
       title: "",
       description: "",
       link: "",
+      imageUrl: "",
     },
   });
 
@@ -86,16 +89,21 @@ export default function NotificationsManagementPage() {
                     title: "",
                     description: "",
                     link: "",
+                    imageUrl: "",
                   });
                   setIsDialogOpen(true);
-                }}>
-                <PlusCircle className="mr-2 h-4 w-4" /> New Announcement
+                }}
+                className="shrink-0"
+                >
+                <PlusCircle className="mr-2 h-4 w-4" /> 
+                <span className="hidden sm:inline">New Announcement</span>
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-xl">
+            <DialogContent className="sm:max-w-xl max-h-[90vh] flex flex-col">
               <DialogHeader>
                 <DialogTitle>Create New Announcement</DialogTitle>
               </DialogHeader>
+               <div className="flex-grow overflow-y-auto pr-4">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                   <FormField
@@ -126,6 +134,19 @@ export default function NotificationsManagementPage() {
                   />
                   <FormField
                     control={form.control}
+                    name="imageUrl"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Image URL (Optional)</FormLabel>
+                        <FormControl>
+                          <Input placeholder="https://placehold.co/600x400.png" {...field} />
+                        </FormControl>
+                         <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
                     name="link"
                     render={({ field }) => (
                       <FormItem>
@@ -137,7 +158,7 @@ export default function NotificationsManagementPage() {
                       </FormItem>
                     )}
                   />
-                  <DialogFooter>
+                  <DialogFooter className="sticky bottom-0 bg-background py-4 -mx-6 px-6 border-t">
                     <DialogClose asChild>
                       <Button type="button" variant="ghost">Cancel</Button>
                     </DialogClose>
@@ -145,6 +166,7 @@ export default function NotificationsManagementPage() {
                   </DialogFooter>
                 </form>
               </Form>
+              </div>
             </DialogContent>
           </Dialog>
         </CardHeader>
@@ -162,10 +184,15 @@ export default function NotificationsManagementPage() {
                 <TableRow key={notification.id}>
                   <TableCell>
                       <div className="flex items-start gap-4">
-                        <div className="p-2 bg-muted rounded-full shrink-0">
+                        <div className="p-2 bg-muted rounded-full shrink-0 mt-1">
                            <Bell className="h-4 w-4 text-muted-foreground" />
                         </div>
                         <div className="flex-1 min-w-0">
+                            {notification.imageUrl && (
+                                <div className="relative aspect-video w-full max-w-sm rounded-md overflow-hidden mb-2">
+                                     <Image src={notification.imageUrl} alt={notification.title} fill className="object-cover" />
+                                </div>
+                            )}
                             <p className="font-medium break-words">{notification.title}</p>
                             <p className="text-sm text-muted-foreground break-words">{notification.description}</p>
                             {notification.link && (
