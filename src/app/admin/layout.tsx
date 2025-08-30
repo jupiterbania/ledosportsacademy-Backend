@@ -79,7 +79,6 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
 
   const superAdminMenuItems = [
      { href: '/admin/requests', label: 'Admin Requests', icon: ShieldCheck },
-     { href: '/admin/profile', label: 'Profile', icon: User },
   ];
 
   const menuItems = isSuperAdmin ? [...baseMenuItems, ...superAdminMenuItems] : baseMenuItems;
@@ -142,6 +141,10 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                     {item.label}
                   </Link>
                 ))}
+                 <Link href="/admin/profile" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
+                    <User className="h-4 w-4" />
+                    Profile
+                  </Link>
               </nav>
             </SheetContent>
           </Sheet>

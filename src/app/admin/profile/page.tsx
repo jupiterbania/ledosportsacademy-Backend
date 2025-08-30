@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -93,7 +92,7 @@ export default function ProfilePage() {
     }
 
     return (
-        <div className="flex flex-1 flex-col gap-4 md:gap-8">
+        <div className="flex flex-1 flex-col gap-4 md:gap-8 items-center">
              <div className="max-w-2xl w-full">
                 <Card className="aurora-card">
                     <CardHeader className="text-center">
