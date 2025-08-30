@@ -1,6 +1,7 @@
 
 "use client";
 
+import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { HandCoins, Medal, Users, Calendar } from "lucide-react";
 import {
@@ -82,46 +83,54 @@ export default function AdminDashboard() {
   return (
     <div className="flex flex-1 flex-col gap-4 md:gap-8">
        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Total Members</CardTitle>
-                    <Users className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                    <div className="text-2xl font-bold">{members.length}</div>
-                    <p className="text-xs text-muted-foreground">Currently active members</p>
-                </CardContent>
-            </Card>
-            <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Upcoming Events</CardTitle>
-                    <Calendar className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                    <div className="text-2xl font-bold">{events.filter(e => new Date(e.date) >= new Date()).length}</div>
-                    <p className="text-xs text-muted-foreground">{events.length} total events</p>
-                </CardContent>
-            </Card>
-             <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Net Balance</CardTitle>
-                    <HandCoins className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                    <div className="text-2xl font-bold">Rs {new Intl.NumberFormat('en-IN').format(totalDonations + totalCollections - totalExpenses)}</div>
-                    <p className="text-xs text-muted-foreground">Income - Expenses</p>
-                </CardContent>
-            </Card>
-            <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Total Achievements</CardTitle>
-                    <Medal className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                    <div className="text-2xl font-bold">{achievements.length}</div>
-                    <p className="text-xs text-muted-foreground">Total achievements recorded</p>
-                </CardContent>
-            </Card>
+            <Link href="/admin/members">
+              <Card className="transition-all duration-300 hover:shadow-cyan-500/20 hover:-translate-y-1">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium">Total Members</CardTitle>
+                      <Users className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                      <div className="text-2xl font-bold">{members.length}</div>
+                      <p className="text-xs text-muted-foreground">Currently active members</p>
+                  </CardContent>
+              </Card>
+            </Link>
+            <Link href="/admin/events">
+              <Card className="transition-all duration-300 hover:shadow-cyan-500/20 hover:-translate-y-1">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium">Upcoming Events</CardTitle>
+                      <Calendar className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                      <div className="text-2xl font-bold">{events.filter(e => new Date(e.date) >= new Date()).length}</div>
+                      <p className="text-xs text-muted-foreground">{events.length} total events</p>
+                  </CardContent>
+              </Card>
+            </Link>
+            <Link href="/admin/finances">
+              <Card className="transition-all duration-300 hover:shadow-cyan-500/20 hover:-translate-y-1">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium">Net Balance</CardTitle>
+                      <HandCoins className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                      <div className="text-2xl font-bold">Rs {new Intl.NumberFormat('en-IN').format(totalDonations + totalCollections - totalExpenses)}</div>
+                      <p className="text-xs text-muted-foreground">Income - Expenses</p>
+                  </CardContent>
+              </Card>
+            </Link>
+            <Link href="/admin/achievements">
+              <Card className="transition-all duration-300 hover:shadow-cyan-500/20 hover:-translate-y-1">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium">Total Achievements</CardTitle>
+                      <Medal className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                      <div className="text-2xl font-bold">{achievements.length}</div>
+                      <p className="text-xs text-muted-foreground">Total achievements recorded</p>
+                  </CardContent>
+              </Card>
+            </Link>
         </div>
 
       <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
