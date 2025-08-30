@@ -5,6 +5,15 @@ import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/components/auth/auth-provider';
 import { Header } from '@/components/layout/header';
 import { ThemeProvider } from "@/components/theme-provider"
+import { SpaceGrotesk } from 'next/font/google'
+import { Background } from '@/components/background';
+
+const spaceGrotesk = SpaceGrotesk({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-space-grotesk',
+});
+
 
 export const metadata: Metadata = {
   title: 'LEDO SPORTS ACADEMY',
@@ -20,18 +29,16 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" href="https://iili.io/FpDNveV.png" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body bg-background text-foreground antialiased min-h-screen flex flex-col">
+      <body className={`${spaceGrotesk.variable} font-body bg-background text-foreground antialiased min-h-screen flex flex-col`}>
         <AuthProvider>
           <ThemeProvider
               attribute="class"
-              defaultTheme="system"
+              defaultTheme="dark"
               enableSystem
               disableTransitionOnChange
-          >
+          >       
+                  <Background />
                   <Header />
                   <main className="flex-grow">{children}</main>
                   <Toaster />

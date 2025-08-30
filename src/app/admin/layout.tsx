@@ -109,9 +109,9 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
   )
 
   const DesktopNav = () => (
-     <div className="hidden border-r bg-muted/40 md:block">
+     <div className="hidden border-r bg-black/10 border-white/10 backdrop-blur-lg md:block">
         <div className="flex h-full max-h-screen flex-col gap-2">
-          <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
+          <div className="flex h-16 items-center border-b border-white/10 px-4 lg:h-[60px] lg:px-6">
             <Link href="/" className="flex items-center gap-2 font-semibold">
               <Image src="https://iili.io/FpDNveV.png" alt="LEDO SPORTS ACADEMY Logo" width={24} height={24} />
               <span className="">LEDO SPORTS ACADEMY</span>
@@ -226,7 +226,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
     <div className="grid h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <DesktopNav />
       <div className="flex flex-col overflow-hidden">
-        <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6 shrink-0">
+        <header className="flex h-14 items-center gap-4 border-b border-white/10 bg-black/10 backdrop-blur-lg px-4 lg:h-[60px] lg:px-6 shrink-0">
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon" className="shrink-0 md:hidden">
@@ -271,7 +271,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                 <span className="sr-only">Toggle user menu</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" className="aurora-card">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => router.push('/admin/settings')}>Settings</DropdownMenuItem>
@@ -301,5 +301,3 @@ export default function AdminDashboardLayout({
     </SidebarProvider>
   )
 }
-
-    

@@ -5,7 +5,6 @@ import * as React from "react"
 import Image from "next/image"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from "@/components/ui/carousel"
 import { getSlideshowItems, SlideshowItem } from "@/lib/data"
-import { Card, CardContent } from "@/components/ui/card"
 import Autoplay from "embla-carousel-autoplay"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -17,7 +16,7 @@ export function HomepageSlideshow() {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = React.useState(false);
 
   const plugin = React.useRef(
-    Autoplay({ delay: 3000, stopOnInteraction: true })
+    Autoplay({ delay: 4000, stopOnInteraction: true })
   )
 
   React.useEffect(() => {
@@ -50,24 +49,25 @@ export function HomepageSlideshow() {
   }, [api]);
 
   if (slideshowItems.length === 0) {
-    return null;
+    return <div className="h-[60vh] w-full flex items-center justify-center text-muted-foreground">Loading Slideshow...</div>;
   }
   
   const currentItem = slideshowItems[current];
 
   return (
-    <section className="w-full py-6 md:py-8 lg:py-12">
-      <div className="container">
+    <section className="w-full relative">
+       <div className="absolute inset-0 z-0 opacity-20 bg-gradient-to-b from-cyan-500/20 via-background to-background" />
+      <div className="container relative z-10 pt-8 pb-4">
         <Carousel 
           setApi={setApi} 
-          className="w-full group rounded-xl overflow-hidden shadow-2xl border" 
+          className="w-full group rounded-xl overflow-hidden shadow-2xl border-2 border-white/10 aurora-glow" 
           opts={{ loop: true }}
           plugins={[plugin.current]}
         >
           <CarouselContent>
             {slideshowItems.map((item, index) => (
               <CarouselItem key={item.id}>
-                  <div className="relative h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] w-full">
+                  <div className="relative h-[300px] sm:h-[400px] md:h-[500px] lg:h-[60vh] w-full">
                     <Image
                       src={item.url}
                       alt={item.description || item.title || `Slider item ${item.id}`}
@@ -77,23 +77,23 @@ export function HomepageSlideshow() {
                       data-ai-hint={item['data-ai-hint']}
                       sizes="100vw"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
                   </div>
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10 hidden md:flex bg-white/20 hover:bg-white/40 text-white" />
-          <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10 hidden md:flex bg-white/20 hover:bg-white/40 text-white" />
+          <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10 hidden md:flex bg-white/10 hover:bg-white/20 text-white border-white/20 backdrop-blur-sm" />
+          <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10 hidden md:flex bg-white/10 hover:bg-white/20 text-white border-white/20 backdrop-blur-sm" />
           
-           <div className="absolute bottom-10 sm:bottom-16 md:bottom-20 left-0 right-0 z-10 px-4 sm:px-8 md:px-16 text-left">
+           <div className="absolute bottom-0 left-0 right-0 z-10 p-6 sm:p-8 md:p-12 text-left bg-gradient-to-t from-background via-background/80 to-transparent">
               <div key={current} className="max-w-4xl mx-auto animate-in fade-in-0 slide-in-from-bottom-10 duration-700">
                   {currentItem?.title && (
-                    <h1 className="text-white text-xl md:text-3xl lg:text-4xl font-bold drop-shadow-2xl line-clamp-2">{currentItem.title}</h1>
+                    <h1 className="text-white text-2xl md:text-4xl lg:text-5xl font-bold drop-shadow-[0_2px_10px_hsl(var(--primary)/0.5)] aurora-text-gradient line-clamp-2">{currentItem.title}</h1>
                   )}
                   {currentItem?.description && (
                        <div>
                          <p className={cn(
-                           "text-white/90 text-sm md:text-base max-w-2xl mt-2 drop-shadow-lg transition-all duration-300",
+                           "text-white/80 text-sm md:text-base max-w-2xl mt-4 drop-shadow-lg transition-all duration-300",
                            !isDescriptionExpanded && "line-clamp-1"
                          )}>
                             {currentItem.description}
@@ -101,7 +101,7 @@ export function HomepageSlideshow() {
                         {currentItem.description.length > 80 && ( // Rough estimate for 1 line
                            <Button 
                               variant="link" 
-                              className="p-0 mt-1 text-white/90 hover:text-white text-sm md:text-base"
+                              className="p-0 mt-1 text-cyan-300 hover:text-cyan-200 text-sm md:text-base"
                               onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
                             >
                               {isDescriptionExpanded ? "Show Less" : "Read More"}
@@ -118,9 +118,9 @@ export function HomepageSlideshow() {
                 key={index}
                 onClick={() => scrollTo(index)}
                 className={cn(
-                  "h-2 w-2 rounded-full bg-white/50 transition-all",
-                  "hover:bg-white/80 hover:scale-110",
-                  current === index ? "w-4 bg-white" : "bg-white/50"
+                  "h-2 w-2 rounded-full bg-white/30 transition-all duration-300 backdrop-blur-sm",
+                  "hover:bg-white/50 hover:scale-110",
+                  current === index ? "w-6 bg-cyan-400" : "bg-white/30"
                 )}
                 aria-label={`Go to slide ${index + 1}`}
               />

@@ -41,7 +41,7 @@ export function Header() {
   const NavLink = ({ href, label }: { href: string, label: string }) => (
     <Link 
       href={href} 
-      className="text-sm font-medium text-foreground/80 transition-colors hover:text-primary"
+      className="text-sm font-medium text-foreground/80 transition-colors hover:text-primary hover:drop-shadow-[0_0_8px_hsl(var(--primary))]"
     >
       {label}
     </Link>
@@ -56,7 +56,7 @@ export function Header() {
   );
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-background/5 backdrop-blur-lg">
       <div className="container flex h-16 items-center">
         <Link href="/" className="flex items-center gap-2 mr-4">
           <Image src="https://iili.io/FpDNveV.png" alt="LEDO SPORTS ACADEMY Logo" width={32} height={32} />
@@ -74,10 +74,10 @@ export function Header() {
           {user ? (
              <div className="flex items-center gap-4">
                 <span className="text-sm text-muted-foreground">Hello, {user.displayName?.split(' ')[0]}!</span>
-                <Button onClick={handleAuthAction}>Logout</Button>
+                <Button onClick={handleAuthAction} variant="outline" className="aurora-card">Logout</Button>
             </div>
           ) : (
-             <Button onClick={handleAuthAction}>Login</Button>
+             <Button onClick={handleAuthAction} variant="outline" className="aurora-card hover:aurora-glow">Login</Button>
           )}
         </div>
 
@@ -122,5 +122,3 @@ export function Header() {
     </header>
   );
 }
-
-    
