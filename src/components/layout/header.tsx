@@ -107,7 +107,7 @@ function NotificationBell() {
                 <SheetTrigger asChild>
                     {triggerButton}
                 </SheetTrigger>
-                <SheetContent className="w-[85vw] max-w-sm p-0" side="right">
+                <SheetContent className="w-[85vw] max-w-sm p-0 flex flex-col" side="right">
                     <NotificationContent notifications={notifications} />
                 </SheetContent>
             </Sheet>
@@ -119,7 +119,7 @@ function NotificationBell() {
             <PopoverTrigger asChild>
                 {triggerButton}
             </PopoverTrigger>
-            <PopoverContent className="w-80 p-0" align="end">
+            <PopoverContent className="w-80 p-0 aurora-card" align="end">
                 <NotificationContent notifications={notifications} />
             </PopoverContent>
         </Popover>
