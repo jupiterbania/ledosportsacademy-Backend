@@ -14,10 +14,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { getAllAchievements, Achievement, addAchievement, updateAchievement, deleteAchievement } from "@/lib/data";
-import { PlusCircle, Edit, Trash2, Sparkles, Wand2 } from 'lucide-react';
+import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import Image from 'next/image';
-import { generateContent } from '@/ai/flows/content-generator';
 
 const achievementSchema = z.object({
   id: z.string().optional(),
@@ -32,7 +31,6 @@ type AchievementFormValues = z.infer<typeof achievementSchema>;
 export default function AchievementsManagementPage() {
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isGenerating, setIsGenerating] = useState<('title' | 'description' | false)>(false);
   const { toast } = useToast();
 
   const fetchAchievements = async () => {
@@ -53,32 +51,6 @@ export default function AchievementsManagementPage() {
       photoUrl: "https://placehold.co/600x400.png",
     },
   });
-
-  const handleGenerateContent = async (contentType: 'title' | 'description', enhance = false) => {
-    const context = form.getValues("title");
-    if (contentType === 'description' && !context) {
-      toast({ title: "Title is required", description: "Please enter a title before generating a description.", variant: "destructive" });
-      return;
-    }
-    
-    setIsGenerating(contentType);
-    try {
-      const input = { 
-        contentType, 
-        context: context || 'sports achievement',
-        existingContent: enhance ? form.getValues(contentType) : undefined 
-      };
-      const result = await generateContent(input);
-      if (result.content) {
-        form.setValue(contentType, result.content, { shouldValidate: true });
-        toast({ title: `${contentType.charAt(0).toUpperCase() + contentType.slice(1)} ${enhance ? 'Enhanced' : 'Generated'}`, description: `The ${contentType} has been updated.` });
-      }
-    } catch (error) {
-      toast({ title: "Error", description: `Failed to generate ${contentType}.`, variant: "destructive" });
-    } finally {
-      setIsGenerating(false);
-    }
-  };
 
   const onSubmit = async (data: AchievementFormValues) => {
     const { id, ...achievementData } = data;
@@ -145,19 +117,7 @@ export default function AchievementsManagementPage() {
                       name="title"
                       render={({ field }) => (
                         <FormItem>
-                          <div className="flex items-center justify-between">
-                            <FormLabel>Title</FormLabel>
-                             <div className="flex gap-2">
-                              <Button type="button" size="sm" variant="ghost" onClick={() => handleGenerateContent('title', false)} disabled={!!isGenerating}>
-                                 <Wand2 className="mr-2 h-4 w-4" />
-                                {isGenerating === 'title' ? 'Generating...' : 'Generate'}
-                              </Button>
-                               <Button type="button" size="sm" variant="ghost" onClick={() => handleGenerateContent('title', true)} disabled={!!isGenerating}>
-                                 <Sparkles className="mr-2 h-4 w-4" />
-                                {isGenerating === 'title' ? 'Enhancing...' : 'Enhance'}
-                              </Button>
-                            </div>
-                          </div>
+                          <FormLabel>Title</FormLabel>
                           <FormControl>
                             <Input placeholder="Tournament Champions" {...field} />
                           </FormControl>
@@ -170,19 +130,7 @@ export default function AchievementsManagementPage() {
                       name="description"
                       render={({ field }) => (
                         <FormItem>
-                          <div className="flex items-center justify-between">
-                            <FormLabel>Description</FormLabel>
-                             <div className="flex gap-2">
-                              <Button type="button" size="sm" variant="ghost" onClick={() => handleGenerateContent('description', false)} disabled={!!isGenerating}>
-                                 <Wand2 className="mr-2 h-4 w-4" />
-                                {isGenerating === 'description' ? 'Generating...' : 'Generate'}
-                              </Button>
-                               <Button type="button" size="sm" variant="ghost" onClick={() => handleGenerateContent('description', true)} disabled={!!isGenerating}>
-                                 <Sparkles className="mr-2 h-4 w-4" />
-                                {isGenerating === 'description' ? 'Enhancing...' : 'Enhance'}
-                              </Button>
-                            </div>
-                          </div>
+                          <FormLabel>Description</FormLabel>
                           <FormControl>
                             <Textarea placeholder="Won the regional tournament..." {...field} />
                           </FormControl>

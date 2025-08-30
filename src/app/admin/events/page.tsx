@@ -14,11 +14,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { getAllEvents, Event, addEvent, updateEvent, deleteEvent, addNotification } from "@/lib/data";
-import { PlusCircle, Edit, Trash2, Wand2, Sparkles } from 'lucide-react';
+import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { generateContent } from '@/ai/flows/content-generator';
 
 const eventSchema = z.object({
   id: z.string().optional(),
@@ -36,7 +35,6 @@ type EventFormValues = z.infer<typeof eventSchema>;
 export default function EventsManagementPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isGenerating, setIsGenerating] = useState<('title' | 'description' | false)>(false);
   const { toast } = useToast();
 
   const fetchEvents = async () => {
@@ -60,33 +58,6 @@ export default function EventsManagementPage() {
       sendNotification: true,
     },
   });
-  
-  const handleGenerateContent = async (contentType: 'title' | 'description', enhance = false) => {
-    const context = form.getValues("title");
-    if (contentType === 'description' && !context) {
-      toast({ title: "Title is required", description: "Please enter a title before generating a description.", variant: "destructive" });
-      return;
-    }
-    
-    setIsGenerating(contentType);
-    try {
-      const input = { 
-        contentType, 
-        context: context || 'sports event',
-        existingContent: enhance ? form.getValues(contentType) : undefined 
-      };
-      const result = await generateContent(input);
-      if (result.content) {
-        form.setValue(contentType, result.content, { shouldValidate: true });
-        toast({ title: `${contentType.charAt(0).toUpperCase() + contentType.slice(1)} ${enhance ? 'Enhanced' : 'Generated'}`, description: `The ${contentType} has been updated.` });
-      }
-    } catch (error) {
-      toast({ title: "Error", description: `Failed to generate ${contentType}.`, variant: "destructive" });
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
 
   const onSubmit = async (data: EventFormValues) => {
     const { id, sendNotification, ...eventData } = data;
@@ -164,19 +135,7 @@ export default function EventsManagementPage() {
                       name="title"
                       render={({ field }) => (
                         <FormItem>
-                          <div className="flex items-center justify-between">
-                            <FormLabel>Title</FormLabel>
-                             <div className="flex gap-2">
-                              <Button type="button" size="sm" variant="ghost" onClick={() => handleGenerateContent('title', false)} disabled={!!isGenerating}>
-                                 <Wand2 className="mr-2 h-4 w-4" />
-                                {isGenerating === 'title' ? 'Generating...' : 'Generate'}
-                              </Button>
-                               <Button type="button" size="sm" variant="ghost" onClick={() => handleGenerateContent('title', true)} disabled={!!isGenerating}>
-                                 <Sparkles className="mr-2 h-4 w-4" />
-                                {isGenerating === 'title' ? 'Enhancing...' : 'Enhance'}
-                              </Button>
-                            </div>
-                          </div>
+                          <FormLabel>Title</FormLabel>
                           <FormControl>
                             <Input placeholder="Annual General Meeting" {...field} />
                           </FormControl>
@@ -189,19 +148,7 @@ export default function EventsManagementPage() {
                       name="description"
                       render={({ field }) => (
                         <FormItem>
-                           <div className="flex items-center justify-between">
-                            <FormLabel>Description</FormLabel>
-                             <div className="flex gap-2">
-                              <Button type="button" size="sm" variant="ghost" onClick={() => handleGenerateContent('description', false)} disabled={!!isGenerating}>
-                                 <Wand2 className="mr-2 h-4 w-4" />
-                                {isGenerating === 'description' ? 'Generating...' : 'Generate'}
-                              </Button>
-                               <Button type="button" size="sm" variant="ghost" onClick={() => handleGenerateContent('description', true)} disabled={!!isGenerating}>
-                                 <Sparkles className="mr-2 h-4 w-4" />
-                                {isGenerating === 'description' ? 'Enhancing...' : 'Enhance'}
-                              </Button>
-                            </div>
-                          </div>
+                          <FormLabel>Description</FormLabel>
                           <FormControl>
                             <Textarea placeholder="Join us for our annual general meeting..." {...field} />
                           </FormControl>

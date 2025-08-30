@@ -17,12 +17,11 @@ import {
   getAllCollections, Collection, addCollection, updateCollection, deleteCollection,
   getAllExpenses, Expense, addExpense, updateExpense, deleteExpense
 } from "@/lib/data";
-import { PlusCircle, Edit, Trash2, Wand2, Sparkles } from 'lucide-react';
+import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from '@/components/ui/textarea';
-import { generateContent } from '@/ai/flows/content-generator';
 
 const donationSchema = z.object({
   id: z.string().optional(),
@@ -76,7 +75,6 @@ type ExpenseFormValues = z.infer<typeof expenseSchema>;
 function DonationTable() {
   const [items, setItems] = useState<Donation[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isGenerating, setIsGenerating] = useState<('title' | 'description' | false)>(false);
   const { toast } = useToast();
 
   const fetchItems = async () => setItems(await getAllDonations());
@@ -96,32 +94,6 @@ function DonationTable() {
   });
 
   const donationType = form.watch("donationType");
-  
-  const handleGenerateContent = async (contentType: 'title' | 'description', enhance = false) => {
-    const context = form.getValues("title");
-    if (contentType === 'description' && !context) {
-      toast({ title: "Title is required", description: "Please enter a title before generating a description.", variant: "destructive" });
-      return;
-    }
-    
-    setIsGenerating(contentType);
-    try {
-      const input = { 
-        contentType, 
-        context: context || 'donation',
-        existingContent: enhance ? form.getValues(contentType) : undefined 
-      };
-      const result = await generateContent(input);
-      if (result.content) {
-        form.setValue(contentType, result.content, { shouldValidate: true });
-        toast({ title: `${contentType.charAt(0).toUpperCase() + contentType.slice(1)} ${enhance ? 'Enhanced' : 'Generated'}`, description: `The ${contentType} has been updated.` });
-      }
-    } catch (error) {
-      toast({ title: "Error", description: `Failed to generate ${contentType}.`, variant: "destructive" });
-    } finally {
-      setIsGenerating(false);
-    }
-  };
 
   const onSubmit = async (data: DonationFormValues) => {
     const { id, ...donationData } = data;
@@ -210,19 +182,7 @@ function DonationTable() {
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                 <FormField control={form.control} name="title" render={({ field }) => (
                   <FormItem>
-                     <div className="flex items-center justify-between">
-                        <FormLabel>Title</FormLabel>
-                         <div className="flex gap-2">
-                          <Button type="button" size="sm" variant="ghost" onClick={() => handleGenerateContent('title', false)} disabled={!!isGenerating}>
-                             <Wand2 className="mr-2 h-4 w-4" />
-                            {isGenerating === 'title' ? 'Generating...' : 'Generate'}
-                          </Button>
-                           <Button type="button" size="sm" variant="ghost" onClick={() => handleGenerateContent('title', true)} disabled={!!isGenerating}>
-                             <Sparkles className="mr-2 h-4 w-4" />
-                            {isGenerating === 'title' ? 'Enhancing...' : 'Enhance'}
-                          </Button>
-                        </div>
-                      </div>
+                    <FormLabel>Title</FormLabel>
                     <FormControl><Input placeholder="e.g. 'Annual Gala Sponsorship'" {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
@@ -284,19 +244,7 @@ function DonationTable() {
                 )}
                  <FormField control={form.control} name="description" render={({ field }) => (
                   <FormItem>
-                     <div className="flex items-center justify-between">
-                        <FormLabel>Description</FormLabel>
-                         <div className="flex gap-2">
-                          <Button type="button" size="sm" variant="ghost" onClick={() => handleGenerateContent('description', false)} disabled={!!isGenerating}>
-                             <Wand2 className="mr-2 h-4 w-4" />
-                            {isGenerating === 'description' ? 'Generating...' : 'Generate'}
-                          </Button>
-                           <Button type="button" size="sm" variant="ghost" onClick={() => handleGenerateContent('description', true)} disabled={!!isGenerating}>
-                             <Sparkles className="mr-2 h-4 w-4" />
-                            {isGenerating === 'description' ? 'Enhancing...' : 'Enhance'}
-                          </Button>
-                        </div>
-                      </div>
+                    <FormLabel>Description</FormLabel>
                     <FormControl><Textarea placeholder="A short description about the donation" {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
@@ -387,7 +335,6 @@ function FinanceTable<T extends Collection | Expense>({
 }) {
   const [items, setItems] = useState<T[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isGenerating, setIsGenerating] = useState<('title' | 'description' | false)>(false);
   const { toast } = useToast();
 
   const fetchItems = async () => setItems(await getAll());
@@ -402,26 +349,6 @@ function FinanceTable<T extends Collection | Expense>({
     },
   });
 
-  const handleGenerateContent = async (contentType: 'title', enhance = false) => {
-    setIsGenerating(contentType);
-    try {
-      const input = { 
-        contentType, 
-        context: `${title}`,
-        existingContent: enhance ? form.getValues(contentType) : undefined 
-      };
-      const result = await generateContent(input);
-      if (result.content) {
-        form.setValue(contentType, result.content, { shouldValidate: true });
-        toast({ title: `${contentType.charAt(0).toUpperCase() + contentType.slice(1)} ${enhance ? 'Enhanced' : 'Generated'}`, description: `The ${contentType} has been updated.` });
-      }
-    } catch (error) {
-      toast({ title: "Error", description: `Failed to generate ${contentType}.`, variant: "destructive" });
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-  
   const onSubmit = async (data: z.infer<typeof schema>) => {
     const { id, ...itemData } = data;
     try {
@@ -484,19 +411,7 @@ function FinanceTable<T extends Collection | Expense>({
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                   <FormField control={form.control} name="title" render={({ field }) => (
                     <FormItem>
-                      <div className="flex items-center justify-between">
-                        <FormLabel>Title</FormLabel>
-                         <div className="flex gap-2">
-                          <Button type="button" size="sm" variant="ghost" onClick={() => handleGenerateContent('title', false)} disabled={!!isGenerating}>
-                             <Wand2 className="mr-2 h-4 w-4" />
-                            {isGenerating === 'title' ? 'Generating...' : 'Generate'}
-                          </Button>
-                           <Button type="button" size="sm" variant="ghost" onClick={() => handleGenerateContent('title', true)} disabled={!!isGenerating}>
-                             <Sparkles className="mr-2 h-4 w-4" />
-                            {isGenerating === 'title' ? 'Enhancing...' : 'Enhance'}
-                          </Button>
-                        </div>
-                      </div>
+                      <FormLabel>Title</FormLabel>
                       <FormControl><Input placeholder={`${title} title`} {...field} /></FormControl>
                       <FormMessage />
                     </FormItem>
