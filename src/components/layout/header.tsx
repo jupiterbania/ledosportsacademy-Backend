@@ -117,7 +117,8 @@ export function Header() {
       <div className="container flex h-16 items-center">
         <Link href="/" className="flex items-center gap-2 mr-4">
           <Image src="https://iili.io/FpDNveV.png" alt="LEDO SPORTS ACADEMY Logo" width={32} height={32} />
-          <span className="font-bold sm:text-xl">LEDO SPORTS ACADEMY</span>
+           <span className="font-bold sm:hidden text-xl">LSA</span>
+          <span className="font-bold hidden sm:inline sm:text-xl">LEDO SPORTS ACADEMY</span>
         </Link>
         
         <nav className="hidden md:flex items-center gap-6 flex-grow">
