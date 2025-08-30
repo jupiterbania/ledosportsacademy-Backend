@@ -25,7 +25,7 @@ const WelcomeSection = () => (
         <span className="block md:inline">Welcome to</span>
         <span className="block md:inline"> LEDO SPORTS ACADEMY</span>
       </h2>
-      <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
+      <p className="text-base md:text-xl text-muted-foreground max-w-3xl mx-auto">
         A community-driven organization dedicated to fostering talent, promoting sportsmanship, and building a brighter future through sports.
       </p>
     </Card>
