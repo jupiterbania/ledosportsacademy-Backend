@@ -76,6 +76,7 @@ export default function LoginPage() {
             <Card className="aurora-card transition-all duration-300 hover:shadow-cyan-500/20 hover:-translate-y-1.5">
                 <CardHeader className="text-center">
                     <div className="mx-auto bg-gradient-to-br from-primary/20 to-primary/5 text-primary rounded-full p-4 w-20 h-20 flex items-center justify-center mb-4 ring-2 ring-primary/30 aurora-glow">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
                     </div>
                     <CardTitle className="text-2xl font-bold">Admin Login</CardTitle>
                     <CardDescription>
@@ -93,6 +94,7 @@ export default function LoginPage() {
             <Card className="aurora-card transition-all duration-300 hover:shadow-cyan-500/20 hover:-translate-y-1.5">
                 <CardHeader className="text-center">
                      <div className="mx-auto bg-gradient-to-br from-primary/20 to-primary/5 text-primary rounded-full p-4 w-20 h-20 flex items-center justify-center mb-4 ring-2 ring-primary/30 aurora-glow">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                     </div>
                     <CardTitle className="text-2xl font-bold">Member Login</CardTitle>
                     <CardDescription>
