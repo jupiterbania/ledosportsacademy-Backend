@@ -24,7 +24,7 @@ export function RecentPhotos({ photos }: { photos: Photo[] }) {
           </Link>
         </Button>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
         {photos.map((photo, index) => (
           <Link key={photo.id} href="/gallery" className="block group">
             <Card className="group overflow-hidden transition-all duration-300 hover:shadow-cyan-500/20 hover:-translate-y-1.5 h-full flex flex-col border-2 border-transparent hover:border-primary/50 animate-fade-in aurora-card" style={{ animationDelay: `${index * 150}ms` }}>

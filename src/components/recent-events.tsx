@@ -50,7 +50,7 @@ export function RecentEvents({ events }: { events: Event[] }) {
           </Link>
         </Button>
       </div>
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
         {events.map((event, index) => {
           const href = event.redirectUrl || "/events";
           const target = event.redirectUrl ? "_blank" : undefined;
