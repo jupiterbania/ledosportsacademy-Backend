@@ -18,6 +18,7 @@ import { ScrollArea } from '../ui/scroll-area';
 import { formatDistanceToNow } from 'date-fns';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from '@/components/ui/dialog';
+import { ThemeToggle } from '../theme-toggle';
 
 
 function NotificationContent({ notifications, onLinkClick }: { notifications: Notification[], onLinkClick: () => void }) {
@@ -101,6 +102,7 @@ function NotificationBell() {
 
     const triggerButton = (
         <Button variant="ghost" size="icon" className="relative">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" /><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" /></svg>
             {hasUnread && <span className="absolute top-2 right-2.5 h-2 w-2 rounded-full bg-primary ring-2 ring-background" />}
             <span className="sr-only">Notifications</span>
         </Button>
@@ -197,6 +199,7 @@ export function Header() {
         </nav>
         
         <div className="hidden md:flex items-center ml-auto gap-2">
+          <ThemeToggle />
            <NotificationBell />
           {user ? (
             <DropdownMenu>
@@ -236,10 +239,12 @@ export function Header() {
 
 
         <div className="md:hidden ml-auto flex items-center gap-2">
+          <ThemeToggle />
           <NotificationBell />
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6"><line x1="4" x2="20" y1="12" y2="12" /><line x1="4" x2="20" y1="6" y2="6" /><line x1="4" x2="20" y1="18" y2="18" /></svg>
                 <span className="sr-only">Open menu</span>
               </Button>
             </SheetTrigger>
