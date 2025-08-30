@@ -6,11 +6,17 @@ import Image from "next/image"
 import { getAllPhotos, Photo } from "@/lib/data"
 import { Card, CardContent } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Eye } from 'lucide-react';
+import { Eye, Download } from 'lucide-react';
+import { useAuth } from '@/hooks/use-auth';
+import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { useToast } from '@/hooks/use-toast';
 
 export default function GalleryPage() {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
+  const { user } = useAuth();
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchPhotos = async () => {
@@ -27,6 +33,68 @@ export default function GalleryPage() {
   const handleDialogClose = () => {
     setSelectedPhoto(null);
   };
+
+  const handleDownload = async (photo: Photo, quality: 'high' | 'medium' | 'low') => {
+    toast({ title: "Preparing Download", description: `Downloading ${photo.title || 'image'} in ${quality} quality...` });
+
+    try {
+      const response = await fetch(photo.url);
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      
+      const fileName = `${photo.title || photo.id}_${quality}.jpg`;
+
+      if (quality === 'high') {
+          link.download = fileName;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+          toast({ title: "Download Started", description: "High quality image is downloading." });
+          return;
+      }
+
+      const image = new window.Image();
+      image.crossOrigin = "anonymous";
+      image.src = url;
+      image.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+            throw new Error('Could not get canvas context');
+        }
+
+        let scale = 1;
+        if (quality === 'medium') scale = 0.5;
+        if (quality === 'low') scale = 0.25;
+
+        canvas.width = image.width * scale;
+        canvas.height = image.height * scale;
+        
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+        canvas.toBlob((blob) => {
+            if (blob) {
+                const canvasUrl = URL.createObjectURL(blob);
+                link.href = canvasUrl;
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(canvasUrl);
+                URL.revokeObjectURL(url); // Revoke original blob url
+                toast({ title: "Download Started", description: `${quality} quality image is downloading.` });
+            }
+        }, 'image/jpeg', 0.9);
+      };
+    } catch (error) {
+        console.error("Download failed:", error);
+        toast({ title: "Download Failed", description: "Could not download the image.", variant: "destructive" });
+    }
+  }
+
 
   return (
     
@@ -72,12 +140,33 @@ export default function GalleryPage() {
                             height={800}
                             className="object-contain w-full h-auto rounded-lg shadow-2xl shadow-cyan-500/20"
                         />
-                        {(selectedPhoto.title || selectedPhoto.description) && (
-                            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent p-6 text-white rounded-b-lg">
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent p-6 text-white rounded-b-lg flex justify-between items-end">
+                            <div className='flex-1'>
                                 {selectedPhoto.title && <h3 className="text-xl font-bold">{selectedPhoto.title}</h3>}
                                 {selectedPhoto.description && <DialogDescription className="text-white/90 mt-1">{selectedPhoto.description}</DialogDescription>}
                             </div>
-                        )}
+                            {user && (
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button variant="outline" size="icon">
+                                            <Download className="h-4 w-4" />
+                                            <span className="sr-only">Download</span>
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end" className="aurora-card">
+                                        <DropdownMenuItem onClick={() => handleDownload(selectedPhoto, 'high')}>
+                                            High Quality
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => handleDownload(selectedPhoto, 'medium')}>
+                                            Medium Quality
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => handleDownload(selectedPhoto, 'low')}>
+                                            Low Quality
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            )}
+                        </div>
                     </div>
                 </DialogContent>
              )}
