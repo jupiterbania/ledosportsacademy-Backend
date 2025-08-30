@@ -12,7 +12,7 @@ import {
   Medal,
   LineChart,
   FileDown,
-  Settings,
+  User,
   Menu,
   ShieldCheck,
   Bell,
@@ -79,7 +79,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
 
   const superAdminMenuItems = [
      { href: '/admin/requests', label: 'Admin Requests', icon: ShieldCheck },
-     { href: '/admin/settings', label: 'Settings', icon: Settings },
+     { href: '/admin/profile', label: 'Profile', icon: User },
   ];
 
   const menuItems = isSuperAdmin ? [...baseMenuItems, ...superAdminMenuItems] : baseMenuItems;
@@ -159,7 +159,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
             <DropdownMenuContent align="end" className="aurora-card">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => router.push('/admin/settings')}>Settings</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push('/admin/profile')}>Profile</DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
             </DropdownMenuContent>

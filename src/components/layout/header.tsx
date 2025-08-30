@@ -189,14 +189,9 @@ export function Header() {
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                     {!isAdmin && isRegisteredMember && (
-                         <DropdownMenuItem onClick={() => router.push('/member/profile')}>
+                     {isRegisteredMember && (
+                         <DropdownMenuItem onClick={() => router.push(isAdmin ? '/admin/profile' : '/member/profile')}>
                              My Profile
-                         </DropdownMenuItem>
-                     )}
-                     {isAdmin && (
-                         <DropdownMenuItem onClick={() => router.push('/admin/settings')}>
-                             Settings
                          </DropdownMenuItem>
                      )}
                     <DropdownMenuSeparator />
@@ -252,8 +247,8 @@ export function Header() {
                    {user && !isAdmin && isRegisteredMember && memberNavLinks.map((link) => <MobileNavLink key={link.href} {...link} />)}
                   {isAdmin && <MobileNavLink href="/admin" label="Admin Dashboard" />}
                   <Separator className="my-3" />
-                   {user && !isAdmin && isRegisteredMember && (
-                       <MobileNavLink href="/member/profile" label="My Profile" />
+                   {user && isRegisteredMember && (
+                       <MobileNavLink href={isAdmin ? '/admin/profile' : '/member/profile'} label="My Profile" />
                    )}
                   <SheetClose asChild>
                     <Button onClick={() => user ? handleLogout() : router.push('/login')} className="w-full">
