@@ -19,6 +19,9 @@ export const metadata: Metadata = {
   title: 'LEDO SPORTS ACADEMY',
   description: 'Welcome to LEDO SPORTS ACADEMY',
   manifest: '/manifest.webmanifest',
+  icons: {
+    icon: 'https://iili.io/FpDNveV.png',
+  },
 };
 
 export default function RootLayout({
