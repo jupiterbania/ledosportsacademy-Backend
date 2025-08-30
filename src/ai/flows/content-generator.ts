@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview A flow for generating and enhancing text content like titles and descriptions.
@@ -28,22 +29,17 @@ const prompt = ai.definePrompt({
   input: { schema: GenerateContentInputSchema },
   output: { schema: GenerateContentOutputSchema },
   prompt: `
-    You are an expert copywriter for a sports academy. 
-    Your task is to {{#if existingContent}}enhance the following {{contentType}}{{else}}write a new, brief, and engaging {{contentType}}{{/if}} for an item.
-
-    {{#if (eq contentType "description")}}
-    The title of the item is: "{{context}}".
-    {{else}}
-    The topic for the title is: "{{context}}".
-    {{/if}}
+    You are an expert copywriter for a sports academy.
+    Your task is to {{#if existingContent}}enhance the existing content{{else}}write new, brief, and engaging content{{/if}}.
+    
+    Content Type: {{contentType}}
+    Context: "{{context}}"
 
     {{#if existingContent}}
-    Existing {{contentType}}:
-    "{{{existingContent}}}"
-    
-    Enhanced {{contentType}}:
+    Existing Content: "{{{existingContent}}}"
+    Enhanced Content:
     {{else}}
-    New {{contentType}}:
+    New Content:
     {{/if}}
   `,
 });
