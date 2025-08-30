@@ -93,7 +93,7 @@ export default function AnalyticsDashboardPage() {
                     <ArrowUpCircle className="h-4 w-4 text-green-500" />
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">INR {new Intl.NumberFormat('en-IN').format(totalDonations)}</div>
+                    <div className="text-2xl font-bold">Rs {new Intl.NumberFormat('en-IN').format(totalDonations)}</div>
                     <p className="text-xs text-muted-foreground">Total monetary donations received</p>
                 </CardContent>
             </Card>
@@ -103,7 +103,7 @@ export default function AnalyticsDashboardPage() {
                     <ArrowUpCircle className="h-4 w-4 text-green-500" />
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">INR {new Intl.NumberFormat('en-IN').format(totalCollections)}</div>
+                    <div className="text-2xl font-bold">Rs {new Intl.NumberFormat('en-IN').format(totalCollections)}</div>
                     <p className="text-xs text-muted-foreground">Total funds collected</p>
                 </CardContent>
             </Card>
@@ -113,7 +113,7 @@ export default function AnalyticsDashboardPage() {
                     <ArrowDownCircle className="h-4 w-4 text-red-500" />
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">INR {new Intl.NumberFormat('en-IN').format(totalExpenses)}</div>
+                    <div className="text-2xl font-bold">Rs {new Intl.NumberFormat('en-IN').format(totalExpenses)}</div>
                     <p className="text-xs text-muted-foreground">Total funds spent</p>
                 </CardContent>
             </Card>
@@ -123,7 +123,7 @@ export default function AnalyticsDashboardPage() {
                     <HandCoins className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">INR {new Intl.NumberFormat('en-IN').format(totalDonations + totalCollections - totalExpenses)}</div>
+                    <div className="text-2xl font-bold">Rs {new Intl.NumberFormat('en-IN').format(totalDonations + totalCollections - totalExpenses)}</div>
                     <p className="text-xs text-muted-foreground">Total income minus expenses</p>
                 </CardContent>
             </Card>
@@ -175,8 +175,8 @@ export default function AnalyticsDashboardPage() {
                 <LineChart data={monthlyFinancials}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
-                  <YAxis tickFormatter={(value) => `INR ${new Intl.NumberFormat('en-IN').format(value)}`} />
-                  <Tooltip formatter={(value: number) => `INR ${new Intl.NumberFormat('en-IN').format(value)}`} contentStyle={{ background: "hsl(var(--background))", borderColor: "hsl(var(--border))" }} />
+                  <YAxis tickFormatter={(value) => `Rs ${new Intl.NumberFormat('en-IN').format(value)}`} />
+                  <Tooltip formatter={(value: number) => `Rs ${new Intl.NumberFormat('en-IN').format(value)}`} contentStyle={{ background: "hsl(var(--background))", borderColor: "hsl(var(--border))" }} />
                   <Legend />
                   <Line type="monotone" dataKey="donations" stroke="hsl(var(--chart-1))" name="Donations" />
                   <Line type="monotone" dataKey="collections" stroke="hsl(var(--chart-2))" name="Collections" />
@@ -211,7 +211,7 @@ export default function AnalyticsDashboardPage() {
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                     </Pie>
-                    <Tooltip formatter={(value: number) => `INR ${new Intl.NumberFormat('en-IN').format(value)}`} contentStyle={{ background: "hsl(var(--background))", borderColor: "hsl(var(--border))" }}/>
+                    <Tooltip formatter={(value: number) => `Rs ${new Intl.NumberFormat('en-IN').format(value)}`} contentStyle={{ background: "hsl(var(--background))", borderColor: "hsl(var(--border))" }}/>
                     <Legend />
                     </PieChart>
                 </ResponsiveContainer>

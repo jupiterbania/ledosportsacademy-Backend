@@ -111,7 +111,7 @@ export default function AdminDashboard() {
                     <HandCoins className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">INR {new Intl.NumberFormat('en-IN').format(totalDonations + totalCollections - totalExpenses)}</div>
+                    <div className="text-2xl font-bold">Rs {new Intl.NumberFormat('en-IN').format(totalDonations + totalCollections - totalExpenses)}</div>
                     <p className="text-xs text-muted-foreground">Income - Expenses</p>
                 </CardContent>
             </Card>
@@ -139,8 +139,8 @@ export default function AdminDashboard() {
                 <LineChart data={monthlyFinancials}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
-                  <YAxis tickFormatter={(value) => `INR ${new Intl.NumberFormat('en-IN').format(value)}`} />
-                  <Tooltip formatter={(value: number) => `INR ${new Intl.NumberFormat('en-IN').format(value)}`} contentStyle={{ background: "hsl(var(--background))", borderColor: "hsl(var(--border))" }} />
+                  <YAxis tickFormatter={(value) => `Rs ${new Intl.NumberFormat('en-IN').format(value)}`} />
+                  <Tooltip formatter={(value: number) => `Rs ${new Intl.NumberFormat('en-IN').format(value)}`} contentStyle={{ background: "hsl(var(--background))", borderColor: "hsl(var(--border))" }} />
                   <Legend />
                   <Line type="monotone" dataKey="income" stroke="hsl(var(--chart-2))" name="Income" />
                   <Line type="monotone" dataKey="expenses" stroke="hsl(var(--chart-1))" name="Expenses" />

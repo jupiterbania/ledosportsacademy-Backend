@@ -53,7 +53,7 @@ export default function ExportPage() {
                     d.title,
                     d.donorName || 'N/A',
                     d.description || 'N/A',
-                    d.amount ? `INR ${new Intl.NumberFormat('en-IN').format(d.amount)}` : d.item || 'N/A'
+                    d.amount ? `Rs ${new Intl.NumberFormat('en-IN').format(d.amount)}` : d.item || 'N/A'
                 ]);
                 commonHeader(doc, "Donations Report");
                 break;
@@ -63,7 +63,7 @@ export default function ExportPage() {
                 body = data.map((c: Collection) => [
                     new Date(c.date).toLocaleDateString(),
                     c.title,
-                    `INR ${new Intl.NumberFormat('en-IN').format(c.amount)}`
+                    `Rs ${new Intl.NumberFormat('en-IN').format(c.amount)}`
                 ]);
                 commonHeader(doc, "Collections Report");
                 break;
@@ -73,7 +73,7 @@ export default function ExportPage() {
                 body = data.map((e: Expense) => [
                      new Date(e.date).toLocaleDateString(),
                     e.title,
-                    `INR ${new Intl.NumberFormat('en-IN').format(e.amount)}`
+                    `Rs ${new Intl.NumberFormat('en-IN').format(e.amount)}`
                 ]);
                  commonHeader(doc, "Expenses Report");
                 break;
@@ -152,11 +152,11 @@ export default function ExportPage() {
       const netBalance = totalDonations + totalCollections - totalExpenses;
       
       const financialSummaryBody = [
-        ['Total Donations', `INR ${new Intl.NumberFormat('en-IN').format(totalDonations)}`],
-        ['Total Collections', `INR ${new Intl.NumberFormat('en-IN').format(totalCollections)}`],
-        ['Total Income', `INR ${new Intl.NumberFormat('en-IN').format(totalDonations + totalCollections)}`],
-        ['Total Expenses', `INR ${new Intl.NumberFormat('en-IN').format(totalExpenses)}`],
-        ['Net Balance', `INR ${new Intl.NumberFormat('en-IN').format(netBalance)}`],
+        ['Total Donations', `Rs ${new Intl.NumberFormat('en-IN').format(totalDonations)}`],
+        ['Total Collections', `Rs ${new Intl.NumberFormat('en-IN').format(totalCollections)}`],
+        ['Total Income', `Rs ${new Intl.NumberFormat('en-IN').format(totalDonations + totalCollections)}`],
+        ['Total Expenses', `Rs ${new Intl.NumberFormat('en-IN').format(totalExpenses)}`],
+        ['Net Balance', `Rs ${new Intl.NumberFormat('en-IN').format(netBalance)}`],
       ];
 
       addSection("Financial Summary", [["Metric", "Amount"]], financialSummaryBody, false);
@@ -166,21 +166,21 @@ export default function ExportPage() {
       addSection(
         "Donations",
         [["Date", "Title", "Donor", "Description", "Value"]],
-        donations.map(d => [new Date(d.date).toLocaleDateString(), d.title, d.donorName || 'N/A', d.description || 'N/A', d.amount ? `INR ${new Intl.NumberFormat('en-IN').format(d.amount)}` : d.item || 'N/A'])
+        donations.map(d => [new Date(d.date).toLocaleDateString(), d.title, d.donorName || 'N/A', d.description || 'N/A', d.amount ? `Rs ${new Intl.NumberFormat('en-IN').format(d.amount)}` : d.item || 'N/A'])
       );
 
       // Collections
       addSection(
         "Collections",
         [["Date", "Title", "Amount"]],
-        collections.map(c => [new Date(c.date).toLocaleDateString(), c.title, `INR ${new Intl.NumberFormat('en-IN').format(c.amount)}`])
+        collections.map(c => [new Date(c.date).toLocaleDateString(), c.title, `Rs ${new Intl.NumberFormat('en-IN').format(c.amount)}`])
       );
       
       // Expenses
       addSection(
         "Expenses",
         [["Date", "Title", "Amount"]],
-        expenses.map(e => [new Date(e.date).toLocaleDateString(), e.title, `INR ${new Intl.NumberFormat('en-IN').format(e.amount)}`])
+        expenses.map(e => [new Date(e.date).toLocaleDateString(), e.title, `Rs ${new Intl.NumberFormat('en-IN').format(e.amount)}`])
       );
       
       // Members

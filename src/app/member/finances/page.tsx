@@ -24,7 +24,7 @@ function DonationsTable() {
       <CardHeader>
         <CardTitle>Donations</CardTitle>
         <CardDescription>
-          Total Monetary Donations: INR {new Intl.NumberFormat('en-IN').format(totalAmount)}
+          Total Monetary Donations: Rs {new Intl.NumberFormat('en-IN').format(totalAmount)}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -45,7 +45,7 @@ function DonationsTable() {
                 <TableCell>{item.donorName || 'N/A'}</TableCell>
                 <TableCell>{item.description || 'N/A'}</TableCell>
                 <TableCell>
-                  {item.amount !== undefined ? `INR ${new Intl.NumberFormat('en-IN').format(item.amount)}` : item.item}
+                  {item.amount !== undefined ? `Rs ${new Intl.NumberFormat('en-IN').format(item.amount)}` : item.item}
                 </TableCell>
                 <TableCell>{new Date(item.date).toLocaleDateString()}</TableCell>
               </TableRow>
@@ -77,7 +77,7 @@ function FinanceTable({
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>
-          Total: INR {new Intl.NumberFormat('en-IN').format(totalAmount)}
+          Total: Rs {new Intl.NumberFormat('en-IN').format(totalAmount)}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -93,7 +93,7 @@ function FinanceTable({
             {items.map((item) => (
               <TableRow key={item.id}>
                 <TableCell className="font-medium">{item.title}</TableCell>
-                <TableCell>INR {new Intl.NumberFormat('en-IN').format((item as Collection).amount)}</TableCell>
+                <TableCell>Rs {new Intl.NumberFormat('en-IN').format((item as Collection).amount)}</TableCell>
                 <TableCell>{new Date(item.date).toLocaleDateString()}</TableCell>
               </TableRow>
             ))}
