@@ -18,6 +18,7 @@ const spaceGrotesk = SpaceGrotesk({
 export const metadata: Metadata = {
   title: 'LEDO SPORTS ACADEMY',
   description: 'Welcome to LEDO SPORTS ACADEMY',
+  manifest: '/manifest.webmanifest',
 };
 
 export default function RootLayout({
