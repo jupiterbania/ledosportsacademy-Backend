@@ -30,16 +30,15 @@ const prompt = ai.definePrompt({
   output: { schema: GenerateContentOutputSchema },
   prompt: `
     You are an expert copywriter for a sports academy.
-    Your task is to {{#if existingContent}}enhance the existing content{{else}}write new, brief, and engaging content{{/if}}.
+    Your task is to {{#if existingContent}}enhance the existing {{contentType}}{{else}}write a new, brief, and engaging {{contentType}}{{/if}}.
     
-    Content Type: {{contentType}}
     Context: "{{context}}"
 
     {{#if existingContent}}
-    Existing Content: "{{{existingContent}}}"
-    Enhanced Content:
+    Existing {{contentType}}: "{{{existingContent}}}"
+    Enhanced {{contentType}}:
     {{else}}
-    New Content:
+    New {{contentType}}:
     {{/if}}
   `,
 });
