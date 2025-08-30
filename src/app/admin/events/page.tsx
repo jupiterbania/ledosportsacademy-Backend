@@ -18,7 +18,7 @@ import { PlusCircle, Edit, Trash2, Wand2, Sparkles } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { generateDescription } from '@/ai/flows/description-generator';
+import { generateContent } from '@/ai/flows/content-generator';
 
 const eventSchema = z.object({
   id: z.string().optional(),
@@ -36,7 +36,7 @@ type EventFormValues = z.infer<typeof eventSchema>;
 export default function EventsManagementPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [isGenerating, setIsGenerating] = useState<('title' | 'description' | false)>(false);
   const { toast } = useToast();
 
   const fetchEvents = async () => {
@@ -61,23 +61,27 @@ export default function EventsManagementPage() {
     },
   });
   
-  const handleGenerateDescription = async (enhance = false) => {
-    const title = form.getValues("title");
-    if (!title) {
+  const handleGenerateContent = async (contentType: 'title' | 'description', enhance = false) => {
+    const context = form.getValues("title");
+    if (contentType === 'description' && !context) {
       toast({ title: "Title is required", description: "Please enter a title before generating a description.", variant: "destructive" });
       return;
     }
     
-    setIsGenerating(true);
+    setIsGenerating(contentType);
     try {
-      const input = { title, description: enhance ? form.getValues("description") : undefined };
-      const result = await generateDescription(input);
-      if (result.description) {
-        form.setValue("description", result.description, { shouldValidate: true });
-        toast({ title: `Description ${enhance ? 'Enhanced' : 'Generated'}`, description: "The description has been updated." });
+      const input = { 
+        contentType, 
+        context: context || 'sports event',
+        existingContent: enhance ? form.getValues(contentType) : undefined 
+      };
+      const result = await generateContent(input);
+      if (result.content) {
+        form.setValue(contentType, result.content, { shouldValidate: true });
+        toast({ title: `${contentType.charAt(0).toUpperCase() + contentType.slice(1)} ${enhance ? 'Enhanced' : 'Generated'}`, description: `The ${contentType} has been updated.` });
       }
     } catch (error) {
-      toast({ title: "Error", description: "Failed to generate description.", variant: "destructive" });
+      toast({ title: "Error", description: `Failed to generate ${contentType}.`, variant: "destructive" });
     } finally {
       setIsGenerating(false);
     }
@@ -160,7 +164,19 @@ export default function EventsManagementPage() {
                       name="title"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Title</FormLabel>
+                          <div className="flex items-center justify-between">
+                            <FormLabel>Title</FormLabel>
+                             <div className="flex gap-2">
+                              <Button type="button" size="sm" variant="ghost" onClick={() => handleGenerateContent('title', false)} disabled={!!isGenerating}>
+                                 <Wand2 className="mr-2 h-4 w-4" />
+                                {isGenerating === 'title' ? 'Generating...' : 'Generate'}
+                              </Button>
+                               <Button type="button" size="sm" variant="ghost" onClick={() => handleGenerateContent('title', true)} disabled={!!isGenerating}>
+                                 <Sparkles className="mr-2 h-4 w-4" />
+                                {isGenerating === 'title' ? 'Enhancing...' : 'Enhance'}
+                              </Button>
+                            </div>
+                          </div>
                           <FormControl>
                             <Input placeholder="Annual General Meeting" {...field} />
                           </FormControl>
@@ -176,13 +192,13 @@ export default function EventsManagementPage() {
                            <div className="flex items-center justify-between">
                             <FormLabel>Description</FormLabel>
                              <div className="flex gap-2">
-                              <Button type="button" size="sm" variant="ghost" onClick={() => handleGenerateDescription(false)} disabled={isGenerating}>
+                              <Button type="button" size="sm" variant="ghost" onClick={() => handleGenerateContent('description', false)} disabled={!!isGenerating}>
                                  <Wand2 className="mr-2 h-4 w-4" />
-                                {isGenerating ? 'Generating...' : 'Generate'}
+                                {isGenerating === 'description' ? 'Generating...' : 'Generate'}
                               </Button>
-                               <Button type="button" size="sm" variant="ghost" onClick={() => handleGenerateDescription(true)} disabled={isGenerating}>
+                               <Button type="button" size="sm" variant="ghost" onClick={() => handleGenerateContent('description', true)} disabled={!!isGenerating}>
                                  <Sparkles className="mr-2 h-4 w-4" />
-                                {isGenerating ? 'Enhancing...' : 'Enhance'}
+                                {isGenerating === 'description' ? 'Enhancing...' : 'Enhance'}
                               </Button>
                             </div>
                           </div>

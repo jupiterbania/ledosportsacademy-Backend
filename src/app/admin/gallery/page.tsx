@@ -18,7 +18,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Switch } from "@/components/ui/switch";
 import Image from 'next/image';
 import { Textarea } from '@/components/ui/textarea';
-import { generateDescription } from '@/ai/flows/description-generator';
+import { generateContent } from '@/ai/flows/content-generator';
 
 const photoSchema = z.object({
   id: z.string().optional(),
@@ -34,7 +34,7 @@ type PhotoFormValues = z.infer<typeof photoSchema>;
 export default function GalleryManagementPage() {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [isGenerating, setIsGenerating] = useState<('title' | 'description' | false)>(false);
   const { toast } = useToast();
 
   const fetchPhotos = async () => {
@@ -57,23 +57,27 @@ export default function GalleryManagementPage() {
     },
   });
   
-  const handleGenerateDescription = async (enhance = false) => {
-    const title = form.getValues("title");
-    if (!title) {
+  const handleGenerateContent = async (contentType: 'title' | 'description', enhance = false) => {
+    const context = form.getValues("title");
+    if (contentType === 'description' && !context) {
       toast({ title: "Title is required", description: "Please enter a title before generating a description.", variant: "destructive" });
       return;
     }
     
-    setIsGenerating(true);
+    setIsGenerating(contentType);
     try {
-      const input = { title, description: enhance ? form.getValues("description") : undefined };
-      const result = await generateDescription(input);
-      if (result.description) {
-        form.setValue("description", result.description, { shouldValidate: true });
-        toast({ title: `Description ${enhance ? 'Enhanced' : 'Generated'}`, description: "The description has been updated." });
+      const input = { 
+        contentType, 
+        context: context || 'photo in a gallery',
+        existingContent: enhance ? form.getValues(contentType) : undefined 
+      };
+      const result = await generateContent(input);
+      if (result.content) {
+        form.setValue(contentType, result.content, { shouldValidate: true });
+        toast({ title: `${contentType.charAt(0).toUpperCase() + contentType.slice(1)} ${enhance ? 'Enhanced' : 'Generated'}`, description: `The ${contentType} has been updated.` });
       }
     } catch (error) {
-      toast({ title: "Error", description: "Failed to generate description.", variant: "destructive" });
+      toast({ title: "Error", description: `Failed to generate ${contentType}.`, variant: "destructive" });
     } finally {
       setIsGenerating(false);
     }
@@ -172,7 +176,19 @@ export default function GalleryManagementPage() {
                       name="title"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Title (Optional)</FormLabel>
+                          <div className="flex items-center justify-between">
+                            <FormLabel>Title (Optional)</FormLabel>
+                             <div className="flex gap-2">
+                              <Button type="button" size="sm" variant="ghost" onClick={() => handleGenerateContent('title', false)} disabled={!!isGenerating}>
+                                 <Wand2 className="mr-2 h-4 w-4" />
+                                {isGenerating === 'title' ? 'Generating...' : 'Generate'}
+                              </Button>
+                               <Button type="button" size="sm" variant="ghost" onClick={() => handleGenerateContent('title', true)} disabled={!!isGenerating}>
+                                 <Sparkles className="mr-2 h-4 w-4" />
+                                {isGenerating === 'title' ? 'Enhancing...' : 'Enhance'}
+                              </Button>
+                            </div>
+                          </div>
                           <FormControl>
                             <Input placeholder="A nice title for the photo" {...field} />
                           </FormControl>
@@ -188,13 +204,13 @@ export default function GalleryManagementPage() {
                           <div className="flex items-center justify-between">
                             <FormLabel>Description (Optional)</FormLabel>
                             <div className="flex gap-2">
-                              <Button type="button" size="sm" variant="ghost" onClick={() => handleGenerateDescription(false)} disabled={isGenerating}>
+                              <Button type="button" size="sm" variant="ghost" onClick={() => handleGenerateContent('description', false)} disabled={!!isGenerating}>
                                  <Wand2 className="mr-2 h-4 w-4" />
-                                {isGenerating ? 'Generating...' : 'Generate'}
+                                {isGenerating === 'description' ? 'Generating...' : 'Generate'}
                               </Button>
-                               <Button type="button" size="sm" variant="ghost" onClick={() => handleGenerateDescription(true)} disabled={isGenerating}>
+                               <Button type="button" size="sm" variant="ghost" onClick={() => handleGenerateContent('description', true)} disabled={!!isGenerating}>
                                  <Sparkles className="mr-2 h-4 w-4" />
-                                {isGenerating ? 'Enhancing...' : 'Enhance'}
+                                {isGenerating === 'description' ? 'Enhancing...' : 'Enhance'}
                               </Button>
                             </div>
                           </div>
