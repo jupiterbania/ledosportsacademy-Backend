@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
@@ -73,6 +73,28 @@ export default function NotificationsManagementPage() {
     }
   };
 
+  const DeleteAction = ({ id }: { id: string}) => (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+          <Button variant="destructive" size="sm">
+            Delete
+          </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone. This will permanently delete the notification.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={() => handleDelete(id)}>Delete</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+
   return (
     <div className="flex flex-1 flex-col gap-4 md:gap-8">
       <Card>
@@ -95,6 +117,7 @@ export default function NotificationsManagementPage() {
                 className="shrink-0"
                 >
                 <span className="hidden sm:inline">New Announcement</span>
+                 <span className="sm:hidden">New</span>
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-xl max-h-[90vh] flex flex-col">
@@ -169,64 +192,76 @@ export default function NotificationsManagementPage() {
           </Dialog>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Notification</TableHead>
-                <TableHead className="hidden md:table-cell">Sent</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {notifications.map((notification) => (
-                <TableRow key={notification.id}>
-                  <TableCell>
-                      <div className="flex items-start gap-4">
-                        <div className="p-2 bg-muted rounded-full shrink-0 mt-1" />
-                        <div className="flex-1 min-w-0">
-                            {notification.imageUrl && (
-                                <div className="relative aspect-video w-full max-w-sm rounded-md overflow-hidden mb-2">
-                                     <Image src={notification.imageUrl} alt={notification.title} fill className="object-cover" sizes="(max-width: 640px) 100vw, 384px"/>
-                                </div>
-                            )}
-                            <p className="font-medium break-words">{notification.title}</p>
-                            <p className="text-sm text-muted-foreground break-words">{notification.description}</p>
-                            {notification.link && (
-                                <a href={notification.link} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline break-all">
-                                    View Link
-                                </a>
-                            )}
-                        </div>
+          {/* Mobile View */}
+          <div className="grid gap-4 md:hidden">
+            {notifications.map((notification) => (
+              <Card key={notification.id}>
+                <CardHeader>
+                  <CardTitle>{notification.title}</CardTitle>
+                  <CardDescription>{notification.createdAt ? formatDistanceToNow(new Date((notification.createdAt as any).seconds * 1000), { addSuffix: true }) : 'Just now'}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {notification.imageUrl && (
+                      <div className="relative aspect-video w-full rounded-md overflow-hidden mb-2">
+                            <Image src={notification.imageUrl} alt={notification.title} fill className="object-cover" sizes="100vw"/>
                       </div>
-                  </TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    {notification.createdAt ? formatDistanceToNow(new Date((notification.createdAt as any).seconds * 1000), { addSuffix: true }) : 'Just now'}
-                  </TableCell>
-                  <TableCell>
-                     <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                           <Button variant="destructive" size="sm">
-                              Delete
-                            </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              This action cannot be undone. This will permanently delete the notification.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleDelete(notification.id)}>Delete</AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                  </TableCell>
+                  )}
+                  <p className="text-sm text-muted-foreground">{notification.description}</p>
+                   {notification.link && (
+                      <a href={notification.link} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline break-all block mt-2">
+                          View Link
+                      </a>
+                  )}
+                </CardContent>
+                <CardFooter>
+                   <DeleteAction id={notification.id} />
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+          {/* Desktop View */}
+          <div className="hidden md:block">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Notification</TableHead>
+                  <TableHead>Sent</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {notifications.map((notification) => (
+                  <TableRow key={notification.id}>
+                    <TableCell>
+                        <div className="flex items-start gap-4">
+                          <div className="p-2 bg-muted rounded-full shrink-0 mt-1" />
+                          <div className="flex-1 min-w-0">
+                              {notification.imageUrl && (
+                                  <div className="relative aspect-video w-full max-w-sm rounded-md overflow-hidden mb-2">
+                                      <Image src={notification.imageUrl} alt={notification.title} fill className="object-cover" sizes="(max-width: 640px) 100vw, 384px"/>
+                                  </div>
+                              )}
+                              <p className="font-medium break-words">{notification.title}</p>
+                              <p className="text-sm text-muted-foreground break-words">{notification.description}</p>
+                              {notification.link && (
+                                  <a href={notification.link} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline break-all">
+                                      View Link
+                                  </a>
+                              )}
+                          </div>
+                        </div>
+                    </TableCell>
+                    <TableCell>
+                      {notification.createdAt ? formatDistanceToNow(new Date((notification.createdAt as any).seconds * 1000), { addSuffix: true }) : 'Just now'}
+                    </TableCell>
+                    <TableCell>
+                       <DeleteAction id={notification.id} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>

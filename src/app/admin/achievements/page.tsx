@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
@@ -83,6 +83,34 @@ export default function AchievementsManagementPage() {
        toast({ title: "Error", description: "Something went wrong.", variant: "destructive" });
     }
   };
+  
+  const AchievementActions = ({ achievement }: { achievement: Achievement }) => (
+     <div className="flex gap-2">
+       <Button variant="outline" size="sm" onClick={() => handleEdit(achievement)}>
+        Edit
+      </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+              <Button variant="destructive" size="sm">
+                Delete
+              </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete the achievement.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={() => handleDelete(achievement.id)}>Delete</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+    </div>
+  );
+
 
   return (
     <div className="flex flex-1 flex-col gap-4 md:gap-8">
@@ -176,57 +204,57 @@ export default function AchievementsManagementPage() {
           </Dialog>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="hidden sm:table-cell">Photo</TableHead>
-                <TableHead>Title</TableHead>
-                <TableHead className="hidden md:table-cell">Description</TableHead>
-                <TableHead className="hidden lg:table-cell">Date</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {achievements.map((achievement) => (
-                <TableRow key={achievement.id}>
-                    <TableCell className="hidden sm:table-cell">
-                         <div className="relative h-16 w-16 rounded-md overflow-hidden">
-                           <Image src={achievement.photoUrl} alt={`Photo for ${achievement.title}`} fill className="object-cover" sizes="64px" />
-                        </div>
-                    </TableCell>
-                  <TableCell className="font-medium">{achievement.title}</TableCell>
-                  <TableCell className="hidden md:table-cell">{achievement.description}</TableCell>
-                  <TableCell className="hidden lg:table-cell">{new Date(achievement.date).toLocaleDateString()}</TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                       <Button variant="outline" size="sm" onClick={() => handleEdit(achievement)}>
-                         Edit
-                      </Button>
-                       <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                             <Button variant="destructive" size="sm">
-                                Delete
-                              </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                              <AlertDialogDescription>
-                                This action cannot be undone. This will permanently delete the achievement.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction onClick={() => handleDelete(achievement.id)}>Delete</AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                    </div>
-                  </TableCell>
+           {/* Mobile View */}
+          <div className="grid gap-4 md:hidden">
+            {achievements.map((achievement) => (
+              <Card key={achievement.id}>
+                <div className="relative aspect-video w-full">
+                  <Image src={achievement.photoUrl} alt={`Photo for ${achievement.title}`} fill className="object-cover rounded-t-lg" sizes="100vw" />
+                </div>
+                <CardHeader>
+                  <CardTitle>{achievement.title}</CardTitle>
+                  <p className="text-sm text-muted-foreground">{new Date(achievement.date).toLocaleDateString()}</p>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground line-clamp-3">{achievement.description}</p>
+                </CardContent>
+                <CardFooter>
+                  <AchievementActions achievement={achievement} />
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+          {/* Desktop View */}
+          <div className="hidden md:block">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[100px]">Photo</TableHead>
+                  <TableHead>Title</TableHead>
+                  <TableHead>Description</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {achievements.map((achievement) => (
+                  <TableRow key={achievement.id}>
+                      <TableCell>
+                           <div className="relative h-16 w-16 rounded-md overflow-hidden">
+                             <Image src={achievement.photoUrl} alt={`Photo for ${achievement.title}`} fill className="object-cover" sizes="64px" />
+                          </div>
+                      </TableCell>
+                    <TableCell className="font-medium">{achievement.title}</TableCell>
+                    <TableCell className="text-muted-foreground line-clamp-2">{achievement.description}</TableCell>
+                    <TableCell>{new Date(achievement.date).toLocaleDateString()}</TableCell>
+                    <TableCell>
+                      <AchievementActions achievement={achievement} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>

@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
@@ -17,6 +17,8 @@ import { getAllEvents, Event, addEvent, updateEvent, deleteEvent, addNotificatio
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import Image from 'next/image';
+import { Badge } from '@/components/ui/badge';
 
 const eventSchema = z.object({
   id: z.string().optional(),
@@ -98,6 +100,33 @@ export default function EventsManagementPage() {
        toast({ title: "Error", description: "Something went wrong.", variant: "destructive" });
     }
   };
+  
+  const EventActions = ({ event }: { event: Event }) => (
+    <div className="flex gap-2">
+       <Button variant="outline" size="sm" onClick={() => handleEdit(event)}>
+         Edit
+      </Button>
+       <AlertDialog>
+          <AlertDialogTrigger asChild>
+             <Button variant="destructive" size="sm">
+                Delete
+              </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete the event.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={() => handleDelete(event.id)}>Delete</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+    </div>
+  );
 
   return (
     <div className="flex flex-1 flex-col gap-4 md:gap-8">
@@ -244,57 +273,69 @@ export default function EventsManagementPage() {
           </Dialog>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Title</TableHead>
-                <TableHead className="hidden md:table-cell">Date</TableHead>
-                <TableHead className="hidden md:table-cell">On Slider</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {events.map((event) => (
-                <TableRow key={event.id}>
-                  <TableCell className="font-medium">{event.title}</TableCell>
-                  <TableCell className="hidden md:table-cell">{new Date(event.date).toLocaleDateString()}</TableCell>
-                   <TableCell className="hidden md:table-cell">
-                     {event.showOnSlider ? (
-                       <span className="text-green-600 font-semibold">Yes</span>
-                      ) : (
-                       <span className="text-muted-foreground">No</span>
-                      )}
-                    </TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                       <Button variant="outline" size="sm" onClick={() => handleEdit(event)}>
-                         Edit
-                      </Button>
-                       <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                             <Button variant="destructive" size="sm">
-                                Delete
-                              </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                              <AlertDialogDescription>
-                                This action cannot be undone. This will permanently delete the event.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction onClick={() => handleDelete(event.id)}>Delete</AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                    </div>
-                  </TableCell>
+          {/* Mobile View */}
+          <div className="grid gap-4 md:hidden">
+            {events.map((event) => (
+              <Card key={event.id}>
+                <div className="relative aspect-video w-full">
+                  <Image src={event.photoUrl} alt={event.title} fill className="object-cover rounded-t-lg" sizes="100vw"/>
+                </div>
+                <CardHeader>
+                  <CardTitle>{event.title}</CardTitle>
+                   <p className="text-sm text-muted-foreground">{new Date(event.date).toLocaleDateString()}</p>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                   <p className="text-sm text-muted-foreground line-clamp-3">{event.description}</p>
+                   <div>
+                    <Badge variant={event.showOnSlider ? "default" : "outline"}>
+                      {event.showOnSlider ? "On Slider" : "Not on Slider"}
+                    </Badge>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <EventActions event={event} />
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+
+          {/* Desktop View */}
+          <div className="hidden md:block">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[100px]">Image</TableHead>
+                  <TableHead>Title</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead>On Slider</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {events.map((event) => (
+                  <TableRow key={event.id}>
+                    <TableCell>
+                      <div className="relative h-16 w-24 rounded-md overflow-hidden">
+                        <Image src={event.photoUrl} alt={event.title} fill className="object-cover" sizes="96px" />
+                      </div>
+                    </TableCell>
+                    <TableCell className="font-medium">{event.title}</TableCell>
+                    <TableCell>{new Date(event.date).toLocaleDateString()}</TableCell>
+                    <TableCell>
+                       {event.showOnSlider ? (
+                         <Badge>Yes</Badge>
+                        ) : (
+                         <Badge variant="outline">No</Badge>
+                        )}
+                      </TableCell>
+                    <TableCell>
+                      <EventActions event={event} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>

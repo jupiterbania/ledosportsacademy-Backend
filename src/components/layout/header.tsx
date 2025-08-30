@@ -183,7 +183,7 @@ export function Header() {
             </DialogTrigger>
             <DialogContent className="p-0 bg-transparent border-0 shadow-none max-w-xs">
               <DialogTitle className="sr-only">LEDO SPORTS ACADEMY Logo</DialogTitle>
-              <Image src="https://iili.io/KFLBPv1.png" alt="LEDO SPORTS ACADEMY Logo" width={400} height={400} className="rounded-lg w-full h-auto" />
+              <Image src="https://iili.io/KFLBPv1.png" alt="LEDO SPORTS ACADEMY Logo" width={400} height={400} className="rounded-lg w-full h-auto" sizes="100vw"/>
             </DialogContent>
           </Dialog>
            <Link href="/" className="flex items-center gap-2">

@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
@@ -17,6 +17,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Switch } from "@/components/ui/switch";
 import Image from 'next/image';
 import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
 
 const photoSchema = z.object({
   id: z.string().optional(),
@@ -99,6 +100,33 @@ export default function GalleryManagementPage() {
        toast({ title: "Error", description: "Something went wrong.", variant: "destructive" });
     }
   };
+
+  const PhotoActions = ({ photo }: { photo: Photo }) => (
+    <div className="flex gap-2">
+       <Button variant="outline" size="sm" onClick={() => handleEdit(photo)}>
+         Edit
+      </Button>
+       <AlertDialog>
+          <AlertDialogTrigger asChild>
+             <Button variant="destructive" size="sm">
+                Delete
+              </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete the photo.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={() => handleDelete(photo.id)}>Delete</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+    </div>
+  );
 
   return (
     <div className="flex flex-1 flex-col gap-4 md:gap-8">
@@ -217,67 +245,72 @@ export default function GalleryManagementPage() {
           </Dialog>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Photo</TableHead>
-                <TableHead className="hidden md:table-cell">Description</TableHead>
-                <TableHead className="hidden md:table-cell">On Slider</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {photos.map((photo) => (
-                <TableRow key={photo.id}>
-                   <TableCell>
-                      <div className="flex items-center gap-4">
-                        <div className="relative h-16 w-16 rounded-md overflow-hidden shrink-0">
-                           <Image src={photo.url} alt={photo.title || `Photo ${photo.id}`} fill className="object-cover" sizes="64px" />
-                        </div>
-                         <div className="flex flex-col">
-                            <span className="font-medium">{photo.title || 'Untitled'}</span>
-                            <a href={photo.url} target="_blank" rel="noopener noreferrer" className="truncate text-sm text-muted-foreground hover:underline hidden sm:inline-block max-w-[150px] lg:max-w-[250px]">{photo.url}</a>
-                         </div>
-                      </div>
-                  </TableCell>
-                  <TableCell className="hidden md:table-cell">{photo.description || 'N/A'}</TableCell>
-                   <TableCell className="hidden md:table-cell">
-                     {photo.isSliderPhoto ? (
-                       <span className="text-green-600 font-semibold">Yes</span>
-                      ) : (
-                       <span className="text-muted-foreground">No</span>
-                      )}
-                    </TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                       <Button variant="outline" size="sm" onClick={() => handleEdit(photo)}>
-                         Edit
-                      </Button>
-                       <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                             <Button variant="destructive" size="sm">
-                                Delete
-                              </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                              <AlertDialogDescription>
-                                This action cannot be undone. This will permanently delete the photo.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction onClick={() => handleDelete(photo.id)}>Delete</AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                    </div>
-                  </TableCell>
+          {/* Mobile View */}
+          <div className="grid gap-4 sm:grid-cols-2 md:hidden">
+            {photos.map((photo) => (
+              <Card key={photo.id}>
+                <div className="relative aspect-video w-full">
+                  <Image src={photo.url} alt={photo.title || ''} fill className="object-cover rounded-t-lg" sizes="(max-width: 640px) 100vw, 50vw"/>
+                </div>
+                <CardHeader>
+                  <CardTitle className="truncate">{photo.title || 'Untitled'}</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                   <p className="text-sm text-muted-foreground line-clamp-2">{photo.description || 'No description'}</p>
+                   <div>
+                    <Badge variant={photo.isSliderPhoto ? "default" : "outline"}>
+                      {photo.isSliderPhoto ? "On Slider" : "Not on Slider"}
+                    </Badge>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <PhotoActions photo={photo} />
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+
+          {/* Desktop View */}
+          <div className="hidden md:block">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Photo</TableHead>
+                  <TableHead>Description</TableHead>
+                  <TableHead>On Slider</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {photos.map((photo) => (
+                  <TableRow key={photo.id}>
+                    <TableCell>
+                        <div className="flex items-center gap-4">
+                          <div className="relative h-16 w-16 rounded-md overflow-hidden shrink-0">
+                             <Image src={photo.url} alt={photo.title || `Photo ${photo.id}`} fill className="object-cover" sizes="64px" />
+                          </div>
+                           <div className="flex flex-col">
+                              <span className="font-medium">{photo.title || 'Untitled'}</span>
+                              <a href={photo.url} target="_blank" rel="noopener noreferrer" className="truncate text-sm text-muted-foreground hover:underline hidden sm:inline-block max-w-[150px] lg:max-w-[250px]">{photo.url}</a>
+                           </div>
+                        </div>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">{photo.description || 'N/A'}</TableCell>
+                    <TableCell className="hidden md:table-cell">
+                       {photo.isSliderPhoto ? (
+                         <Badge>Yes</Badge>
+                        ) : (
+                         <Badge variant="outline">No</Badge>
+                        )}
+                      </TableCell>
+                    <TableCell>
+                      <PhotoActions photo={photo} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>

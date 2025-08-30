@@ -91,7 +91,7 @@ export default function ProfilePage() {
     }
 
     return (
-        <div className="flex flex-1 flex-col gap-4 md:gap-8 items-center">
+        <div className="flex flex-1 flex-col gap-4 md:gap-8 items-center p-4">
              <div className="max-w-2xl w-full">
                 <Card className="aurora-card">
                     <CardHeader className="text-center">
@@ -131,7 +131,7 @@ export default function ProfilePage() {
                                         </FormItem>
                                     )}
                                 />
-                                <div className="grid grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <FormField
                                     control={form.control}
                                     name="dob"

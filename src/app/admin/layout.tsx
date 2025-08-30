@@ -11,6 +11,7 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
+  SidebarTrigger
 } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -80,12 +81,13 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
   );
 
   const DesktopNav = () => (
-    <Sidebar collapsible="icon" variant="sidebar" className="border-r border-white/10 bg-black/10 backdrop-blur-lg">
+    <Sidebar collapsible="icon" variant="sidebar" className="border-r border-white/10 bg-black/10 backdrop-blur-lg hidden md:flex">
       <SidebarHeader>
         <Link href="/" className="flex items-center gap-2 font-semibold">
            <Image src="https://iili.io/KFLBPv1.png" alt="LEDO SPORTS ACADEMY Logo" width={32} height={32} />
            <span className="text-lg hidden group-data-[collapsible=icon]:hidden">LEDO SPORTS ACADEMY</span>
         </Link>
+        <SidebarTrigger className="ml-auto" />
       </SidebarHeader>
       <SidebarContent className="flex-1 overflow-y-auto">
         <SidebarMenu>
@@ -105,6 +107,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon" className="shrink-0 md:hidden">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
                 <span className="sr-only">Toggle navigation menu</span>
               </Button>
             </SheetTrigger>
