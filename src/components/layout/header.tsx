@@ -178,12 +178,12 @@ export function Header() {
           <Dialog>
             <DialogTrigger asChild>
               <button className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-full">
-                <Image src="https://iili.io/KFtnPMg.png" alt="LEDO SPORTS ACADEMY Logo" width={32} height={32} />
+                <Image src="https://iili.io/KFLBPv1.png" alt="LEDO SPORTS ACADEMY Logo" width={40} height={40} />
               </button>
             </DialogTrigger>
             <DialogContent className="p-0 bg-transparent border-0 shadow-none max-w-xs">
               <DialogTitle className="sr-only">LEDO SPORTS ACADEMY Logo</DialogTitle>
-              <Image src="https://iili.io/KFtnPMg.png" alt="LEDO SPORTS ACADEMY Logo" width={400} height={400} className="rounded-lg w-full h-auto" sizes="100vw"/>
+              <Image src="https://iili.io/KFLBPv1.png" alt="LEDO SPORTS ACADEMY Logo" width={400} height={400} className="rounded-lg w-full h-auto" sizes="100vw"/>
             </DialogContent>
           </Dialog>
            <Link href="/" className="flex items-center gap-2">
@@ -256,7 +256,7 @@ export function Header() {
                <div className="p-4">
                 <SheetClose asChild>
                   <Link href="/" className="flex items-center gap-2 mb-6">
-                     <Image src="https://iili.io/KFtnPMg.png" alt="LEDO SPORTS ACADEMY Logo" width={32} height={32} />
+                     <Image src="https://iili.io/KFLBPv1.png" alt="LEDO SPORTS ACADEMY Logo" width={32} height={32} />
                     <span className="font-bold text-xl">LEDO SPORTS ACADEMY</span>
                   </Link>
                 </SheetClose>
@@ -297,4 +297,3 @@ export function Header() {
     </header>
   );
 }
-

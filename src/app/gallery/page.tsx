@@ -16,7 +16,7 @@ export default function GalleryPage() {
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
   const { user } = useAuth();
   const { toast } = useToast();
-  const logoUrl = 'https://iili.io/KFtnPMg.png';
+  const logoUrl = 'https://iili.io/KFLBPv1.png';
 
   useEffect(() => {
     const fetchPhotos = async () => {
