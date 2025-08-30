@@ -5,25 +5,25 @@
 
 @layer base {
   :root {
-    --background: 224 71.4% 4.1%;
-    --foreground: 210 20% 98%;
-    --card: 224 71.4% 4.1%;
-    --card-foreground: 210 20% 98%;
-    --popover: 224 71.4% 4.1%;
-    --popover-foreground: 210 20% 98%;
-    --primary: 180 90% 50%;
-    --primary-foreground: 224 71.4% 4.1%;
-    --secondary: 215 27.9% 16.9%;
-    --secondary-foreground: 210 20% 98%;
-    --muted: 215 27.9% 16.9%;
-    --muted-foreground: 217.9 10.6% 64.9%;
-    --accent: 215 27.9% 16.9%;
-    --accent-foreground: 210 20% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 355.7 100% 97.3%;
-    --border: 215 27.9% 16.9%;
-    --input: 215 27.9% 16.9%;
-    --ring: 180 90% 50%;
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 170 85% 45%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 170 85% 45%;
     --chart-1: 180 90% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
@@ -103,20 +103,36 @@
     }
   }
   
-  .aurora-card {
+  .dark .aurora-card {
     @apply bg-white/5 border border-white/10 backdrop-blur-lg shadow-2xl shadow-cyan-500/5;
   }
 
-  .aurora-border {
-     border-image: linear-gradient(to bottom, theme('colors.cyan.300'), theme('colors.blue.500')) 1;
+  .light .aurora-card {
+      @apply bg-white/50 border border-black/10 backdrop-blur-lg shadow-2xl shadow-cyan-500/5;
   }
 
-  .aurora-glow {
+  .dark .aurora-border {
+     border-image: linear-gradient(to bottom, theme('colors.cyan.300'), theme('colors.blue.500')) 1;
+  }
+  
+  .light .aurora-border {
+     border-image: linear-gradient(to bottom, theme('colors.cyan.500'), theme('colors.blue.700')) 1;
+  }
+
+  .dark .aurora-glow {
      box-shadow: 0 0 20px theme('colors.cyan.500/50'), 0 0 8px theme('colors.white/20');
   }
 
-  .aurora-text-gradient {
+  .light .aurora-glow {
+     box-shadow: 0 0 20px theme('colors.cyan.500/50'), 0 0 8px theme('colors.black/20');
+  }
+
+  .dark .aurora-text-gradient {
       @apply bg-gradient-to-r from-cyan-300 to-blue-400 text-transparent bg-clip-text;
+  }
+  
+   .light .aurora-text-gradient {
+      @apply bg-gradient-to-r from-cyan-600 to-blue-700 text-transparent bg-clip-text;
   }
 }
 
