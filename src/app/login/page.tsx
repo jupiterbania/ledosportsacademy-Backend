@@ -75,24 +75,6 @@ export default function LoginPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <Card className="aurora-card transition-all duration-300 hover:shadow-cyan-500/20 hover:-translate-y-1.5">
                 <CardHeader className="text-center">
-                    <div className="mx-auto bg-gradient-to-br from-primary/20 to-primary/5 text-primary rounded-full p-4 w-20 h-20 flex items-center justify-center mb-4 ring-2 ring-primary/30 aurora-glow">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                    </div>
-                    <CardTitle className="text-2xl font-bold">Admin Login</CardTitle>
-                    <CardDescription>
-                        For club administrators and staff.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <Button className="w-full group" onClick={() => handleLogin('admin')} size="lg" variant="outline">
-                        <svg className="mr-2 h-5 w-5 group-hover:text-primary transition-colors" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512"><path fill="currentColor" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 126 23.4 172.9 61.9l-76.3 64.5c-24.5-23.4-58.2-38.3-96.6-38.3-84.3 0-152.3 68.2-152.3 152.4s68 152.4 152.3 152.4c97.9 0 130.4-74.5 134.7-109.8H248v-85.3h236.1c2.3 12.7 3.9 26.9 3.9 41.4z"></path></svg>
-                        Sign in as Admin
-                    </Button>
-                </CardContent>
-            </Card>
-
-            <Card className="aurora-card transition-all duration-300 hover:shadow-cyan-500/20 hover:-translate-y-1.5">
-                <CardHeader className="text-center">
                      <div className="mx-auto bg-gradient-to-br from-primary/20 to-primary/5 text-primary rounded-full p-4 w-20 h-20 flex items-center justify-center mb-4 ring-2 ring-primary/30 aurora-glow">
                         <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                     </div>
@@ -105,6 +87,23 @@ export default function LoginPage() {
                     <Button className="w-full group" onClick={() => handleLogin('member')} size="lg" variant="outline">
                        <svg className="mr-2 h-5 w-5 group-hover:text-primary transition-colors" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512"><path fill="currentColor" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 126 23.4 172.9 61.9l-76.3 64.5c-24.5-23.4-58.2-38.3-96.6-38.3-84.3 0-152.3 68.2-152.3 152.4s68 152.4 152.3 152.4c97.9 0 130.4-74.5 134.7-109.8H248v-85.3h236.1c2.3 12.7 3.9 26.9 3.9 41.4z"></path></svg>
                         Sign in as Member
+                    </Button>
+                </CardContent>
+            </Card>
+            <Card className="aurora-card transition-all duration-300 hover:shadow-cyan-500/20 hover:-translate-y-1.5">
+                <CardHeader className="text-center">
+                    <div className="mx-auto bg-gradient-to-br from-primary/20 to-primary/5 text-primary rounded-full p-4 w-20 h-20 flex items-center justify-center mb-4 ring-2 ring-primary/30 aurora-glow">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    </div>
+                    <CardTitle className="text-2xl font-bold">Admin Login</CardTitle>
+                    <CardDescription>
+                        For club administrators and staff.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Button className="w-full group" onClick={() => handleLogin('admin')} size="lg" variant="outline">
+                        <svg className="mr-2 h-5 w-5 group-hover:text-primary transition-colors" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512"><path fill="currentColor" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 126 23.4 172.9 61.9l-76.3 64.5c-24.5-23.4-58.2-38.3-96.6-38.3-84.3 0-152.3 68.2-152.3 152.4s68 152.4 152.3 152.4c97.9 0 130.4-74.5 134.7-109.8H248v-85.3h236.1c2.3 12.7 3.9 26.9 3.9 41.4z"></path></svg>
+                        Sign in as Admin
                     </Button>
                 </CardContent>
             </Card>
