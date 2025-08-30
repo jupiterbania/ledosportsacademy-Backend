@@ -5,7 +5,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/components/auth/auth-provider';
 import { Header } from '@/components/layout/header';
 import { ThemeProvider } from "@/components/theme-provider"
-import { SpaceGrotesk } from 'next/font/google'
+import { Space_Grotesk as SpaceGrotesk } from 'next/font/google'
 import { Background } from '@/components/background';
 
 const spaceGrotesk = SpaceGrotesk({
