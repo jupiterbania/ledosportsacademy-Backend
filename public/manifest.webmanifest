@@ -1,11 +1,7 @@
 {
   "name": "LEDO SPORTS ACADEMY",
   "short_name": "LSA",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#09090b",
-  "theme_color": "#00e5e5",
-  "description": "Welcome to LEDO SPORTS ACADEMY",
+  "description": "LEDO SPORTS ACADEMY Official App",
   "icons": [
     {
       "src": "https://iili.io/KFLBPv1.png",
@@ -17,5 +13,9 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ]
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#00aaff"
 }
