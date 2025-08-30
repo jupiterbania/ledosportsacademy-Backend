@@ -32,9 +32,10 @@ function NotificationContent({ notifications, onLinkClick }: { notifications: No
 
     return (
         <div className="h-full flex flex-col">
-            <div className="p-4 border-b">
-              <h4 className="font-medium text-sm">Notifications</h4>
-            </div>
+             <SheetHeader className="p-4 border-b">
+                <SheetTitle>Notifications</SheetTitle>
+                <SheetDescription className="sr-only">A list of recent notifications.</SheetDescription>
+            </SheetHeader>
             <ScrollArea className="flex-1 max-h-[70vh]">
                 {notifications.length === 0 ? (
                     <p className="text-center text-sm text-muted-foreground py-8">No new notifications</p>
@@ -282,5 +283,3 @@ export function Header() {
     </header>
   );
 }
-
-    
