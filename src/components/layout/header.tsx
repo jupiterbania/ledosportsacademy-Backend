@@ -1,7 +1,7 @@
 
 "use client"
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Menu, Club, LayoutDashboard, HandCoins, Medal, Users as UsersIcon, User, Bell } from 'lucide-react';
@@ -13,7 +13,66 @@ import { signOut } from '@/lib/auth';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import Image from 'next/image';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { getAllNotifications, Notification } from '@/lib/data';
+import { ScrollArea } from '../ui/scroll-area';
+import { formatDistanceToNow } from 'date-fns';
 
+function NotificationBell() {
+    const [notifications, setNotifications] = useState<Notification[]>([]);
+    const [hasUnread, setHasUnread] = useState(false);
+
+    useEffect(() => {
+        const fetchNotifications = async () => {
+            const fetchedNotifications = await getAllNotifications();
+            // In a real app, you'd filter for unread notifications
+            setNotifications(fetchedNotifications);
+            setHasUnread(fetchedNotifications.length > 0); 
+        }
+        fetchNotifications();
+    }, []);
+
+    return (
+        <Popover>
+            <PopoverTrigger asChild>
+                <Button variant="ghost" size="icon" className="relative">
+                    {hasUnread && <span className="absolute top-2 right-2.5 h-2 w-2 rounded-full bg-primary ring-2 ring-background" />}
+                    <Bell className="h-5 w-5" />
+                    <span className="sr-only">Notifications</span>
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80 p-0" align="end">
+                <div className="p-4">
+                  <h4 className="font-medium text-sm">Notifications</h4>
+                </div>
+                <ScrollArea className="h-[300px]">
+                    {notifications.length === 0 ? (
+                        <p className="text-center text-sm text-muted-foreground py-8">No new notifications</p>
+                    ) : (
+                        <div className="flex flex-col">
+                            {notifications.map(notif => (
+                                <Link key={notif.id} href={notif.link || '#'} className="block hover:bg-accent" passHref>
+                                    <div className="p-4 border-b">
+                                        <p className="font-semibold text-sm">{notif.title}</p>
+                                        <p className="text-xs text-muted-foreground">{notif.description}</p>
+                                        <p className="text-xs text-muted-foreground mt-1">
+                                            {notif.createdAt ? formatDistanceToNow(new Date((notif.createdAt as any).seconds * 1000), { addSuffix: true }) : ''}
+                                        </p>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    )}
+                </ScrollArea>
+                <div className="p-2 border-t text-center">
+                    <Button variant="link" size="sm" asChild>
+                       <Link href="#">View all notifications</Link>
+                    </Button>
+                </div>
+            </PopoverContent>
+        </Popover>
+    )
+}
 
 export function Header() {
   const router = useRouter();
@@ -68,10 +127,7 @@ export function Header() {
         </nav>
         
         <div className="hidden md:flex items-center ml-auto gap-2">
-            <Button variant="ghost" size="icon">
-                <Bell className="h-5 w-5" />
-                <span className="sr-only">Notifications</span>
-            </Button>
+           <NotificationBell />
           {user ? (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -115,10 +171,7 @@ export function Header() {
 
 
         <div className="md:hidden ml-auto flex items-center gap-2">
-           <Button variant="ghost" size="icon">
-              <Bell className="h-5 w-5" />
-              <span className="sr-only">Notifications</span>
-            </Button>
+          <NotificationBell />
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">

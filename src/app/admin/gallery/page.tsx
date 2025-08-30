@@ -12,7 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { getAllPhotos, Photo, addPhoto, updatePhoto, deletePhoto } from "@/lib/data";
+import { getAllPhotos, Photo, addPhoto, updatePhoto, deletePhoto, addNotification } from "@/lib/data";
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Switch } from "@/components/ui/switch";
@@ -26,6 +26,7 @@ const photoSchema = z.object({
   description: z.string().optional(),
   'data-ai-hint': z.string().optional(),
   isSliderPhoto: z.boolean().default(false),
+  sendNotification: z.boolean().default(true),
 });
 
 type PhotoFormValues = z.infer<typeof photoSchema>;
@@ -52,11 +53,12 @@ export default function GalleryManagementPage() {
       title: '',
       'data-ai-hint': '',
       description: '',
+      sendNotification: true,
     },
   });
 
   const onSubmit = async (data: PhotoFormValues) => {
-    const { id, ...photoData } = data;
+    const { id, sendNotification, ...photoData } = data;
     try {
       if (id) {
         await updatePhoto(id, photoData);
@@ -66,8 +68,17 @@ export default function GalleryManagementPage() {
           ...photoData,
           uploadedAt: new Date().toISOString(),
         };
-        await addPhoto(newPhotoData);
+        const newPhoto = await addPhoto(newPhotoData);
         toast({ title: "Photo Added", description: "The new photo has been added to the gallery." });
+        
+        if (sendNotification) {
+          await addNotification({
+            title: `New Photo Added to Gallery`,
+            description: newPhoto.title || "A new photo has been added to the gallery. Check it out!",
+            link: '/gallery'
+          });
+          toast({ title: "Notification Sent", description: "Users have been notified about the new photo." });
+        }
       }
       fetchPhotos();
       setIsDialogOpen(false);
@@ -78,7 +89,7 @@ export default function GalleryManagementPage() {
   };
 
   const handleEdit = (photo: Photo) => {
-    form.reset(photo);
+    form.reset({ ...photo, sendNotification: false });
     setIsDialogOpen(true);
   };
   
@@ -107,6 +118,7 @@ export default function GalleryManagementPage() {
                     isSliderPhoto: false,
                     title: '',
                     description: '',
+                    sendNotification: true,
                   });
                   setIsDialogOpen(true);
                 }}>
@@ -189,6 +201,26 @@ export default function GalleryManagementPage() {
                         </FormItem>
                       )}
                     />
+                     {!form.getValues("id") && (
+                      <FormField
+                        control={form.control}
+                        name="sendNotification"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                            <div className="space-y-0.5">
+                              <FormLabel>Send Notification</FormLabel>
+                               <p className="text-xs text-muted-foreground">Notify users about this new photo.</p>
+                            </div>
+                            <FormControl>
+                              <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    )}
                     <DialogFooter className="sticky bottom-0 bg-background py-4 -mx-6 px-6 border-t">
                       <DialogClose asChild>
                         <Button type="button" variant="ghost">Cancel</Button>

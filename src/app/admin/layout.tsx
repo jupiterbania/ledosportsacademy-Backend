@@ -15,6 +15,7 @@ import {
   Settings,
   Menu,
   ShieldCheck,
+  Bell,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -72,6 +73,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
     { href: '/admin/achievements', label: 'Achievements', icon: Medal },
     { href: '/admin/members', label: 'Members', icon: Users },
     { href: '/admin/finances', label: 'Finances', icon: HandCoins },
+    { href: '/admin/notifications', label: 'Notifications', icon: Bell },
     { href: '/admin/export', label: 'PDF Export', icon: FileDown },
   ];
 

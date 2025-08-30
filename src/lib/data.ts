@@ -86,6 +86,13 @@ export interface AdminRequest extends BaseDocument {
   requestedAt: FieldValue;
 }
 
+export interface Notification extends BaseDocument {
+  title: string;
+  description: string;
+  link?: string;
+  createdAt: FieldValue;
+}
+
 
 // Generic Firestore functions
 async function getCollection<T extends BaseDocument>(collectionName: string, orderField: string = 'date', orderDirection: 'asc' | 'desc' = 'desc'): Promise<T[]> {
@@ -293,6 +300,11 @@ export const updateAdminRequestStatus = async (id: string, status: 'approved' | 
         }
     }
 };
+
+// Notifications
+export const getAllNotifications = () => getCollection<Notification>('notifications', 'createdAt', 'desc');
+export const addNotification = (data: Omit<Notification, 'id' | 'createdAt'>) => addDocument<Notification>('notifications', { ...data, createdAt: serverTimestamp() });
+export const deleteNotification = (id: string) => deleteDocument('notifications', id);
 
 
 // Database Seeding

@@ -13,10 +13,11 @@ import { useToast } from "@/hooks/use-toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { getAllEvents, Event, addEvent, updateEvent, deleteEvent } from "@/lib/data";
+import { getAllEvents, Event, addEvent, updateEvent, deleteEvent, addNotification } from "@/lib/data";
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 
 const eventSchema = z.object({
   id: z.string().optional(),
@@ -27,6 +28,7 @@ const eventSchema = z.object({
   redirectUrl: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
   showOnSlider: z.boolean().default(false),
   'data-ai-hint': z.string().optional(),
+  sendNotification: z.boolean().default(true),
 });
 
 type EventFormValues = z.infer<typeof eventSchema>;
@@ -54,18 +56,27 @@ export default function EventsManagementPage() {
       photoUrl: "https://placehold.co/600x400.png",
       redirectUrl: "",
       showOnSlider: false,
+      sendNotification: true,
     },
   });
 
   const onSubmit = async (data: EventFormValues) => {
-    const { id, ...eventData } = data;
+    const { id, sendNotification, ...eventData } = data;
     try {
       if (id) {
         await updateEvent(id, eventData);
         toast({ title: "Event Updated", description: "The event has been successfully updated." });
       } else {
-        await addEvent({ ...eventData, 'data-ai-hint': 'custom event' });
+        const newEvent = await addEvent({ ...eventData, 'data-ai-hint': 'custom event' });
         toast({ title: "Event Created", description: "The new event has been added." });
+        if(sendNotification) {
+          await addNotification({
+            title: `New Event: ${newEvent.title}`,
+            description: newEvent.description.substring(0, 100) + (newEvent.description.length > 100 ? '...' : ''),
+            link: `/events`,
+          });
+          toast({ title: "Notification Sent", description: "Users have been notified about the new event." });
+        }
       }
       fetchEvents();
       setIsDialogOpen(false);
@@ -76,7 +87,7 @@ export default function EventsManagementPage() {
   };
 
   const handleEdit = (event: Event) => {
-    form.reset(event);
+    form.reset({ ...event, sendNotification: false });
     setIsDialogOpen(true);
   };
   
@@ -106,6 +117,7 @@ export default function EventsManagementPage() {
                     photoUrl: "https://placehold.co/600x400.png",
                     redirectUrl: "",
                     showOnSlider: false,
+                    sendNotification: true,
                   });
                   setIsDialogOpen(true);
                 }}>
@@ -201,6 +213,26 @@ export default function EventsManagementPage() {
                         </FormItem>
                       )}
                     />
+                    {!form.getValues("id") && (
+                      <FormField
+                        control={form.control}
+                        name="sendNotification"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                            <div className="space-y-0.5">
+                              <FormLabel>Send Notification</FormLabel>
+                              <p className="text-xs text-muted-foreground">Notify users about this new event.</p>
+                            </div>
+                            <FormControl>
+                              <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    )}
                     <DialogFooter className="sticky bottom-0 bg-background py-4 -mx-6 px-6 border-t">
                       <DialogClose asChild>
                         <Button type="button" variant="ghost">Cancel</Button>
