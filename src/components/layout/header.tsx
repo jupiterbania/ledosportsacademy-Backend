@@ -115,6 +115,10 @@ function NotificationBell() {
                     {triggerButton}
                 </SheetTrigger>
                 <SheetContent className="w-[85vw] max-w-sm p-0 flex flex-col h-full" side="right">
+                    <SheetHeader className="sr-only">
+                        <SheetTitle>Notifications</SheetTitle>
+                        <SheetDescription>A list of recent notifications.</SheetDescription>
+                    </SheetHeader>
                     <NotificationContent notifications={notifications} onLinkClick={handleLinkClick} />
                 </SheetContent>
             </Sheet>
