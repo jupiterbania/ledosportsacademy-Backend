@@ -18,7 +18,7 @@ import { getAllNotifications, Notification } from '@/lib/data';
 import { ScrollArea } from '../ui/scroll-area';
 import { formatDistanceToNow } from 'date-fns';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger, DialogTitle } from '@/components/ui/dialog';
 
 
 function NotificationContent({ notifications }: { notifications: Notification[] }) {
@@ -151,6 +151,7 @@ export function Header() {
               </button>
             </DialogTrigger>
             <DialogContent className="p-0 bg-transparent border-0 shadow-none max-w-xs">
+              <DialogTitle className="sr-only">LEDO SPORTS ACADEMY Logo</DialogTitle>
               <Image src="https://iili.io/KFLBPv1.png" alt="LEDO SPORTS ACADEMY Logo" width={400} height={400} className="rounded-lg w-full h-auto" />
             </DialogContent>
           </Dialog>
