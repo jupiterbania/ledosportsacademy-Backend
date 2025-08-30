@@ -64,10 +64,26 @@ function NotificationBell() {
         const fetchNotifications = async () => {
             const fetchedNotifications = await getAllNotifications();
             setNotifications(fetchedNotifications);
-            setHasUnread(fetchedNotifications.length > 0); 
+            if (fetchedNotifications.length > 0) {
+              const latestTimestamp = new Date((fetchedNotifications[0].createdAt as any).seconds * 1000).getTime();
+              const lastSeenTimestamp = localStorage.getItem('lastSeenNotificationTimestamp');
+              if (!lastSeenTimestamp || latestTimestamp > parseInt(lastSeenTimestamp)) {
+                setHasUnread(true);
+              }
+            }
         }
         fetchNotifications();
     }, []);
+
+    const handleOpenChange = (open: boolean) => {
+        if (open && hasUnread) {
+            setHasUnread(false);
+            if (notifications.length > 0) {
+                 const latestTimestamp = new Date((notifications[0].createdAt as any).seconds * 1000).getTime();
+                 localStorage.setItem('lastSeenNotificationTimestamp', latestTimestamp.toString());
+            }
+        }
+    };
 
     const triggerButton = (
         <Button variant="ghost" size="icon" className="relative">
@@ -79,7 +95,7 @@ function NotificationBell() {
 
     if (isMobile) {
         return (
-            <Sheet>
+            <Sheet onOpenChange={handleOpenChange}>
                 <SheetTrigger asChild>
                     {triggerButton}
                 </SheetTrigger>
@@ -91,7 +107,7 @@ function NotificationBell() {
     }
 
     return (
-        <Popover>
+        <Popover onOpenChange={handleOpenChange}>
             <PopoverTrigger asChild>
                 {triggerButton}
             </PopoverTrigger>
