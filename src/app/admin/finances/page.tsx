@@ -169,7 +169,7 @@ function DonationTable() {
             setIsDialogOpen(open);
         }}>
           <DialogTrigger asChild>
-            <Button>
+            <Button size="sm">
               <PlusCircle className="mr-2 h-4 w-4" /> Add Donation
             </Button>
           </DialogTrigger>
@@ -395,7 +395,7 @@ function FinanceTable<T extends Collection | Expense>({
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={() => {
+            <Button size="sm" onClick={() => {
               form.reset({ id: undefined, title: "", amount: 0, date: "" });
               setIsDialogOpen(true);
             }}>

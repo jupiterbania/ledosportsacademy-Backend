@@ -84,7 +84,7 @@ export default function NotificationsManagementPage() {
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-               <Button onClick={() => {
+               <Button size="sm" onClick={() => {
                   form.reset({
                     title: "",
                     description: "",

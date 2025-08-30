@@ -108,7 +108,7 @@ export default function EventsManagementPage() {
           <CardTitle>Events Management</CardTitle>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-               <Button onClick={() => {
+               <Button size="sm" onClick={() => {
                   form.reset({
                     id: undefined,
                     title: "",

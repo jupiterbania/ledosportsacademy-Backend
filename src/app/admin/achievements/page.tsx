@@ -94,7 +94,7 @@ export default function AchievementsManagementPage() {
           <CardTitle>Achievements</CardTitle>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-               <Button onClick={() => {
+               <Button size="sm" onClick={() => {
                   form.reset({
                     id: undefined,
                     title: "",
