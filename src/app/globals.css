@@ -149,12 +149,12 @@
 @keyframes shooting-star-1 {
   0% { transform: translateX(-100vw) translateY(-20vh) scale(0); opacity: 1; }
   70% { opacity: 1; }
-  100% { transform: translateX(100vw) translateY(80vh) scale(0.8); opacity: 0; }
+  100% { transform: translateX(100vw) translateY(80vh) scale(0.6); opacity: 0; }
 }
 @keyframes shooting-star-2 {
   0% { transform: translateX(50vw) translateY(-20vh) scale(0); opacity: 1; }
   70% { opacity: 1; }
-  100% { transform: translateX(-50vw) translateY(80vh) scale(0.6); opacity: 0; }
+  100% { transform: translateX(-50vw) translateY(80vh) scale(0.4); opacity: 0; }
 }
 
 #star-container {
@@ -170,30 +170,30 @@
   width: 200%;
   height: 200%;
   background-image:
-    radial-gradient(1px 1px at 20px 30px, #ccc, rgba(0,0,0,0)),
-    radial-gradient(1px 1px at 40px 70px, #fff, rgba(0,0,0,0)),
-    radial-gradient(1px 1px at 50px 160px, #bbb, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 20px 30px, #999, rgba(0,0,0,0)),
+    radial-gradient(0.5px 0.5px at 40px 70px, #fff, rgba(0,0,0,0)),
+    radial-gradient(0.5px 0.5px at 50px 160px, #aaa, rgba(0,0,0,0)),
     radial-gradient(1px 1px at 90px 40px, #fff, rgba(0,0,0,0)),
-    radial-gradient(1px 1px at 130px 80px, #fff, rgba(0,0,0,0)),
-    radial-gradient(1px 1px at 160px 120px, #ccc, rgba(0,0,0,0));
+    radial-gradient(0.5px 0.5px at 130px 80px, #fff, rgba(0,0,0,0)),
+    radial-gradient(0.5px 0.5px at 160px 120px, #999, rgba(0,0,0,0));
   background-repeat: repeat;
-  background-size: 200px 200px;
-  animation: move-background 240s linear infinite;
+  background-size: 250px 250px;
+  animation: move-background 320s linear infinite;
 }
 
 .shooting-star {
     position: absolute;
-    height: 1.5px;
+    height: 1px;
     background: linear-gradient(-45deg, #4da8bd, rgba(0, 0, 255, 0));
     border-radius: 999px;
-    filter: drop-shadow(0 0 4px #58D6F5);
-    animation: shooting-star-1 15s ease-in-out infinite;
+    filter: drop-shadow(0 0 2px #58D6F5);
+    animation: shooting-star-1 20s ease-in-out infinite;
 }
 .shooting-star:nth-child(2) {
     top: 80vh;
     left: 20vw;
-    animation: shooting-star-2 12s ease-in-out infinite;
-    animation-delay: 5s;
+    animation: shooting-star-2 18s ease-in-out infinite;
+    animation-delay: 7s;
 }
 
 /* Day mode styles */
@@ -201,89 +201,89 @@
   position: absolute;
   top: 5%;
   right: 5%;
-  width: 100px;
-  height: 100px;
-  background: #ffd700;
+  width: 80px;
+  height: 80px;
+  background: #fde68a;
   border-radius: 50%;
-  box-shadow: 0 0 20px #ffd700, 0 0 40px #ffb700, 0 0 80px #ff8c00;
-  animation: pulse 5s infinite ease-in-out;
+  box-shadow: 0 0 15px #fde68a, 0 0 30px #fcd34d, 0 0 60px #fbbf24;
+  animation: pulse 6s infinite ease-in-out;
 }
 
 .cloud {
   position: absolute;
-  background: #ffffff;
+  background: #f3f4f6;
   border-radius: 100px;
-  opacity: 0.8;
-  filter: drop-shadow(0 0 10px rgba(0,0,0,0.05));
-  animation: move-clouds 60s linear infinite;
+  opacity: 0.6;
+  filter: drop-shadow(0 0 8px rgba(0,0,0,0.03));
+  animation: move-clouds 80s linear infinite;
 }
 
 .cloud::before, .cloud::after {
   content: '';
   position: absolute;
-  background: #f2f9fe;
+  background: #e5e7eb;
   border-radius: 50%;
 }
 
 .cloud-1 {
-  width: 180px;
-  height: 50px;
+  width: 160px;
+  height: 45px;
   top: 15%;
   left: -250px;
-  animation-duration: 50s;
+  animation-duration: 60s;
 }
 .cloud-1::before {
-  width: 90px;
-  height: 90px;
-  top: -40px;
+  width: 80px;
+  height: 80px;
+  top: -35px;
   left: 20px;
 }
 .cloud-1::after {
-  width: 110px;
-  height: 110px;
-  top: -50px;
+  width: 100px;
+  height: 100px;
+  top: -45px;
   right: 10px;
 }
 
 .cloud-2 {
-  width: 250px;
-  height: 70px;
+  width: 220px;
+  height: 60px;
   top: 30%;
   left: -400px;
-  animation-duration: 70s;
-  animation-delay: -10s;
+  animation-duration: 90s;
+  animation-delay: -15s;
 }
 .cloud-2::before {
-  width: 130px;
-  height: 130px;
-  top: -60px;
+  width: 110px;
+  height: 110px;
+  top: -50px;
   left: 30px;
 }
 .cloud-2::after {
-  width: 150px;
-  height: 150px;
-  top: -80px;
+  width: 130px;
+  height: 130px;
+  top: -70px;
   right: 20px;
 }
 
 .cloud-3 {
-  width: 130px;
-  height: 40px;
+  width: 110px;
+  height: 35px;
   top: 50%;
   left: -200px;
-  animation-duration: 40s;
-  animation-delay: -20s;
+  animation-duration: 50s;
+  animation-delay: -25s;
 }
 .cloud-3::before {
-  width: 70px;
-  height: 70px;
-  top: -30px;
+  width: 60px;
+  height: 60px;
+  top: -25px;
   left: 15px;
 }
 .cloud-3::after {
-  width: 90px;
-  height: 90px;
-  top: -40px;
+  width: 80px;
+  height: 80px;
+  top: -35px;
   right: 10px;
 }
 
@@ -291,11 +291,11 @@
 @keyframes pulse {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 0 20px #ffd700, 0 0 40px #ffb700, 0 0 80px #ff8c00;
+    box-shadow: 0 0 15px #fde68a, 0 0 30px #fcd34d, 0 0 60px #fbbf24;
   }
   50% {
     transform: scale(1.02);
-    box-shadow: 0 0 25px #ffe44d, 0 0 50px #ffc34d, 0 0 100px #ffa533;
+    box-shadow: 0 0 20px #fef3c7, 0 0 40px #fde68a, 0 0 80px #fcd34d;
   }
 }
 
@@ -307,5 +307,3 @@
     transform: translateX(calc(100vw + 400px));
   }
 }
-
-    

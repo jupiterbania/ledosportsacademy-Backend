@@ -15,8 +15,8 @@ export function Background() {
 
   return (
     <div className={cn(
-      "fixed inset-0 z-[-2] w-full h-full transition-colors duration-500",
-      isLight ? 'bg-gradient-to-b from-sky-300 to-sky-500' : 'bg-transparent'
+      "fixed inset-0 z-[-2] w-full h-full transition-colors duration-1000",
+      isLight ? 'bg-gradient-to-b from-sky-200 to-sky-400' : 'bg-transparent'
     )}>
        {/* Night sky */}
       <div className={cn(
