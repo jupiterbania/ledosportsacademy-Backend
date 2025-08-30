@@ -87,10 +87,11 @@
 
 @layer utilities {
   .animate-fade-in {
-    animation: fade-in 0.6s ease-in-out forwards;
-    opacity: 0;
+    animation: fade-in 0.8s ease-in-out both;
+    animation-timeline: view();
+    animation-range: entry;
   }
-
+  
   @keyframes fade-in {
     from {
       opacity: 0;

@@ -37,7 +37,7 @@ export function RecentAchievements({ achievements }: { achievements: Achievement
                   sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   data-ai-hint={achievement['data-ai-hint']}
                 />
-                 <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-300" />
+                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-50 group-hover:opacity-30 transition-opacity" />
               </div>
               <CardHeader>
                 <CardTitle className="aurora-text-gradient group-hover:drop-shadow-[0_0_8px_hsl(var(--primary)/0.5)] transition-all duration-300">{achievement.title}</CardTitle>

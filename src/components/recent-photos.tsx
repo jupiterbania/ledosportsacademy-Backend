@@ -29,7 +29,7 @@ export function RecentPhotos({ photos }: { photos: Photo[] }) {
           <Link key={photo.id} href="/gallery" className="block group">
             <Card className="group overflow-hidden transition-all duration-300 hover:shadow-cyan-500/20 hover:-translate-y-1.5 h-full flex flex-col border-2 border-transparent hover:border-primary/50 animate-fade-in aurora-card" style={{ animationDelay: `${index * 150}ms` }}>
               <CardContent className="p-0">
-                <div className="relative aspect-[4/3] w-full overflow-hidden">
+                <div className="relative aspect-video w-full overflow-hidden">
                   <Image
                     src={photo.url}
                     alt={photo.title || `Gallery photo ${photo.id}`}
@@ -38,7 +38,7 @@ export function RecentPhotos({ photos }: { photos: Photo[] }) {
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     data-ai-hint={photo['data-ai-hint']}
                   />
-                   <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-300" />
+                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-50 group-hover:opacity-30 transition-opacity" />
                 </div>
               </CardContent>
                {(photo.title || photo.description) && (
