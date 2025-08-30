@@ -291,13 +291,13 @@ export const updateAdminRequestStatus = async (id: string, status: 'approved' | 
     const requestRef = doc(db, 'adminRequests', id);
     await updateDoc(requestRef, { status });
 
-    if (status === 'approved') {
-        const requestSnap = await getDoc(requestRef);
-        const requestData = requestSnap.data() as AdminRequest;
-        const member = await getMemberByEmail(requestData.email);
-        if (member) {
-            await updateMember(member.id, { isAdmin: true });
-        }
+    const requestSnap = await getDoc(requestRef);
+    if (!requestSnap.exists()) return;
+    const requestData = requestSnap.data() as AdminRequest;
+    
+    const member = await getMemberByEmail(requestData.email);
+    if (member) {
+        await updateMember(member.id, { isAdmin: status === 'approved' });
     }
 };
 

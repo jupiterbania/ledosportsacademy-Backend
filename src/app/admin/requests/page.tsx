@@ -9,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { getAllAdminRequests, updateAdminRequestStatus, AdminRequest } from "@/lib/data";
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Check, X } from 'lucide-react';
+import { Check, X, ShieldOff } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -66,49 +66,52 @@ export default function AdminRequestsPage() {
     }
 
     const RequestActions = ({ request }: { request: AdminRequest}) => (
-        <div className="flex gap-2">
+      <div className="flex gap-2">
+        {request.status === 'pending' && (
+          <>
             <AlertDialog>
-                <AlertDialogTrigger asChild>
+              <AlertDialogTrigger asChild>
                 <Button size="icon" variant="outline" className="text-green-500 border-green-500 hover:bg-green-500/10 hover:text-green-600">
-                    <Check className="h-4 w-4" />
-                    <span className="sr-only">Approve</span>
+                  <Check className="h-4 w-4" /> <span className="sr-only">Approve</span>
                 </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                <AlertDialogHeader>
-                    <AlertDialogTitle>Approve Request?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                    This will grant admin access to {request.name}. Are you sure?
-                    </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => handleUpdateRequest(request.id, 'approved')}>Approve</AlertDialogAction>
-                </AlertDialogFooter>
-                </AlertDialogContent>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader><AlertDialogTitle>Approve Request?</AlertDialogTitle><AlertDialogDescription>This will grant admin access to {request.name}. Are you sure?</AlertDialogDescription></AlertDialogHeader>
+                <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleUpdateRequest(request.id, 'approved')}>Approve</AlertDialogAction></AlertDialogFooter>
+              </AlertDialogContent>
             </AlertDialog>
-
             <AlertDialog>
-                <AlertDialogTrigger asChild>
-                    <Button size="icon" variant="destructive">
-                    <X className="h-4 w-4" />
-                    <span className="sr-only">Reject</span>
-                    </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                <AlertDialogHeader>
-                    <AlertDialogTitle>Reject Request?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                    This will reject the admin access request for {request.name}. Are you sure?
-                    </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => handleUpdateRequest(request.id, 'rejected')}>Reject</AlertDialogAction>
-                </AlertDialogFooter>
-                </AlertDialogContent>
+              <AlertDialogTrigger asChild><Button size="icon" variant="destructive"><X className="h-4 w-4" /><span className="sr-only">Reject</span></Button></AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader><AlertDialogTitle>Reject Request?</AlertDialogTitle><AlertDialogDescription>This will reject the admin access request for {request.name}. Are you sure?</AlertDialogDescription></AlertDialogHeader>
+                <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleUpdateRequest(request.id, 'rejected')}>Reject</AlertDialogAction></AlertDialogFooter>
+              </AlertDialogContent>
             </AlertDialog>
-        </div>
+          </>
+        )}
+        {request.status === 'approved' && (
+          <AlertDialog>
+            <AlertDialogTrigger asChild><Button size="icon" variant="destructive"><ShieldOff className="h-4 w-4" /><span className="sr-only">Revoke</span></Button></AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader><AlertDialogTitle>Revoke Admin Access?</AlertDialogTitle><AlertDialogDescription>This will remove admin privileges from {request.name}. Are you sure?</AlertDialogDescription></AlertDialogHeader>
+              <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleUpdateRequest(request.id, 'rejected')}>Revoke</AlertDialogAction></AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
+        {request.status === 'rejected' && (
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button size="icon" variant="outline" className="text-green-500 border-green-500 hover:bg-green-500/10 hover:text-green-600">
+                <Check className="h-4 w-4" /><span className="sr-only">Approve</span>
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader><AlertDialogTitle>Approve Request?</AlertDialogTitle><AlertDialogDescription>This will grant admin access to {request.name}. Are you sure?</AlertDialogDescription></AlertDialogHeader>
+              <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleUpdateRequest(request.id, 'approved')}>Approve</AlertDialogAction></AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
+      </div>
     )
 
     return (
@@ -139,11 +142,9 @@ export default function AdminRequestsPage() {
                                 <p className="text-sm text-muted-foreground">{request.requestedAt ? new Date((request.requestedAt as any).seconds * 1000).toLocaleString() : 'N/A'}</p>
                             </div>
                         </CardContent>
-                        {status === 'pending' && (
-                            <CardFooter>
-                                <RequestActions request={request} />
-                            </CardFooter>
-                        )}
+                        <CardFooter>
+                            <RequestActions request={request} />
+                        </CardFooter>
                     </Card>
                 ))}
             </div>
@@ -156,7 +157,7 @@ export default function AdminRequestsPage() {
                         <TableHead>User</TableHead>
                         <TableHead>Reason</TableHead>
                         <TableHead>Requested On</TableHead>
-                        {status === 'pending' && <TableHead>Actions</TableHead>}
+                        <TableHead>Actions</TableHead>
                     </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -178,11 +179,9 @@ export default function AdminRequestsPage() {
                             <TableCell>
                                 {request.requestedAt ? new Date((request.requestedAt as any).seconds * 1000).toLocaleString() : 'N/A'}
                             </TableCell>
-                            {status === 'pending' && (
-                                <TableCell>
-                                    <RequestActions request={request} />
-                                </TableCell>
-                            )}
+                            <TableCell>
+                                <RequestActions request={request} />
+                            </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
