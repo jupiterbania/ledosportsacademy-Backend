@@ -11,6 +11,8 @@ import * as z from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useAuth } from "@/hooks/use-auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { updateMemberByEmail } from "@/lib/data";
+import { useEffect } from "react";
 
 const settingsSchema = z.object({
   displayName: z.string().min(1, "Display name is required"),
@@ -21,23 +23,48 @@ type SettingsFormValues = z.infer<typeof settingsSchema>;
 
 export default function SettingsPage() {
   const { toast } = useToast();
-  const { user } = useAuth();
+  const { user, member } = useAuth();
   
   const form = useForm<SettingsFormValues>({
     resolver: zodResolver(settingsSchema),
     defaultValues: {
-      displayName: user?.displayName || "",
-      email: user?.email || "",
+      displayName: "",
+      email: "",
     },
   });
 
-  const onSubmit = (data: SettingsFormValues) => {
-    console.log(data);
-    toast({
-      title: "Settings Saved",
-      description: "Your profile information has been updated. (Frontend only)",
-    });
+  useEffect(() => {
+    if (user) {
+      form.reset({
+        displayName: user.displayName || "",
+        email: user.email || "",
+      });
+    }
+  }, [user, form]);
+
+  const onSubmit = async (data: SettingsFormValues) => {
+    if (!user?.email) {
+      toast({ title: "Error", description: "You must be logged in.", variant: "destructive"});
+      return;
+    }
+    try {
+      await updateMemberByEmail(user.email, { name: data.displayName });
+      // Note: Updating the displayName in Firebase Auth requires re-authentication or a backend function.
+      // We are updating it in our 'members' collection which is used throughout the app.
+      toast({
+        title: "Settings Saved",
+        description: "Your profile information has been updated.",
+      });
+    } catch (error) {
+       toast({
+        title: "Error",
+        description: "Could not save settings.",
+        variant: "destructive",
+      });
+    }
   };
+
+  if (!user) return null;
 
   return (
     <div className="flex flex-1 flex-col gap-4 md:gap-8">
@@ -50,12 +77,12 @@ export default function SettingsPage() {
           <CardContent className="space-y-6">
             <div className="flex items-center gap-4">
               <Avatar className="h-20 w-20">
-                <AvatarImage src={user?.photoURL || undefined} alt="Admin" />
-                <AvatarFallback>{user?.displayName?.charAt(0) || 'A'}</AvatarFallback>
+                <AvatarImage src={user.photoURL || undefined} alt="Admin" />
+                <AvatarFallback>{user.displayName?.charAt(0) || 'A'}</AvatarFallback>
               </Avatar>
               <div>
-                <h3 className="text-xl font-semibold">{user?.displayName}</h3>
-                <p className="text-muted-foreground">{user?.email}</p>
+                <h3 className="text-xl font-semibold">{user.displayName}</h3>
+                <p className="text-muted-foreground">{user.email}</p>
               </div>
             </div>
             
