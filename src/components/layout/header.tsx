@@ -111,7 +111,7 @@ function NotificationBell() {
             <PopoverTrigger asChild>
                 {triggerButton}
             </PopoverTrigger>
-            <PopoverContent className="w-80 p-0 aurora-card" align="end">
+            <PopoverContent className="w-[95vw] sm:w-80 p-0 aurora-card" align="end">
                 <NotificationContent notifications={notifications} onLinkClick={handleLinkClick}/>
             </PopoverContent>
         </Popover>
