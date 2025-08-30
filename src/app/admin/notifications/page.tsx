@@ -190,7 +190,7 @@ export default function NotificationsManagementPage() {
                         <div className="flex-1 min-w-0">
                             {notification.imageUrl && (
                                 <div className="relative aspect-video w-full max-w-sm rounded-md overflow-hidden mb-2">
-                                     <Image src={notification.imageUrl} alt={notification.title} fill className="object-cover" />
+                                     <Image src={notification.imageUrl} alt={notification.title} fill className="object-cover" sizes="(max-width: 640px) 100vw, 384px"/>
                                 </div>
                             )}
                             <p className="font-medium break-words">{notification.title}</p>
