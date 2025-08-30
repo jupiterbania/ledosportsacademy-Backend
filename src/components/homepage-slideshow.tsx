@@ -8,6 +8,7 @@ import { getSlideshowItems, SlideshowItem } from "@/lib/data"
 import Autoplay from "embla-carousel-autoplay"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 
 export function HomepageSlideshow() {
   const [api, setApi] = React.useState<CarouselApi>()
@@ -66,18 +67,38 @@ export function HomepageSlideshow() {
         <CarouselContent>
           {slideshowItems.map((item, index) => (
             <CarouselItem key={item.id}>
-                <div className="relative h-[400px] sm:h-[500px] md:h-[600px] lg:h-[70vh] w-full">
-                  <Image
-                    src={item.url}
-                    alt={item.description || item.title || `Slider item ${item.id}`}
-                    fill
-                    className="object-cover"
-                    priority={index === 0}
-                    data-ai-hint={item['data-ai-hint']}
-                    sizes="100vw"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
-                </div>
+              <Dialog>
+                 <DialogTrigger asChild>
+                    <div className="relative h-[400px] sm:h-[500px] md:h-[600px] lg:h-[70vh] w-full cursor-pointer">
+                      <Image
+                        src={item.url}
+                        alt={item.description || item.title || `Slider item ${item.id}`}
+                        fill
+                        className="object-cover"
+                        priority={index === 0}
+                        data-ai-hint={item['data-ai-hint']}
+                        sizes="100vw"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
+                    </div>
+                  </DialogTrigger>
+                  <DialogContent className="p-0 border-0 max-w-4xl bg-transparent shadow-none">
+                      <DialogTitle className="sr-only">{item.title || 'Enlarged slideshow image'}</DialogTitle>
+                      <div className="relative">
+                          <Image
+                              src={item.url}
+                              alt={item.title || 'Enlarged slideshow image'}
+                              width={1200}
+                              height={800}
+                              className="object-contain w-full h-auto rounded-lg shadow-2xl shadow-cyan-500/20"
+                          />
+                           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent p-6 text-white rounded-b-lg">
+                                {item.title && <h3 className="text-xl font-bold">{item.title}</h3>}
+                                {item.description && <DialogDescription className="text-white/90 mt-1">{item.description}</DialogDescription>}
+                            </div>
+                      </div>
+                  </DialogContent>
+               </Dialog>
             </CarouselItem>
           ))}
         </CarouselContent>
