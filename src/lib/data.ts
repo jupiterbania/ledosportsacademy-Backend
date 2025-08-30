@@ -118,9 +118,9 @@ export const addPhoto = (data: Omit<Photo, 'id'>) => addDocument<Photo>('photos'
 export const updatePhoto = (id: string, data: Partial<Photo>) => updateDocument<Photo>('photos', id, data);
 export const deletePhoto = (id: string) => deleteDocument('photos', id);
 
-export const getRecentPhotos = async () => {
+export const getRecentPhotos = async (count: number = 6) => {
     if (!isConfigComplete) return [];
-    const q = query(collection(db, "photos"), orderBy("uploadedAt", "desc"), limit(6));
+    const q = query(collection(db, "photos"), orderBy("uploadedAt", "desc"), limit(count));
     const snapshot = await getDocs(q);
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Photo));
 };
@@ -131,12 +131,12 @@ export const addEvent = (data: Omit<Event, 'id'>) => addDocument<Event>('events'
 export const updateEvent = (id: string, data: Partial<Event>) => updateDocument<Event>('events', id, data);
 export const deleteEvent = (id: string) => deleteDocument('events', id);
 
-export const getRecentEvents = async () => {
+export const getRecentEvents = async (count: number = 3) => {
     if (!isConfigComplete) return [];
     const q = query(
         collection(db, "events"), 
         orderBy("date", "desc"), 
-        limit(3)
+        limit(count)
     );
     const snapshot = await getDocs(q);
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Event));
@@ -180,9 +180,9 @@ export const addAchievement = (data: Omit<Achievement, 'id'>) => addDocument<Ach
 export const updateAchievement = (id: string, data: Partial<Achievement>) => updateDocument<Achievement>('achievements', id, data);
 export const deleteAchievement = (id: string) => deleteDocument('achievements', id);
 
-export const getRecentAchievements = async () => {
+export const getRecentAchievements = async (count: number = 3) => {
     if (!isConfigComplete) return [];
-    const q = query(collection(db, "achievements"), orderBy("date", "desc"), limit(3));
+    const q = query(collection(db, "achievements"), orderBy("date", "desc"), limit(count));
     const snapshot = await getDocs(q);
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Achievement));
 };

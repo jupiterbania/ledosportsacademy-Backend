@@ -16,9 +16,9 @@ export default function Home() {
 
   useEffect(() => {
     const fetchData = async () => {
-      setRecentEvents(await getRecentEvents(5));
+      setRecentEvents(await getRecentEvents(3));
       setRecentAchievements(await getRecentAchievements(3));
-      setRecentPhotos(await getRecentPhotos(6));
+      setRecentPhotos(await getRecentPhotos(3));
     };
     fetchData();
   }, []);
