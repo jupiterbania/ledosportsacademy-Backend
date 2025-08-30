@@ -1,6 +1,6 @@
 
 import { db, isConfigComplete } from './firebase';
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy, limit, where, writeBatch } from 'firebase/firestore';
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy, limit, where, writeBatch, getDoc } from 'firebase/firestore';
 
 // Base types
 export interface BaseDocument {
@@ -118,7 +118,7 @@ export const addPhoto = (data: Omit<Photo, 'id'>) => addDocument<Photo>('photos'
 export const updatePhoto = (id: string, data: Partial<Photo>) => updateDocument<Photo>('photos', id, data);
 export const deletePhoto = (id: string) => deleteDocument('photos', id);
 
-export const getRecentPhotos = async (count: number = 6) => {
+export const getRecentPhotos = async (count: number = 2) => {
     if (!isConfigComplete) return [];
     const q = query(collection(db, "photos"), orderBy("uploadedAt", "desc"), limit(count));
     const snapshot = await getDocs(q);
@@ -131,7 +131,7 @@ export const addEvent = (data: Omit<Event, 'id'>) => addDocument<Event>('events'
 export const updateEvent = (id: string, data: Partial<Event>) => updateDocument<Event>('events', id, data);
 export const deleteEvent = (id: string) => deleteDocument('events', id);
 
-export const getRecentEvents = async (count: number = 3) => {
+export const getRecentEvents = async (count: number = 2) => {
     if (!isConfigComplete) return [];
     const q = query(
         collection(db, "events"), 
@@ -153,6 +153,27 @@ export const checkIfMemberExists = async (email: string): Promise<boolean> => {
     const q = query(collection(db, "members"), where("email", "==", email), limit(1));
     const snapshot = await getDocs(q);
     return !snapshot.empty;
+};
+
+export const getMemberByEmail = async (email: string): Promise<Member | null> => {
+    if (!isConfigComplete) return null;
+    const q = query(collection(db, "members"), where("email", "==", email), limit(1));
+    const snapshot = await getDocs(q);
+    if (snapshot.empty) {
+        return null;
+    }
+    const doc = snapshot.docs[0];
+    return { id: doc.id, ...doc.data() } as Member;
+};
+
+export const updateMemberByEmail = async (email: string, data: Partial<Omit<Member, 'id' | 'email'>>) => {
+    if (!isConfigComplete) return;
+    const member = await getMemberByEmail(email);
+    if (member) {
+        await updateMember(member.id, data);
+    } else {
+        throw new Error("Member not found");
+    }
 };
 
 
@@ -180,7 +201,7 @@ export const addAchievement = (data: Omit<Achievement, 'id'>) => addDocument<Ach
 export const updateAchievement = (id: string, data: Partial<Achievement>) => updateDocument<Achievement>('achievements', id, data);
 export const deleteAchievement = (id: string) => deleteDocument('achievements', id);
 
-export const getRecentAchievements = async (count: number = 3) => {
+export const getRecentAchievements = async (count: number = 2) => {
     if (!isConfigComplete) return [];
     const q = query(collection(db, "achievements"), orderBy("date", "desc"), limit(count));
     const snapshot = await getDocs(q);

@@ -4,7 +4,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Menu, Club, LayoutDashboard, HandCoins, Medal, Users as UsersIcon } from 'lucide-react';
+import { Menu, Club, LayoutDashboard, HandCoins, Medal, Users as UsersIcon, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
@@ -13,16 +13,15 @@ import { signOut } from '@/lib/auth';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import Image from 'next/image';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
 
 
 export function Header() {
   const router = useRouter();
-  const { user, isAdmin } = useAuth();
+  const { user, isAdmin, isRegisteredMember } = useAuth();
 
-  const handleAuthAction = async () => {
-    if (user) {
-      await signOut();
-    }
+  const handleLogout = async () => {
+    await signOut();
     router.push('/login');
   };
   
@@ -65,19 +64,50 @@ export function Header() {
         
         <nav className="hidden md:flex items-center gap-6 flex-grow">
           {baseNavLinks.map((link) => <NavLink key={link.href} {...link} />)}
-          {user && !isAdmin && memberNavLinks.map((link) => <NavLink key={link.href} {...link} />)}
+          {user && !isAdmin && isRegisteredMember && memberNavLinks.map((link) => <NavLink key={link.href} {...link} />)}
           {isAdmin && <NavLink href="/admin" label="Admin Dashboard" />}
         </nav>
         
         <div className="hidden md:flex items-center ml-auto gap-2">
             <ThemeToggle />
           {user ? (
-             <div className="flex items-center gap-4">
-                <span className="text-sm text-muted-foreground">Hello, {user.displayName?.split(' ')[0]}!</span>
-                <Button onClick={handleAuthAction} variant="outline" className="aurora-card">Logout</Button>
-            </div>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                        <Avatar className="h-10 w-10">
+                             <AvatarImage src={user.photoURL || undefined} alt={user.displayName || 'User'} />
+                             <AvatarFallback>{user.displayName?.charAt(0) || 'U'}</AvatarFallback>
+                        </Avatar>
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56 aurora-card" align="end" forceMount>
+                     <DropdownMenuLabel className="font-normal">
+                      <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium leading-none">{user.displayName}</p>
+                        <p className="text-xs leading-none text-muted-foreground">
+                          {user.email}
+                        </p>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                     {!isAdmin && isRegisteredMember && (
+                         <DropdownMenuItem onClick={() => router.push('/member/profile')}>
+                             My Profile
+                         </DropdownMenuItem>
+                     )}
+                     {isAdmin && (
+                         <DropdownMenuItem onClick={() => router.push('/admin/settings')}>
+                             Settings
+                         </DropdownMenuItem>
+                     )}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleLogout}>
+                        Log out
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
           ) : (
-             <Button onClick={handleAuthAction} variant="outline" className="aurora-card hover:aurora-glow">Login</Button>
+             <Button onClick={() => router.push('/login')} variant="outline" className="aurora-card hover:aurora-glow">Login</Button>
           )}
         </div>
 
@@ -103,13 +133,31 @@ export function Header() {
                     <span className="font-bold text-xl">LEDO SPORTS ACADEMY</span>
                   </Link>
                 </SheetClose>
+
+                {user && (
+                     <div className="flex items-center gap-3 mb-4">
+                        <Avatar>
+                           <AvatarImage src={user.photoURL || undefined} alt={user.displayName || ''} />
+                            <AvatarFallback>{user.displayName?.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                             <p className="text-sm font-medium leading-none">{user.displayName}</p>
+                             <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+                        </div>
+                     </div>
+                )}
+
+
                 <nav className="flex flex-col gap-3">
                   {baseNavLinks.map((link) => <MobileNavLink key={link.href} {...link} />)}
-                   {user && !isAdmin && memberNavLinks.map((link) => <MobileNavLink key={link.href} {...link} />)}
+                   {user && !isAdmin && isRegisteredMember && memberNavLinks.map((link) => <MobileNavLink key={link.href} {...link} />)}
                   {isAdmin && <MobileNavLink href="/admin" label="Admin Dashboard" />}
                   <Separator className="my-3" />
+                   {user && !isAdmin && isRegisteredMember && (
+                       <MobileNavLink href="/member/profile" label="My Profile" />
+                   )}
                   <SheetClose asChild>
-                    <Button onClick={handleAuthAction} className="w-full">
+                    <Button onClick={() => user ? handleLogout() : router.push('/login')} className="w-full">
                       {user ? 'Logout' : 'Login'}
                     </Button>
                   </SheetClose>
