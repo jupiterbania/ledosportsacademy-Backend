@@ -14,10 +14,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { getAllEvents, Event, addEvent, updateEvent, deleteEvent, addNotification } from "@/lib/data";
-import { PlusCircle, Edit, Trash2 } from 'lucide-react';
+import { PlusCircle, Edit, Trash2, Wand2, Sparkles } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { generateDescription } from '@/ai/flows/description-generator';
 
 const eventSchema = z.object({
   id: z.string().optional(),
@@ -35,6 +36,7 @@ type EventFormValues = z.infer<typeof eventSchema>;
 export default function EventsManagementPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   const { toast } = useToast();
 
   const fetchEvents = async () => {
@@ -58,6 +60,29 @@ export default function EventsManagementPage() {
       sendNotification: true,
     },
   });
+  
+  const handleGenerateDescription = async (enhance = false) => {
+    const title = form.getValues("title");
+    if (!title) {
+      toast({ title: "Title is required", description: "Please enter a title before generating a description.", variant: "destructive" });
+      return;
+    }
+    
+    setIsGenerating(true);
+    try {
+      const input = { title, description: enhance ? form.getValues("description") : undefined };
+      const result = await generateDescription(input);
+      if (result.description) {
+        form.setValue("description", result.description, { shouldValidate: true });
+        toast({ title: `Description ${enhance ? 'Enhanced' : 'Generated'}`, description: "The description has been updated." });
+      }
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to generate description.", variant: "destructive" });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
 
   const onSubmit = async (data: EventFormValues) => {
     const { id, sendNotification, ...eventData } = data;
@@ -148,7 +173,19 @@ export default function EventsManagementPage() {
                       name="description"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Description</FormLabel>
+                           <div className="flex items-center justify-between">
+                            <FormLabel>Description</FormLabel>
+                             <div className="flex gap-2">
+                              <Button type="button" size="sm" variant="ghost" onClick={() => handleGenerateDescription(false)} disabled={isGenerating}>
+                                 <Wand2 className="mr-2 h-4 w-4" />
+                                {isGenerating ? 'Generating...' : 'Generate'}
+                              </Button>
+                               <Button type="button" size="sm" variant="ghost" onClick={() => handleGenerateDescription(true)} disabled={isGenerating}>
+                                 <Sparkles className="mr-2 h-4 w-4" />
+                                {isGenerating ? 'Enhancing...' : 'Enhance'}
+                              </Button>
+                            </div>
+                          </div>
                           <FormControl>
                             <Textarea placeholder="Join us for our annual general meeting..." {...field} />
                           </FormControl>
