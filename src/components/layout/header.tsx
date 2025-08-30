@@ -16,7 +16,6 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { getAllNotifications, Notification } from '@/lib/data';
 import { ScrollArea } from '../ui/scroll-area';
 import { formatDistanceToNow } from 'date-fns';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from '@/components/ui/dialog';
 import { ThemeToggle } from '../theme-toggle';
 
@@ -36,7 +35,7 @@ function NotificationContent({ notifications, onLinkClick }: { notifications: No
             <div className="p-4 border-b">
               <h4 className="font-medium text-sm">Notifications</h4>
             </div>
-            <ScrollArea className="flex-1">
+            <ScrollArea className="flex-1 max-h-[70vh]">
                 {notifications.length === 0 ? (
                     <p className="text-center text-sm text-muted-foreground py-8">No new notifications</p>
                 ) : (
@@ -68,7 +67,6 @@ function NotificationBell() {
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [hasUnread, setHasUnread] = useState(false);
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-    const isMobile = useIsMobile();
 
     useEffect(() => {
         const fetchNotifications = async () => {
@@ -107,23 +105,6 @@ function NotificationBell() {
             <span className="sr-only">Notifications</span>
         </Button>
     );
-
-    if (isMobile) {
-        return (
-            <Sheet open={isPopoverOpen} onOpenChange={handleOpenChange}>
-                <SheetTrigger asChild>
-                    {triggerButton}
-                </SheetTrigger>
-                <SheetContent className="w-[85vw] max-w-sm p-0 flex flex-col h-full" side="right">
-                    <SheetHeader className="sr-only">
-                        <SheetTitle>Notifications</SheetTitle>
-                        <SheetDescription>A list of recent notifications.</SheetDescription>
-                    </SheetHeader>
-                    <NotificationContent notifications={notifications} onLinkClick={handleLinkClick} />
-                </SheetContent>
-            </Sheet>
-        )
-    }
 
     return (
         <Popover open={isPopoverOpen} onOpenChange={handleOpenChange}>
@@ -301,3 +282,5 @@ export function Header() {
     </header>
   );
 }
+
+    
