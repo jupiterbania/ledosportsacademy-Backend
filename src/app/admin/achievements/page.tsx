@@ -24,7 +24,6 @@ const achievementSchema = z.object({
   description: z.string().min(1, { message: "Description is required" }),
   date: z.string().refine((val) => !isNaN(Date.parse(val)), { message: "Invalid date format" }),
   photoUrl: z.string().url({ message: "Please enter a valid URL." }),
-  'data-ai-hint': z.string().optional(),
 });
 
 type AchievementFormValues = z.infer<typeof achievementSchema>;
@@ -50,7 +49,6 @@ export default function AchievementsManagementPage() {
       description: "",
       date: "",
       photoUrl: "https://placehold.co/600x400.png",
-      'data-ai-hint': "",
     },
   });
 
@@ -101,7 +99,6 @@ export default function AchievementsManagementPage() {
                     description: "",
                     date: "",
                     photoUrl: "https://placehold.co/600x400.png",
-                    'data-ai-hint': "",
                   });
                   setIsDialogOpen(true);
                 }}>
@@ -164,19 +161,6 @@ export default function AchievementsManagementPage() {
                             <Input placeholder="https://placehold.co/600x400.png" {...field} />
                           </FormControl>
                            <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                     <FormField
-                      control={form.control}
-                      name="data-ai-hint"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>AI Hint</FormLabel>
-                          <FormControl>
-                            <Input placeholder="e.g. 'award trophy'" {...field} />
-                          </FormControl>
-                          <FormMessage />
                         </FormItem>
                       )}
                     />

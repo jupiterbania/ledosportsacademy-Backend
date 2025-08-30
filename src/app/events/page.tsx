@@ -29,7 +29,7 @@ export default function EventsPage() {
           fill
           className="object-cover transition-transform duration-500 group-hover:scale-105"
           sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-          data-ai-hint={event['data-ai-hint']}
+          
         />
         <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-300" />
       </div>

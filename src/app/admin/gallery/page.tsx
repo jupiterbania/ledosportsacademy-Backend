@@ -24,7 +24,6 @@ const photoSchema = z.object({
   url: z.string().url({ message: "Please enter a valid URL." }),
   title: z.string().optional(),
   description: z.string().optional(),
-  'data-ai-hint': z.string().optional(),
   isSliderPhoto: z.boolean().default(false),
   sendNotification: z.boolean().default(true),
 });
@@ -51,7 +50,6 @@ export default function GalleryManagementPage() {
       url: "https://placehold.co/600x400.png",
       isSliderPhoto: false,
       title: '',
-      'data-ai-hint': '',
       description: '',
       sendNotification: true,
     },
@@ -114,7 +112,6 @@ export default function GalleryManagementPage() {
                   form.reset({
                     id: undefined,
                     url: "https://placehold.co/600x400.png",
-                    'data-ai-hint': '',
                     isSliderPhoto: false,
                     title: '',
                     description: '',
@@ -166,19 +163,6 @@ export default function GalleryManagementPage() {
                           <FormLabel>Description (Optional)</FormLabel>
                           <FormControl>
                             <Textarea placeholder="A short description of the photo" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="data-ai-hint"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>AI Hint</FormLabel>
-                          <FormControl>
-                            <Input placeholder="e.g. 'community event'" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>

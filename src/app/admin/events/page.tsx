@@ -27,7 +27,6 @@ const eventSchema = z.object({
   photoUrl: z.string().url({ message: "Please enter a valid URL." }),
   redirectUrl: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
   showOnSlider: z.boolean().default(false),
-  'data-ai-hint': z.string().optional(),
   sendNotification: z.boolean().default(true),
 });
 
@@ -67,7 +66,7 @@ export default function EventsManagementPage() {
         await updateEvent(id, eventData);
         toast({ title: "Event Updated", description: "The event has been successfully updated." });
       } else {
-        const newEvent = await addEvent({ ...eventData, 'data-ai-hint': 'custom event' });
+        const newEvent = await addEvent(eventData);
         toast({ title: "Event Created", description: "The new event has been added." });
         if(sendNotification) {
           await addNotification({

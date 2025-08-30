@@ -76,7 +76,7 @@ export function HomepageSlideshow() {
                         fill
                         className="object-cover"
                         priority={index === 0}
-                        data-ai-hint={item['data-ai-hint']}
+                        
                         sizes="100vw"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />

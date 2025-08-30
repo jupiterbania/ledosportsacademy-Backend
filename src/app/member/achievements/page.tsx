@@ -37,7 +37,7 @@ export default function MemberAchievementsPage() {
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
-                  data-ai-hint={achievement['data-ai-hint']}
+                  
                 />
               </div>
             <CardHeader>

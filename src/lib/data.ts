@@ -12,7 +12,6 @@ export interface Photo extends BaseDocument {
   url: string;
   isSliderPhoto: boolean;
   uploadedAt: string;
-  'data-ai-hint'?: string;
   title?: string;
   description?: string;
 }
@@ -22,7 +21,6 @@ export interface Event extends BaseDocument {
   description: string;
   date: string;
   photoUrl:string;
-  'data-ai-hint'?: string;
   redirectUrl?: string;
   showOnSlider?: boolean;
 }
@@ -65,7 +63,6 @@ export interface Achievement extends BaseDocument {
     description: string;
     date: string;
     photoUrl: string;
-    'data-ai-hint'?: string;
 }
 
 export interface SlideshowItem {
@@ -73,7 +70,6 @@ export interface SlideshowItem {
     url: string;
     title?: string;
     description?: string;
-    'data-ai-hint'?: string;
     date: string;
 }
 
@@ -260,7 +256,6 @@ export const getSlideshowItems = async (): Promise<SlideshowItem[]> => {
             url: p.url,
             title: p.title || '',
             description: p.description || '',
-            'data-ai-hint': p['data-ai-hint'],
             date: p.uploadedAt,
         };
     });
@@ -272,7 +267,6 @@ export const getSlideshowItems = async (): Promise<SlideshowItem[]> => {
             url: e.photoUrl,
             title: e.title,
             description: e.description,
-            'data-ai-hint': e['data-ai-hint'],
             date: e.date,
         };
     });
