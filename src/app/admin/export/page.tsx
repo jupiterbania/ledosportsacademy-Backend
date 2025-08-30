@@ -21,9 +21,21 @@ interface jsPDFWithAutoTable extends jsPDF {
   autoTable: (options: any) => jsPDFWithAutoTable;
 }
 
+const getBase64Image = async (url: string): Promise<string> => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+    });
+};
+
 
 export default function ExportPage() {
   const { toast } = useToast();
+  const logoUrl = 'https://iili.io/KFLBPv1.png';
 
   const generatePdf = async (dataType: string) => {
     toast({
@@ -31,17 +43,19 @@ export default function ExportPage() {
       description: `Generating PDF for ${dataType}. Please wait...`,
     });
 
-    const doc = new jsPDF() as jsPDFWithAutoTable;
-    const date = new Date().toLocaleDateString();
-
     try {
+        const doc = new jsPDF() as jsPDFWithAutoTable;
+        const date = new Date().toLocaleDateString();
+        const logoBase64 = await getBase64Image(logoUrl);
+        
         let data, columns, body;
         
         const commonHeader = (doc: jsPDFWithAutoTable, title: string) => {
+            doc.addImage(logoBase64, 'PNG', 14, 15, 20, 20);
             doc.setFontSize(18);
-            doc.text(title, 14, 22);
+            doc.text(title, 40, 22);
             doc.setFontSize(11);
-            doc.text(`Report generated on: ${date}`, 14, 30);
+            doc.text(`Report generated on: ${date}`, 40, 30);
         };
 
         switch (dataType) {
@@ -105,15 +119,19 @@ export default function ExportPage() {
       description: "Generating comprehensive PDF report. This may take a moment...",
     });
 
-    const doc = new jsPDF() as jsPDFWithAutoTable;
-    const date = new Date().toLocaleDateString();
-
     try {
+        const doc = new jsPDF() as jsPDFWithAutoTable;
+        const date = new Date().toLocaleDateString();
+        const logoBase64 = await getBase64Image(logoUrl);
+
       // Main Title
+      doc.addImage(logoBase64, 'PNG', 14, 15, 20, 20);
       doc.setFontSize(22);
-      doc.text("LEDO SPORTS ACADEMY - Full Analytics Report", 105, 20, { align: 'center' });
+      doc.text("LEDO SPORTS ACADEMY", 105, 25, { align: 'center' });
+      doc.setFontSize(16);
+      doc.text("Full Analytics Report", 105, 33, { align: 'center' });
       doc.setFontSize(12);
-      doc.text(`Generated on: ${date}`, 105, 28, { align: 'center' });
+      doc.text(`Generated on: ${date}`, 105, 40, { align: 'center' });
 
       const [donations, collections, expenses, members, events, achievements] = await Promise.all([
         getAllDonations(),
@@ -124,7 +142,7 @@ export default function ExportPage() {
         getAllAchievements()
       ]);
       
-      let startY = 40;
+      let startY = 55;
 
       const addSection = (title: string, head: any[], body: any[][], newPage: boolean = true) => {
           if (newPage && doc.internal.pageSize.height - startY < 60) {
