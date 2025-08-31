@@ -9,7 +9,6 @@
  */
 
 import {ai} from '@/ai/genkit';
-import { googleAI } from '@genkit-ai/googleai';
 import {z} from 'zod';
 
 const EnhanceTextInputSchema = z.object({
@@ -38,24 +37,19 @@ export async function enhanceText(input: EnhanceTextInput): Promise<EnhanceTextO
   return enhanceTextFlow(input);
 }
 
-const buildPrompt = (input: EnhanceTextInput): string => {
-  const contextPrompts = {
-      gallery: "You are an expert in creative writing for a sports club's photo gallery.",
-      event: "You are an expert in creative writing for a sports club's event announcements.",
-      achievement: "You are an expert in creative writing for a sports club's achievements.",
-  }
-  
-  return `
-    ${contextPrompts[input.context]}
-    Your task is to take the user-provided topic and generate an engaging, professional, and exciting title and description.
-    Do not analyze or refer to any image. Do not use markdown.
-    
-    The output should be the title, followed by "||", followed by the description.
-    
-    Topic: ${input.topic}
-  `;
-}
 
+const contextPrompts = {
+    gallery: "You are an expert in creative writing for a sports club's photo gallery.",
+    event: "You are an expert in creative writing for a sports club's event announcements.",
+    achievement: "You are an expert in creative writing for a sports club's achievements.",
+};
+
+const getSystemPrompt = (context: EnhanceTextInput['context']) => `
+    ${contextPrompts[context]}
+    Your task is to take the user-provided topic and generate an engaging, professional, and exciting title and description.
+    Do not analyze or refer to any image. Do not use markdown in your response.
+    Generate a response that fits the provided output schema.
+`;
 
 const enhanceTextFlow = ai.defineFlow(
   {
@@ -63,27 +57,21 @@ const enhanceTextFlow = ai.defineFlow(
     inputSchema: EnhanceTextInputSchema,
     outputSchema: EnhanceTextOutputSchema,
   },
-  async input => {
-    const promptText = buildPrompt(input);
-
-    const { text } = await ai.generate({
-      model: googleAI.model('gemini-pro'),
-      prompt: promptText,
+  async (input) => {
+    const prompt = ai.definePrompt({
+        name: `enhanceTextPrompt_${input.context}`,
+        input: { schema: EnhanceTextInputSchema },
+        output: { schema: EnhanceTextOutputSchema },
+        prompt: getSystemPrompt(input.context) + '\n\nTopic: {{{topic}}}',
     });
 
-    if (!text) {
-        throw new Error("The AI model did not return the expected output.");
+    const llmResponse = await prompt(input);
+    const output = llmResponse.output();
+
+    if (!output) {
+      throw new Error("The AI model did not return the expected output.");
     }
     
-    const [title, description] = text.split('||');
-
-    if (!title || !description) {
-      throw new Error('Could not parse the AI response.');
-    }
-
-    return {
-      title: title.trim(),
-      description: description.trim(),
-    };
+    return output;
   }
 );
