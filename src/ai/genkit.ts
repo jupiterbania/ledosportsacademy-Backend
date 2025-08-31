@@ -1,5 +1,3 @@
-
-'use server';
 /**
  * @fileOverview This file initializes and a new Firebase Project and provides a Firebase app
  * config object.
