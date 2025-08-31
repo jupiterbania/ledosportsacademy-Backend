@@ -2,6 +2,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import {
   getAllDonations, Donation, 
@@ -16,6 +17,8 @@ import { useMemo, useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Users, CalendarDays, CircleDollarSign, Trophy, GalleryHorizontal, ArrowUpRight, ArrowDownRight, Scale } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { Table, TableBody, TableCell, TableRow, TableHead, TableHeader } from "@/components/ui/table";
 
 
 export default function AdminDashboard() {
@@ -167,6 +170,84 @@ export default function AdminDashboard() {
                 ))}
             </CardContent>
         </Card>
+        
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <Card className="xl:col-span-1">
+            <CardHeader>
+              <CardTitle>Recent Photos</CardTitle>
+               <CardDescription>Last 5 photos added to the gallery.</CardDescription>
+            </CardHeader>
+            <CardContent className="grid grid-cols-3 gap-2">
+              {photos.slice(0, 5).map(photo => (
+                <Link href="/admin/gallery" key={photo.id}>
+                  <div className="relative aspect-square w-full rounded-md overflow-hidden transition-all hover:scale-105 hover:shadow-lg">
+                    <Image src={photo.url} alt={photo.title || 'Gallery photo'} fill className="object-cover" sizes="100px" />
+                  </div>
+                </Link>
+              ))}
+            </CardContent>
+          </Card>
+
+          <Card className="xl:col-span-2">
+            <CardHeader>
+              <CardTitle>Recent Events</CardTitle>
+               <CardDescription>Last 5 created events.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Event</TableHead>
+                      <TableHead>Date</TableHead>
+                      <TableHead>On Slider</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {events.slice(0, 5).map(event => (
+                      <TableRow key={event.id}>
+                        <TableCell className="font-medium">{event.title}</TableCell>
+                        <TableCell>{new Date(event.date).toLocaleDateString()}</TableCell>
+                        <TableCell>
+                          <Badge variant={event.showOnSlider ? 'default' : 'outline'}>
+                            {event.showOnSlider ? 'Yes' : 'No'}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+            </CardContent>
+          </Card>
+          
+           <Card className="xl:col-span-3">
+            <CardHeader>
+              <CardTitle>Recent Achievements</CardTitle>
+              <CardDescription>Last 5 recorded achievements.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Achievement</TableHead>
+                      <TableHead>Date</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {achievements.slice(0, 5).map(achievement => (
+                      <TableRow key={achievement.id}>
+                        <TableCell>
+                          <div className="font-medium">{achievement.title}</div>
+                          <div className="text-sm text-muted-foreground line-clamp-1">{achievement.description}</div>
+                        </TableCell>
+                        <TableCell>{new Date(achievement.date).toLocaleDateString()}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+            </CardContent>
+          </Card>
+
+        </div>
     </div>
   );
 }
