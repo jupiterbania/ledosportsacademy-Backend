@@ -183,12 +183,10 @@ export const getMemberByEmail = async (email: string): Promise<Member | null> =>
     if (memberData.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
         memberData.isSuperAdmin = true;
         memberData.isAdmin = true;
-    }
-
-    if (memberData.isAdmin) {
+    } else if (memberData.isAdmin) {
         const adminRequestQ = query(collection(db, "adminRequests"), where("email", "==", email), where("status", "==", "approved"), limit(1));
         const adminRequestSnap = await getDocs(adminRequestQ);
-        if(adminRequestSnap.empty && !memberData.isSuperAdmin) {
+        if(adminRequestSnap.empty) {
             memberData.isAdmin = false;
         }
     }
