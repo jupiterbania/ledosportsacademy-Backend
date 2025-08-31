@@ -10,6 +10,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'zod';
+import {googleAI} from '@genkit-ai/googleai';
 
 const EnhanceTextInputSchema = z.object({
   topic: z
@@ -51,6 +52,15 @@ const getSystemPrompt = (context: EnhanceTextInput['context']) => `
     Generate a response that fits the provided output schema.
 `;
 
+const prompt = ai.definePrompt({
+    name: 'enhanceTextPrompt',
+    input: { schema: EnhanceTextInputSchema },
+    output: { schema: EnhanceTextOutputSchema },
+    prompt: getSystemPrompt('gallery'), // Default prompt, will be overridden in the flow
+    model: googleAI.model('gemini-1.5-flash-latest'),
+});
+
+
 const enhanceTextFlow = ai.defineFlow(
   {
     name: 'enhanceTextFlow',
@@ -58,14 +68,16 @@ const enhanceTextFlow = ai.defineFlow(
     outputSchema: EnhanceTextOutputSchema,
   },
   async (input) => {
-    const prompt = ai.definePrompt({
+    
+    const dynamicPrompt = await ai.definePrompt({
         name: `enhanceTextPrompt_${input.context}`,
         input: { schema: EnhanceTextInputSchema },
         output: { schema: EnhanceTextOutputSchema },
         prompt: getSystemPrompt(input.context) + '\n\nTopic: {{{topic}}}',
+        model: googleAI.model('gemini-1.5-flash-latest'),
     });
 
-    const llmResponse = await prompt(input);
+    const llmResponse = await dynamicPrompt(input);
     const output = llmResponse.output;
 
     if (!output) {
