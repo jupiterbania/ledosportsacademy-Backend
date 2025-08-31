@@ -50,6 +50,7 @@ const prompt = ai.definePrompt({
   output: {schema: EnhanceTextOutputSchema},
   prompt: `You are an expert in creative writing for a sports club. 
   Your task is to take the user-provided title and description and make them more engaging, professional, and exciting.
+  You should only use the text provided. Do not analyze or refer to any image.
 
   Here is the user's draft:
   Title: {{{title}}}
@@ -81,5 +82,6 @@ const enhanceTextFlow = ai.defineFlow(
     return output;
   }
 );
+
 
 
