@@ -1,9 +1,9 @@
 
 'use server';
 /**
- * @fileOverview An AI flow for enhancing a user-provided title and description.
+ * @fileOverview An AI flow for generating a title and description from a topic.
  *
- * - enhanceText - A function that takes a title and description and uses AI to improve them.
+ * - enhanceText - A function that takes a topic and uses AI to generate a title and description.
  * - EnhanceTextInput - The input type for the function.
  * - EnhanceTextOutput - The return type for the function.
  */
@@ -13,46 +13,45 @@ import { googleAI } from '@genkit-ai/googleai';
 import {z} from 'zod';
 
 const EnhanceTextInputSchema = z.object({
-  title: z
+  topic: z
     .string()
-    .optional()
     .describe(
-      "The user-provided title to be enhanced. Can be an empty string if only description is provided."
+      "The user-provided topic to generate a title and description from."
     ),
-  description: z
-    .string()
-    .optional()
-    .describe(
-        "The user-provided description to be enhanced. Can be an empty string if only title is provided."
-    ),
+  context: z.enum(['gallery', 'event', 'achievement']).default('gallery'),
 });
 export type EnhanceTextInput = z.infer<typeof EnhanceTextInputSchema>;
 
 const EnhanceTextOutputSchema = z.object({
-  title: z.string().describe('A creative and engaging title, improved from the user\'s input.'),
-  description: z.string().describe('A compelling, one-paragraph description, improved from the user\'s input.'),
+  title: z.string().describe('A creative and engaging title based on the topic.'),
+  description: z.string().describe('A compelling, one-paragraph description based on the topic.'),
 });
 export type EnhanceTextOutput = z.infer<typeof EnhanceTextOutputSchema>;
 
 
 /**
- * Enhances a title and description using a generative AI model.
- * @param input The input object containing the text to be enhanced.
- * @returns A promise that resolves to the enhanced title and description.
+ * Generates a title and description using a generative AI model.
+ * @param input The input object containing the topic.
+ * @returns A promise that resolves to the generated title and description.
  */
 export async function enhanceText(input: EnhanceTextInput): Promise<EnhanceTextOutput> {
   return enhanceTextFlow(input);
 }
 
 const buildPrompt = (input: EnhanceTextInput): string => {
-  const basePrompt = `You are an expert in creative writing for a sports club.
-Your task is to take the user-provided input and generate an engaging, professional, and exciting title and description.
-You should only use the text provided. Do not analyze or refer to any image.
-Enhance the provided text. If a field is empty, generate a suitable value for it based on the field that is provided. Do not just repeat the user's text; improve it significantly.
-${input.title ? `Title: ${input.title}` : ''}
-${input.description ? `Description: ${input.description}` : ''}`;
-
-  return basePrompt;
+  const contextPrompts = {
+      gallery: "You are an expert in creative writing for a sports club's photo gallery.",
+      event: "You are an expert in creative writing for a sports club's event announcements.",
+      achievement: "You are an expert in creative writing for a sports club's achievements.",
+  }
+  
+  return `
+    ${contextPrompts[input.context]}
+    Your task is to take the user-provided topic and generate an engaging, professional, and exciting title and description.
+    Do not analyze or refer to any image. Do not use markdown.
+    
+    Topic: ${input.topic}
+  `;
 }
 
 
