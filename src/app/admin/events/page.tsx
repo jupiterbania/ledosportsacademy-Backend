@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
@@ -19,6 +19,8 @@ import { Switch } from '@/components/ui/switch';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { enhanceText, EnhanceTextInput, EnhanceTextOutput } from '@/ai/flows/generate-photo-details-flow';
+import { PlusCircle, Trash, Pencil, Bot } from 'lucide-react';
+
 
 const eventSchema = z.object({
   id: z.string().optional(),
@@ -126,11 +128,13 @@ export default function EventsManagementPage() {
   const EventActions = ({ event }: { event: Event }) => (
     <div className="flex gap-2">
        <Button variant="outline" size="sm" onClick={() => handleEdit(event)}>
+         <Pencil className="h-4 w-4 mr-2" />
          Edit
       </Button>
        <AlertDialog>
           <AlertDialogTrigger asChild>
              <Button variant="destructive" size="sm">
+                <Trash className="h-4 w-4 mr-2" />
                 Delete
               </Button>
           </AlertDialogTrigger>
@@ -154,7 +158,10 @@ export default function EventsManagementPage() {
     <div className="flex flex-1 flex-col gap-4 md:gap-8">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Events Management</CardTitle>
+          <div>
+            <CardTitle>Events Management</CardTitle>
+            <CardDescription>Plan, create, and manage all club events.</CardDescription>
+          </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
                <Button size="sm" onClick={() => {
@@ -171,16 +178,30 @@ export default function EventsManagementPage() {
                   setAiTopic('');
                   setIsDialogOpen(true);
                 }}>
+                <PlusCircle className="h-4 w-4 mr-2" />
                 Add Event
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-2xl max-h-[90vh] flex flex-col">
+            <DialogContent className="sm:max-w-3xl max-h-[90vh] flex flex-col">
               <DialogHeader>
                 <DialogTitle>{form.getValues("id") ? 'Edit Event' : 'Add New Event'}</DialogTitle>
               </DialogHeader>
               <div className="flex-grow overflow-y-auto pr-4">
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                     <FormField
+                      control={form.control}
+                      name="photoUrl"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Photo URL</FormLabel>
+                          <FormControl>
+                            <Input placeholder="https://placehold.co/600x400.png" {...field} />
+                          </FormControl>
+                           <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                     <Card className="bg-muted/50 p-4">
                       <div className="space-y-2">
                           <p className="text-sm font-medium">Generate with AI</p>
@@ -195,37 +216,39 @@ export default function EventsManagementPage() {
                                 className="flex-grow"
                             />
                             <Button type="button" variant="outline" onClick={handleGenerate} disabled={isAiLoading}>
-                                {isAiLoading ? 'Generating...' : 'Generate'}
+                                {isAiLoading ? 'Generating...' : <><Bot className="h-4 w-4 mr-2"/> Generate</>}
                             </Button>
                           </div>
                       </div>
                     </Card>
-                    <FormField
-                      control={form.control}
-                      name="photoUrl"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Photo URL</FormLabel>
-                          <FormControl>
-                            <Input placeholder="https://placehold.co/600x400.png" {...field} />
-                          </FormControl>
-                           <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="title"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Title</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Annual General Meeting" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="title"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Title</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Annual General Meeting" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="date"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Date</FormLabel>
+                            <FormControl>
+                              <Input type="date" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                     <FormField
                       control={form.control}
                       name="description"
@@ -234,19 +257,6 @@ export default function EventsManagementPage() {
                           <FormLabel>Description</FormLabel>
                           <FormControl>
                             <Textarea placeholder="Join us for our annual general meeting..." {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="date"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Date</FormLabel>
-                          <FormControl>
-                             <Input type="date" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>

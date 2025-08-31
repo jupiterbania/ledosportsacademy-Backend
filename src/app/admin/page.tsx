@@ -23,6 +23,8 @@ import {
   TimelineContent,
 } from "@/components/ui/timeline";
 import { useToast } from "@/hooks/use-toast";
+import { Users, CalendarDays, CircleDollarSign, Trophy } from "lucide-react";
+
 
 export default function AdminDashboard() {
   const [donations, setDonations] = useState<Donation[]>([]);
@@ -37,12 +39,20 @@ export default function AdminDashboard() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      setDonations(await getAllDonations());
-      setCollections(await getAllCollections());
-      setExpenses(await getAllExpenses());
-      setAchievements(await getAllAchievements());
-      setMembers(await getAllMembers());
-      setEvents(await getAllEvents());
+      const [donationsData, collectionsData, expensesData, achievementsData, membersData, eventsData] = await Promise.all([
+        getAllDonations(),
+        getAllCollections(),
+        getAllExpenses(),
+        getAllAchievements(),
+        getAllMembers(),
+        getAllEvents(),
+      ]);
+      setDonations(donationsData);
+      setCollections(collectionsData);
+      setExpenses(expensesData);
+      setAchievements(achievementsData);
+      setMembers(membersData);
+      setEvents(eventsData);
     } catch (error) {
       console.error("Failed to fetch data:", error);
       toast({ title: "Error", description: "Failed to load dashboard data.", variant: "destructive" });
@@ -52,7 +62,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     fetchData();
-  }, [toast]);
+  }, []);
 
   const totalDonations = useMemo(() => donations.reduce((sum, d) => sum + (d.amount || 0), 0), [donations]);
   const totalCollections = useMemo(() => collections.reduce((sum, c) => sum + c.amount, 0), [collections]);
@@ -60,6 +70,7 @@ export default function AdminDashboard() {
   
   const monthlyFinancials = useMemo(() => {
     const data: { [key: string]: { month: string, income: number, expenses: number } } = {};
+    const monetaryDonations = donations.filter(d => typeof d.amount === 'number');
 
     const processItems = (items: any[], type: 'income' | 'expenses') => {
         items.forEach(item => {
@@ -71,7 +82,7 @@ export default function AdminDashboard() {
         });
     };
     
-    processItems(donations, 'income');
+    processItems(monetaryDonations, 'income');
     processItems(collections, 'income');
     processItems(expenses, 'expenses');
     
@@ -79,53 +90,54 @@ export default function AdminDashboard() {
   }, [donations, collections, expenses]);
 
 
+  const summaryCards = [
+    { 
+      href: "/admin/members", 
+      title: "Total Members", 
+      value: members.length,
+      description: "Currently active members",
+      icon: Users
+    },
+    { 
+      href: "/admin/events", 
+      title: "Upcoming Events", 
+      value: events.filter(e => new Date(e.date) >= new Date()).length,
+      description: `${events.length} total events`,
+      icon: CalendarDays
+    },
+    { 
+      href: "/admin/finances", 
+      title: "Net Balance", 
+      value: `Rs ${new Intl.NumberFormat('en-IN').format(totalDonations + totalCollections - totalExpenses)}`,
+      description: "Income - Expenses",
+      icon: CircleDollarSign
+    },
+    { 
+      href: "/admin/achievements", 
+      title: "Achievements", 
+      value: achievements.length,
+      description: "Total achievements recorded",
+      icon: Trophy
+    },
+  ]
+
   return (
     <div className="flex flex-1 flex-col gap-4 md:gap-8">
        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Link href="/admin/members">
-              <Card className="transition-all duration-300 hover:shadow-cyan-500/20 hover:-translate-y-1">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium">Total Members</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                      <div className="text-2xl font-bold">{members.length}</div>
-                      <p className="text-xs text-muted-foreground">Currently active members</p>
-                  </CardContent>
-              </Card>
-            </Link>
-            <Link href="/admin/events">
-              <Card className="transition-all duration-300 hover:shadow-cyan-500/20 hover:-translate-y-1">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium">Upcoming Events</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                      <div className="text-2xl font-bold">{events.filter(e => new Date(e.date) >= new Date()).length}</div>
-                      <p className="text-xs text-muted-foreground">{events.length} total events</p>
-                  </CardContent>
-              </Card>
-            </Link>
-            <Link href="/admin/finances">
-              <Card className="transition-all duration-300 hover:shadow-cyan-500/20 hover:-translate-y-1">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium">Net Balance</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                      <div className="text-2xl font-bold">Rs {new Intl.NumberFormat('en-IN').format(totalDonations + totalCollections - totalExpenses)}</div>
-                      <p className="text-xs text-muted-foreground">Income - Expenses</p>
-                  </CardContent>
-              </Card>
-            </Link>
-            <Link href="/admin/achievements">
-              <Card className="transition-all duration-300 hover:shadow-cyan-500/20 hover:-translate-y-1">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium">Total Achievements</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                      <div className="text-2xl font-bold">{achievements.length}</div>
-                      <p className="text-xs text-muted-foreground">Total achievements recorded</p>
-                  </CardContent>
-              </Card>
-            </Link>
+            {summaryCards.map(card => (
+              <Link href={card.href} key={card.title}>
+                <Card className="transition-all duration-300 hover:shadow-cyan-500/20 hover:-translate-y-1">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">{card.title}</CardTitle>
+                        <card.icon className="h-5 w-5 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">{card.value}</div>
+                        <p className="text-xs text-muted-foreground">{card.description}</p>
+                    </CardContent>
+                </Card>
+              </Link>
+            ))}
         </div>
 
       <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
@@ -140,7 +152,7 @@ export default function AdminDashboard() {
                 <LineChart data={monthlyFinancials}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
-                  <YAxis tickFormatter={(value) => `Rs ${new Intl.NumberFormat('en-IN').format(value)}`} />
+                  <YAxis tickFormatter={(value) => `Rs ${new Intl.NumberFormat('en-IN', {notation: 'compact'})}`} />
                   <Tooltip formatter={(value: number) => `Rs ${new Intl.NumberFormat('en-IN').format(value)}`} contentStyle={{ background: "hsl(var(--background))", borderColor: "hsl(var(--border))" }} />
                   <Legend />
                   <Line type="monotone" dataKey="income" stroke="hsl(var(--chart-2))" name="Income" />

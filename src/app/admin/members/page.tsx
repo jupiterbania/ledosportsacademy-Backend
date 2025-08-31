@@ -17,6 +17,8 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import { PlusCircle, Trash, Pencil } from 'lucide-react';
+
 
 const memberSchema = z.object({
   id: z.string().optional(),
@@ -31,6 +33,7 @@ const memberSchema = z.object({
 type MemberFormValues = z.infer<typeof memberSchema>;
 
 function calculateAge(dob: string) {
+  if (!dob) return 'N/A';
   const birthDate = new Date(dob);
   const today = new Date();
   let age = today.getFullYear() - birthDate.getFullYear();
@@ -110,11 +113,13 @@ export default function MembersManagementPage() {
   const MemberActions = ({ member }: { member: Member}) => (
      <div className="flex gap-2">
        <Button variant="outline" size="sm" onClick={() => handleEdit(member)}>
+        <Pencil className="h-4 w-4 mr-2" />
         Edit
       </Button>
         <AlertDialog>
           <AlertDialogTrigger asChild>
               <Button variant="destructive" size="sm">
+                <Trash className="h-4 w-4 mr-2" />
                 Delete
               </Button>
           </AlertDialogTrigger>
@@ -138,7 +143,10 @@ export default function MembersManagementPage() {
     <div className="flex flex-1 flex-col gap-4 md:gap-8">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Members Management</CardTitle>
+          <div>
+            <CardTitle>Members Management</CardTitle>
+            <CardDescription>View, add, and manage club members.</CardDescription>
+          </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
                <Button size="sm" onClick={() => {
@@ -153,10 +161,11 @@ export default function MembersManagementPage() {
                   });
                   setIsDialogOpen(true);
                 }}>
+                <PlusCircle className="h-4 w-4 mr-2" />
                 Add Member
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-xl max-h-[90vh] flex flex-col">
+            <DialogContent className="sm:max-w-2xl max-h-[90vh] flex flex-col">
               <DialogHeader>
                 <DialogTitle>{form.getValues("id") ? 'Edit Member' : 'Add New Member'}</DialogTitle>
               </DialogHeader>
@@ -165,30 +174,45 @@ export default function MembersManagementPage() {
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                     <FormField
                       control={form.control}
-                      name="name"
+                      name="photoUrl"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Name</FormLabel>
+                          <FormLabel>Photo URL</FormLabel>
                           <FormControl>
-                            <Input placeholder="John Doe" {...field} />
+                            <Input placeholder="https://placehold.co/100x100.png" {...field} />
                           </FormControl>
-                          <FormMessage />
+                           <FormMessage />
                         </FormItem>
                       )}
                     />
-                     <FormField
-                      control={form.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Email</FormLabel>
-                          <FormControl>
-                            <Input placeholder="member@example.com" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                            <FormItem>
+                            <FormLabel>Name</FormLabel>
+                            <FormControl>
+                                <Input placeholder="John Doe" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                            </FormItem>
+                        )}
+                        />
+                        <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                            <FormItem>
+                            <FormLabel>Email</FormLabel>
+                            <FormControl>
+                                <Input placeholder="member@example.com" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                            </FormItem>
+                        )}
+                        />
+                    </div>
                     <FormField
                       control={form.control}
                       name="phone"
@@ -244,19 +268,6 @@ export default function MembersManagementPage() {
                         )}
                         />
                     </div>
-                    <FormField
-                      control={form.control}
-                      name="photoUrl"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Photo URL</FormLabel>
-                          <FormControl>
-                            <Input placeholder="https://placehold.co/100x100.png" {...field} />
-                          </FormControl>
-                           <FormMessage />
-                        </FormItem>
-                      )}
-                    />
                     <DialogFooter className="sticky bottom-0 bg-background py-4 -mx-6 px-6 border-t">
                       <DialogClose asChild>
                         <Button type="button" variant="ghost">Cancel</Button>
@@ -291,7 +302,7 @@ export default function MembersManagementPage() {
                    <div className="flex items-center gap-4 text-sm">
                       <div className="flex items-center">
                         <span className="font-medium mr-2">Age:</span>
-                        <Badge variant="outline">{member.dob ? calculateAge(member.dob) : 'N/A'}</Badge>
+                        <Badge variant="outline">{calculateAge(member.dob || '')}</Badge>
                       </div>
                       <div className="flex items-center">
                         <span className="font-medium mr-2">Blood:</span>
@@ -336,7 +347,7 @@ export default function MembersManagementPage() {
                         </div>
                     </TableCell>
                     <TableCell>{new Date(member.joinDate).toLocaleDateString()}</TableCell>
-                    <TableCell>{member.dob ? calculateAge(member.dob) : 'N/A'}</TableCell>
+                    <TableCell>{calculateAge(member.dob || '')}</TableCell>
                     <TableCell>{member.bloodGroup || 'N/A'}</TableCell>
                     <TableCell>
                       <MemberActions member={member} />

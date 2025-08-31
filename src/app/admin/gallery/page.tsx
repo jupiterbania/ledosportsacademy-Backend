@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
@@ -19,6 +19,8 @@ import Image from 'next/image';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { enhanceText, EnhanceTextInput, EnhanceTextOutput } from '@/ai/flows/generate-photo-details-flow';
+import { PlusCircle, Trash, Pencil, Edit, Bot } from 'lucide-react';
+
 
 const photoSchema = z.object({
   id: z.string().optional(),
@@ -127,11 +129,13 @@ export default function GalleryManagementPage() {
   const PhotoActions = ({ photo }: { photo: Photo }) => (
     <div className="flex gap-2">
        <Button variant="outline" size="sm" onClick={() => handleEdit(photo)}>
+         <Pencil className="h-4 w-4 mr-2" />
          Edit
       </Button>
        <AlertDialog>
           <AlertDialogTrigger asChild>
              <Button variant="destructive" size="sm">
+                <Trash className="h-4 w-4 mr-2" />
                 Delete
               </Button>
           </AlertDialogTrigger>
@@ -155,7 +159,10 @@ export default function GalleryManagementPage() {
     <div className="flex flex-1 flex-col gap-4 md:gap-8">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Gallery Management</CardTitle>
+          <div>
+            <CardTitle>Gallery Management</CardTitle>
+            <CardDescription>Add, edit, and manage photos in your gallery.</CardDescription>
+          </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
                <Button size="sm" onClick={() => {
@@ -170,16 +177,30 @@ export default function GalleryManagementPage() {
                   setAiTopic('');
                   setIsDialogOpen(true);
                 }}>
+                <PlusCircle className="h-4 w-4 mr-2" />
                 Add Photo
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-xl max-h-[90vh] flex flex-col">
+            <DialogContent className="sm:max-w-3xl max-h-[90vh] flex flex-col">
               <DialogHeader>
                 <DialogTitle>{form.getValues("id") ? 'Edit Photo' : 'Add New Photo'}</DialogTitle>
               </DialogHeader>
                <div className="flex-grow overflow-y-auto pr-4">
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="url"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Photo URL</FormLabel>
+                          <FormControl>
+                            <Input placeholder="https://placehold.co/600x400.png" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                     <Card className="bg-muted/50 p-4">
                       <div className="space-y-2">
                           <p className="text-sm font-medium">Generate with AI</p>
@@ -194,51 +215,40 @@ export default function GalleryManagementPage() {
                                 className="flex-grow"
                             />
                             <Button type="button" variant="outline" onClick={handleGenerate} disabled={isAiLoading}>
-                                {isAiLoading ? 'Generating...' : 'Generate'}
+                                {isAiLoading ? 'Generating...' : <> <Bot className="h-4 w-4 mr-2"/> Generate</>}
                             </Button>
                           </div>
                       </div>
                     </Card>
-                    <FormField
-                      control={form.control}
-                      name="url"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Photo URL</FormLabel>
-                          <FormControl>
-                            <Input placeholder="https://placehold.co/600x400.png" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="title"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Title (Optional)</FormLabel>
-                          <FormControl>
-                            <Input placeholder="A nice title for the photo" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="description"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Description (Optional)</FormLabel>
-                          <FormControl>
-                            <Textarea placeholder="A short description of the photo" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
 
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="title"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Title (Optional)</FormLabel>
+                            <FormControl>
+                              <Input placeholder="A nice title for the photo" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="description"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Description (Optional)</FormLabel>
+                            <FormControl>
+                              <Textarea placeholder="A short description of the photo" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                      <FormField
                       control={form.control}
                       name="isSliderPhoto"

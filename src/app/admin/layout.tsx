@@ -11,7 +11,10 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarTrigger
+  SidebarTrigger,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarSeparator
 } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -22,6 +25,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { LayoutDashboard, BarChart3, GalleryHorizontal, CalendarDays, Trophy, Users, CircleDollarSign, Bell, FileDown, UserCheck, Menu, Settings, LogOut, User as UserIcon } from 'lucide-react';
+import { ThemeToggle } from '@/components/theme-toggle';
+
 
 function AdminLayout({ children }: { children: React.ReactNode }) {
   const { user, loading, isAdmin, isSuperAdmin } = useAuth();
@@ -57,29 +63,37 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
       return <>{children}</>;
   }
 
-  const baseMenuItems = [
-    { href: '/admin', label: 'Dashboard' },
-    { href: '/admin/analytics', label: 'Analytics' },
-    { href: '/admin/gallery', label: 'Gallery' },
-    { href: '/admin/events', label: 'Events' },
-    { href: '/admin/achievements', label: 'Achievements' },
-    { href: '/admin/members', label: 'Members' },
-    { href: '/admin/finances', label: 'Finances' },
-    { href: '/admin/notifications', label: 'Notifications' },
-    { href: '/admin/export', label: 'PDF Export' },
+  const overviewMenuItems = [
+    { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
+    { href: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
   ];
+
+  const contentMenuItems = [
+    { href: '/admin/gallery', label: 'Gallery', icon: GalleryHorizontal },
+    { href: '/admin/events', label: 'Events', icon: CalendarDays },
+    { href: '/admin/achievements', label: 'Achievements', icon: Trophy },
+  ];
+
+  const managementMenuItems = [
+    { href: '/admin/members', label: 'Members', icon: Users },
+    { href: '/admin/finances', label: 'Finances', icon: CircleDollarSign },
+    { href: '/admin/notifications', label: 'Notifications', icon: Bell },
+  ];
+  
+  const toolsMenuItems = [
+     { href: '/admin/export', label: 'PDF Export', icon: FileDown },
+  ]
 
   const superAdminMenuItems = [
-     { href: '/admin/requests', label: 'Admin Requests' },
+     { href: '/admin/requests', label: 'Admin Requests', icon: UserCheck },
   ];
 
-  const menuItems = isSuperAdmin ? [...baseMenuItems, ...superAdminMenuItems] : baseMenuItems;
 
-
-  const NavLink = ({ href, label, isActive }: { href: string; label: string; isActive: boolean; }) => (
+  const NavLink = ({ href, label, icon: Icon, isActive }: { href: string; label: string; icon: React.ElementType, isActive: boolean; }) => (
     <SidebarMenuItem>
       <Link href={href} passHref>
         <SidebarMenuButton tooltip={label} isActive={isActive} size="lg" className="justify-center md:justify-start">
+          <Icon className="size-5" />
           <span className="md:inline hidden">{label}</span>
         </SidebarMenuButton>
       </Link>
@@ -91,19 +105,53 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
       <SidebarHeader>
         <Link href="/" className="flex items-center gap-2 font-semibold">
            <Image src="https://iili.io/KFLBPv1.png" alt="LEDO SPORTS ACADEMY Logo" width={40} height={40} />
-           <span className="text-lg hidden group-data-[collapsible=icon]:hidden">LEDO SPORTS ACADEMY</span>
+           <span className="text-lg hidden group-data-[collapsible=icon]:hidden">LEDO SPORTS</span>
         </Link>
-        <SidebarTrigger className="ml-auto" />
       </SidebarHeader>
       <SidebarContent className="flex-1 overflow-y-auto">
         <SidebarMenu>
-          {menuItems.map((item) => (
-            <NavLink key={item.href} {...item} isActive={pathname === item.href} />
-          ))}
+          <SidebarGroup>
+            <SidebarGroupLabel>Overview</SidebarGroupLabel>
+             {overviewMenuItems.map((item) => (
+                <NavLink key={item.href} {...item} isActive={pathname === item.href} />
+             ))}
+          </SidebarGroup>
+
+          <SidebarSeparator />
+          
+          <SidebarGroup>
+            <SidebarGroupLabel>Content</SidebarGroupLabel>
+             {contentMenuItems.map((item) => (
+                <NavLink key={item.href} {...item} isActive={pathname === item.href} />
+             ))}
+          </SidebarGroup>
+
+          <SidebarSeparator />
+
+           <SidebarGroup>
+            <SidebarGroupLabel>Management</SidebarGroupLabel>
+             {managementMenuItems.map((item) => (
+                <NavLink key={item.href} {...item} isActive={pathname === item.href} />
+             ))}
+              {isSuperAdmin && superAdminMenuItems.map((item) => (
+                <NavLink key={item.href} {...item} isActive={pathname === item.href} />
+             ))}
+          </SidebarGroup>
+          
+           <SidebarSeparator />
+           
+           <SidebarGroup>
+             <SidebarGroupLabel>Tools</SidebarGroupLabel>
+              {toolsMenuItems.map((item) => (
+                <NavLink key={item.href} {...item} isActive={pathname === item.href} />
+              ))}
+           </SidebarGroup>
         </SidebarMenu>
       </SidebarContent>
     </Sidebar>
   );
+  
+  const allMenuItems = [...overviewMenuItems, ...contentMenuItems, ...managementMenuItems, ...(isSuperAdmin ? superAdminMenuItems : []), ...toolsMenuItems];
 
   return (
     <div className="flex h-screen w-full">
@@ -113,7 +161,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon" className="shrink-0 md:hidden">
-                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+                 <Menu className="h-6 w-6" />
                 <span className="sr-only">Toggle navigation menu</span>
               </Button>
             </SheetTrigger>
@@ -127,18 +175,17 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                 </SheetTitle>
               </SheetHeader>
               <nav className="flex-1 overflow-y-auto grid gap-2 text-lg font-medium mt-4">
-                {menuItems.map((item) => (
+                {allMenuItems.map((item) => (
                   <Link key={item.href} href={item.href} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
+                    <item.icon className="h-5 w-5"/>
                     {item.label}
                   </Link>
                 ))}
-                 <Link href="/admin/profile" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
-                    Profile
-                  </Link>
               </nav>
             </SheetContent>
           </Sheet>
           <div className="w-full flex-1" />
+           <ThemeToggle />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="secondary" size="icon" className="rounded-full">
@@ -152,9 +199,15 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
             <DropdownMenuContent align="end" className="aurora-card">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => router.push('/admin/profile')}>Profile</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push('/admin/profile')}>
+                <UserIcon className="mr-2 h-4 w-4" />
+                <span>Profile</span>
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout}>
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Logout</span>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
