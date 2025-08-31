@@ -12,13 +12,19 @@ import {ai} from '@/ai/genkit';
 import {z} from 'zod';
 
 const EnhanceTextInputSchema = z.object({
+  topic: z
+    .string()
+    .optional()
+    .describe('A topic or keywords provided by the user to generate a title and description from scratch.'),
   title: z
     .string()
+    .optional()
     .describe(
       "The user-provided title to be enhanced. Can be an empty string if only description is provided."
     ),
   description: z
     .string()
+    .optional()
     .describe(
         "The user-provided description to be enhanced. Can be an empty string if only title is provided."
     ),
@@ -48,27 +54,31 @@ const prompt = ai.definePrompt({
   model: 'googleai/gemini-1.5-flash-preview',
   input: {schema: EnhanceTextInputSchema},
   output: {schema: EnhanceTextOutputSchema},
-  prompt: `You are an expert in creative writing for a sports club. 
-  Your task is to take the user-provided title and/or description and make them more engaging, professional, and exciting.
+  prompt: `You are an expert in creative writing for a sports club.
+  Your task is to take the user-provided input and generate an engaging, professional, and exciting title and description.
   You should only use the text provided. Do not analyze or refer to any image.
 
-  Here is the user's draft:
+  {{#if topic}}
+  The user has provided the following topic. Generate a brand new, compelling title and description based on it.
+  Topic: {{{topic}}}
+  {{else}}
+  The user has provided the following draft. Enhance the provided text. If a field is empty, generate a suitable value for it based on the field that is provided. Do not just repeat the user's text; improve it significantly.
   {{#if title}}
   Title: {{{title}}}
   {{/if}}
   {{#if description}}
   Description: {{{description}}}
   {{/if}}
+  {{/if}}
 
   {{#ifCond context "==" "gallery"}}
-  Rewrite the provided text with a tone that is engaging and appropriate for a photo gallery caption. If a field is empty, generate a suitable value for it based on the provided field.
+  Generate the response with a tone that is engaging and appropriate for a photo gallery caption.
   {{/ifCond}}
 
   {{#ifCond context "==" "event"}}
-  Rewrite the provided text with a tone that is exciting and inviting, suitable for promoting an upcoming event. If a field is empty, generate a suitable value for it based on the provided field.
+  Generate the response with a tone that is exciting and inviting, suitable for promoting an upcoming event.
   {{/ifCond}}
-  
-  Do not just repeat the user's text. Enhance it significantly. If a field was empty, create a compelling new version for it.`,
+  `,
 });
 
 
