@@ -18,11 +18,4 @@ export const ai = genkit({
   plugins: [
     googleAI(),
   ],
-  models: {
-    'gemini-pro-vision': {
-        model: 'gemini-pro-vision',
-        path: 'models/gemini-pro-vision',
-        version: 'v1beta'
-    },
-  },
 });

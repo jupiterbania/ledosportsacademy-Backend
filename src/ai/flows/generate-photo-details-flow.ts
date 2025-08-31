@@ -40,6 +40,7 @@ export async function generatePhotoDetails(input: GeneratePhotoDetailsInput): Pr
 
 const prompt = ai.definePrompt({
   name: 'generatePhotoDetailsPrompt',
+  model: 'googleai/gemini-pro-vision',
   input: {schema: GeneratePhotoDetailsInputSchema},
   output: {schema: GeneratePhotoDetailsOutputSchema},
   prompt: `You are an expert in creative writing for photo galleries. 
