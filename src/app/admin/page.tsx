@@ -10,20 +10,11 @@ import {
   getAllAchievements, Achievement,
   getAllMembers, Member,
   getAllEvents, Event,
+  getAllPhotos, Photo,
 } from "@/lib/data";
 import { useMemo, useState, useEffect } from "react";
-import { LineChart, Line, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from "recharts";
-import {
-  Timeline,
-  TimelineItem,
-  TimelineConnector,
-  TimelineHeader,
-  TimelineIcon,
-  TimelineTitle,
-  TimelineContent,
-} from "@/components/ui/timeline";
 import { useToast } from "@/hooks/use-toast";
-import { Users, CalendarDays, CircleDollarSign, Trophy } from "lucide-react";
+import { Users, CalendarDays, CircleDollarSign, Trophy, GalleryHorizontal, ArrowUpRight, ArrowDownRight, Scale } from "lucide-react";
 
 
 export default function AdminDashboard() {
@@ -33,19 +24,21 @@ export default function AdminDashboard() {
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [members, setMembers] = useState<Member[]>([]);
   const [events, setEvents] = useState<Event[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [photos, setPhotos] = useState<Photo[]>([]);
+  const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [donationsData, collectionsData, expensesData, achievementsData, membersData, eventsData] = await Promise.all([
+      const [donationsData, collectionsData, expensesData, achievementsData, membersData, eventsData, photosData] = await Promise.all([
         getAllDonations(),
         getAllCollections(),
         getAllExpenses(),
         getAllAchievements(),
         getAllMembers(),
         getAllEvents(),
+        getAllPhotos(),
       ]);
       setDonations(donationsData);
       setCollections(collectionsData);
@@ -53,6 +46,7 @@ export default function AdminDashboard() {
       setAchievements(achievementsData);
       setMembers(membersData);
       setEvents(eventsData);
+      setPhotos(photosData);
     } catch (error) {
       console.error("Failed to fetch data:", error);
       toast({ title: "Error", description: "Failed to load dashboard data.", variant: "destructive" });
@@ -68,61 +62,73 @@ export default function AdminDashboard() {
   const totalCollections = useMemo(() => collections.reduce((sum, c) => sum + c.amount, 0), [collections]);
   const totalExpenses = useMemo(() => expenses.reduce((sum, e) => sum + e.amount, 0), [expenses]);
   
-  const monthlyFinancials = useMemo(() => {
-    const data: { [key: string]: { month: string, income: number, expenses: number } } = {};
-    const monetaryDonations = donations.filter(d => typeof d.amount === 'number');
-
-    const processItems = (items: any[], type: 'income' | 'expenses') => {
-        items.forEach(item => {
-            const month = new Date(item.date).toLocaleString('default', { month: 'short', year: 'numeric' });
-            if (!data[month]) {
-                data[month] = { month, income: 0, expenses: 0 };
-            }
-            data[month][type] += item.amount || 0;
-        });
-    };
-    
-    processItems(monetaryDonations, 'income');
-    processItems(collections, 'income');
-    processItems(expenses, 'expenses');
-    
-    return Object.values(data).sort((a,b) => new Date(a.month).getTime() - new Date(b.month).getTime());
-  }, [donations, collections, expenses]);
-
-
   const summaryCards = [
     { 
       href: "/admin/members", 
       title: "Total Members", 
       value: members.length,
-      description: "Currently active members",
       icon: Users
+    },
+     { 
+      href: "/admin/gallery", 
+      title: "Total Photos", 
+      value: photos.length,
+      icon: GalleryHorizontal
     },
     { 
       href: "/admin/events", 
-      title: "Upcoming Events", 
-      value: events.filter(e => new Date(e.date) >= new Date()).length,
-      description: `${events.length} total events`,
+      title: "Total Events", 
+      value: events.length,
       icon: CalendarDays
+    },
+    { 
+      href: "/admin/achievements", 
+      title: "Total Achievements", 
+      value: achievements.length,
+      icon: Trophy
+    },
+  ];
+  
+   const financeCards = [
+    { 
+      href: "/admin/finances", 
+      title: "Total Donations", 
+      value: `Rs ${new Intl.NumberFormat('en-IN').format(totalDonations)}`,
+      icon: ArrowUpRight,
+      color: "text-green-500"
+    },
+    { 
+      href: "/admin/finances", 
+      title: "Total Collections", 
+      value: `Rs ${new Intl.NumberFormat('en-IN').format(totalCollections)}`,
+      icon: ArrowUpRight,
+      color: "text-green-500"
+    },
+    { 
+      href: "/admin/finances", 
+      title: "Total Expenses", 
+      value: `Rs ${new Intl.NumberFormat('en-IN').format(totalExpenses)}`,
+      icon: ArrowDownRight,
+      color: "text-red-500"
     },
     { 
       href: "/admin/finances", 
       title: "Net Balance", 
       value: `Rs ${new Intl.NumberFormat('en-IN').format(totalDonations + totalCollections - totalExpenses)}`,
-      description: "Income - Expenses",
-      icon: CircleDollarSign
+      icon: Scale,
+      color: "text-blue-500"
     },
-    { 
-      href: "/admin/achievements", 
-      title: "Achievements", 
-      value: achievements.length,
-      description: "Total achievements recorded",
-      icon: Trophy
-    },
-  ]
+  ];
 
   return (
     <div className="flex flex-1 flex-col gap-4 md:gap-8">
+      <Card>
+        <CardHeader>
+          <CardTitle>Dashboard</CardTitle>
+          <CardDescription>A quick overview of your club's status.</CardDescription>
+        </CardHeader>
+      </Card>
+
        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {summaryCards.map(card => (
               <Link href={card.href} key={card.title}>
@@ -133,60 +139,33 @@ export default function AdminDashboard() {
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{card.value}</div>
-                        <p className="text-xs text-muted-foreground">{card.description}</p>
                     </CardContent>
                 </Card>
               </Link>
             ))}
         </div>
-
-      <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-         <Card className="xl:col-span-2">
-          <CardHeader>
-            <CardTitle>Financial Overview</CardTitle>
-            <CardDescription>Monthly income vs expenses.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[350px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={monthlyFinancials}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
-                  <YAxis tickFormatter={(value) => `Rs ${new Intl.NumberFormat('en-IN', {notation: 'compact'})}`} />
-                  <Tooltip formatter={(value: number) => `Rs ${new Intl.NumberFormat('en-IN').format(value)}`} contentStyle={{ background: "hsl(var(--background))", borderColor: "hsl(var(--border))" }} />
-                  <Legend />
-                  <Line type="monotone" dataKey="income" stroke="hsl(var(--chart-2))" name="Income" />
-                  <Line type="monotone" dataKey="expenses" stroke="hsl(var(--chart-1))" name="Expenses" />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="xl:col-span-1">
-          <CardHeader>
-            <CardTitle>Recent Achievements</CardTitle>
-            <CardDescription>A look at the latest accomplishments.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[350px] overflow-y-auto pr-4">
-              <Timeline>
-                {achievements.slice(0, 5).map((achievement, index) => (
-                  <TimelineItem key={achievement.id}>
-                    <TimelineConnector />
-                    <TimelineHeader>
-                      <TimelineIcon />
-                      <TimelineTitle>{achievement.title}</TimelineTitle>
-                    </TimelineHeader>
-                    <TimelineContent>
-                      <p className="text-sm text-muted-foreground">{new Date(achievement.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                    </TimelineContent>
-                  </TimelineItem>
+        
+        <Card>
+            <CardHeader>
+                <CardTitle>Financial Summary</CardTitle>
+                <CardDescription>An overview of your club's finances.</CardDescription>
+            </CardHeader>
+            <CardContent className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                 {financeCards.map(card => (
+                  <Link href={card.href} key={card.title}>
+                    <Card className="transition-all duration-300 hover:shadow-cyan-500/20 hover:-translate-y-1">
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">{card.title}</CardTitle>
+                            <card.icon className={cn("h-5 w-5 text-muted-foreground", card.color)} />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">{card.value}</div>
+                        </CardContent>
+                    </Card>
+                  </Link>
                 ))}
-              </Timeline>
-            </div>
-          </CardContent>
+            </CardContent>
         </Card>
-      </div>
     </div>
   );
 }
