@@ -16,6 +16,7 @@ import * as z from "zod";
 import { getAllAchievements, Achievement, addAchievement, updateAchievement, deleteAchievement } from "@/lib/data";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import Image from 'next/image';
+import { enhanceText, EnhanceTextInput, EnhanceTextOutput } from '@/ai/flows/generate-photo-details-flow';
 
 const achievementSchema = z.object({
   id: z.string().optional(),
@@ -30,6 +31,7 @@ type AchievementFormValues = z.infer<typeof achievementSchema>;
 export default function AchievementsManagementPage() {
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isAiLoading, setIsAiLoading] = useState(false);
   const { toast } = useToast();
 
   const fetchAchievements = async () => {
@@ -81,6 +83,26 @@ export default function AchievementsManagementPage() {
       toast({ title: "Achievement Deleted", description: "The achievement has been removed.", variant: "destructive" });
     } catch (error) {
        toast({ title: "Error", description: "Something went wrong.", variant: "destructive" });
+    }
+  };
+
+  const handleEnhance = async () => {
+    const { title, description } = form.getValues();
+    if (!title && !description) {
+        toast({ title: "Input Required", description: "Please enter a title or description to enhance.", variant: "destructive" });
+        return;
+    }
+
+    setIsAiLoading(true);
+    try {
+        const enhanced: EnhanceTextOutput = await enhanceText({ title, description });
+        form.setValue('title', enhanced.title, { shouldValidate: true });
+        form.setValue('description', enhanced.description, { shouldValidate: true });
+        toast({ title: "Content Enhanced", description: "The title and description have been improved by AI." });
+    } catch (error) {
+        toast({ title: "AI Enhancement Failed", description: "Could not enhance the text.", variant: "destructive" });
+    } finally {
+        setIsAiLoading(false);
     }
   };
   
@@ -139,6 +161,17 @@ export default function AchievementsManagementPage() {
                <div className="flex-grow overflow-y-auto pr-4">
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                    <Card className="bg-muted/50 p-4">
+                      <div className="space-y-2">
+                          <p className="text-sm font-medium">AI Enhancement</p>
+                          <p className="text-xs text-muted-foreground">
+                            Write a simple title and/or description, then let AI enhance it for you.
+                          </p>
+                           <Button type="button" variant="outline" size="sm" onClick={handleEnhance} disabled={isAiLoading}>
+                                {isAiLoading ? 'Enhancing...' : 'Enhance with AI'}
+                            </Button>
+                      </div>
+                    </Card>
                     <FormField
                       control={form.control}
                       name="title"

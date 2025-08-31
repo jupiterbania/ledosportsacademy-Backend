@@ -18,6 +18,7 @@ import { Switch } from "@/components/ui/switch";
 import Image from 'next/image';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { enhanceText, EnhanceTextInput, EnhanceTextOutput } from '@/ai/flows/generate-photo-details-flow';
 
 const photoSchema = z.object({
   id: z.string().optional(),
@@ -33,6 +34,7 @@ type PhotoFormValues = z.infer<typeof photoSchema>;
 export default function GalleryManagementPage() {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isAiLoading, setIsAiLoading] = useState(false);
   const { toast } = useToast();
 
   const fetchPhotos = async () => {
@@ -101,6 +103,26 @@ export default function GalleryManagementPage() {
     }
   };
 
+  const handleEnhance = async () => {
+    const { title, description } = form.getValues();
+    if (!title && !description) {
+        toast({ title: "Input Required", description: "Please enter a title or description to enhance.", variant: "destructive" });
+        return;
+    }
+
+    setIsAiLoading(true);
+    try {
+        const enhanced: EnhanceTextOutput = await enhanceText({ title, description });
+        form.setValue('title', enhanced.title, { shouldValidate: true });
+        form.setValue('description', enhanced.description, { shouldValidate: true });
+        toast({ title: "Content Enhanced", description: "The title and description have been improved by AI." });
+    } catch (error) {
+        toast({ title: "AI Enhancement Failed", description: "Could not enhance the text.", variant: "destructive" });
+    } finally {
+        setIsAiLoading(false);
+    }
+  };
+
   const PhotoActions = ({ photo }: { photo: Photo }) => (
     <div className="flex gap-2">
        <Button variant="outline" size="sm" onClick={() => handleEdit(photo)}>
@@ -156,6 +178,17 @@ export default function GalleryManagementPage() {
                <div className="flex-grow overflow-y-auto pr-4">
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                    <Card className="bg-muted/50 p-4">
+                      <div className="space-y-2">
+                          <p className="text-sm font-medium">AI Enhancement</p>
+                          <p className="text-xs text-muted-foreground">
+                            Write a simple title and/or description, then let AI enhance it for you.
+                          </p>
+                           <Button type="button" variant="outline" size="sm" onClick={handleEnhance} disabled={isAiLoading}>
+                                {isAiLoading ? 'Enhancing...' : 'Enhance with AI'}
+                            </Button>
+                      </div>
+                    </Card>
                     <FormField
                       control={form.control}
                       name="url"
