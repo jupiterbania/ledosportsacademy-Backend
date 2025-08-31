@@ -69,6 +69,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const totalDonations = useMemo(() => donations.reduce((sum, d) => sum + (d.amount || 0), 0), [donations]);
@@ -186,7 +187,7 @@ export default function AdminDashboard() {
               <CardTitle>Featured Photos</CardTitle>
                <CardDescription>Photos selected to show on the homepage slider.</CardDescription>
             </CardHeader>
-            <CardContent className="grid grid-cols-3 gap-2">
+            <CardContent className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-5 gap-2">
               {dashboardPhotos.slice(0, 5).map(photo => (
                 <Link href="/admin/gallery" key={photo.id}>
                   <div className="relative aspect-square w-full rounded-md overflow-hidden transition-all hover:scale-105 hover:shadow-lg">

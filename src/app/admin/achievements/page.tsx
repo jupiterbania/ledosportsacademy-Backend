@@ -168,7 +168,7 @@ export default function AchievementsManagementPage() {
               <DialogHeader>
                 <DialogTitle>{form.getValues("id") ? 'Edit Achievement' : 'Add New Achievement'}</DialogTitle>
               </DialogHeader>
-               <div className="flex-grow overflow-y-auto pr-4">
+               <div className="flex-grow overflow-y-auto pr-4 -mr-4">
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                      <FormField
@@ -313,5 +313,3 @@ export default function AchievementsManagementPage() {
     </div>
   );
 }
-
-    

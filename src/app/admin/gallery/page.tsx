@@ -185,7 +185,7 @@ export default function GalleryManagementPage() {
               <DialogHeader>
                 <DialogTitle>{form.getValues("id") ? 'Edit Photo' : 'Add New Photo'}</DialogTitle>
               </DialogHeader>
-               <div className="flex-grow overflow-y-auto pr-4">
+               <div className="flex-grow overflow-y-auto pr-4 -mr-4">
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                     <FormField
@@ -367,5 +367,3 @@ export default function GalleryManagementPage() {
     </div>
   );
 }
-
-    

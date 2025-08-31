@@ -176,7 +176,7 @@ function DonationTable() {
             <DialogHeader>
               <DialogTitle>{form.getValues("id") ? 'Edit' : 'Add'} Donation</DialogTitle>
             </DialogHeader>
-            <div className="flex-grow overflow-y-auto pr-4">
+            <div className="flex-grow overflow-y-auto pr-4 -mr-4">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                 <FormField control={form.control} name="title" render={({ field }) => (
@@ -405,7 +405,7 @@ function FinanceTable<T extends Collection | Expense>({
             <DialogHeader>
               <DialogTitle>{form.getValues("id") ? 'Edit' : 'Add'} {title}</DialogTitle>
             </DialogHeader>
-             <div className="flex-grow overflow-y-auto pr-4">
+             <div className="flex-grow overflow-y-auto pr-4 -mr-4">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                   <FormField control={form.control} name="title" render={({ field }) => (
