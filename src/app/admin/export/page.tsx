@@ -126,7 +126,7 @@ export default function ExportPage() {
       // Main Title
       doc.addImage(logoBase64, 'PNG', 14, 15, 20, 20);
       doc.setFontSize(22);
-      doc.text("LEDO SPORTS ACADEMY", 105, 25, { align: 'center' });
+      doc.text("Admin", 105, 25, { align: 'center' });
       doc.setFontSize(16);
       doc.text("Full Analytics Report", 105, 33, { align: 'center' });
       doc.setFontSize(12);

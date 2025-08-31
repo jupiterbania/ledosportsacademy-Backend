@@ -15,8 +15,8 @@ const spaceGrotesk = SpaceGrotesk({
 
 
 export const metadata: Metadata = {
-  title: 'LEDO SPORTS ACADEMY - Admin',
-  description: 'Admin panel for LEDO SPORTS ACADEMY',
+  title: 'Admin',
+  description: 'Admin panel',
   manifest: '/manifest.webmanifest',
   icons: {
     icon: 'https://iili.io/KKdeC0J.png',
