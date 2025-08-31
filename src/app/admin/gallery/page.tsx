@@ -246,16 +246,16 @@ export default function GalleryManagementPage() {
         </CardHeader>
         <CardContent>
           {/* Mobile View */}
-          <div className="grid gap-4 sm:grid-cols-2 md:hidden">
+          <div className="grid gap-4 md:hidden">
             {photos.map((photo) => (
-              <Card key={photo.id} className="flex flex-col">
+              <Card key={photo.id}>
                 <div className="relative aspect-video w-full">
-                  <Image src={photo.url} alt={photo.title || ''} fill className="object-cover rounded-t-lg" sizes="(max-width: 640px) 100vw, 50vw"/>
+                  <Image src={photo.url} alt={photo.title || ''} fill className="object-cover rounded-t-lg" sizes="100vw"/>
                 </div>
                 <CardHeader>
                   <CardTitle className="truncate">{photo.title || 'Untitled'}</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-2 flex-grow">
+                <CardContent className="space-y-2">
                    <p className="text-sm text-muted-foreground line-clamp-2">{photo.description || 'No description'}</p>
                    <div>
                     <Badge variant={photo.isSliderPhoto ? "default" : "outline"}>
@@ -263,7 +263,7 @@ export default function GalleryManagementPage() {
                     </Badge>
                   </div>
                 </CardContent>
-                <CardFooter className="flex justify-end">
+                <CardFooter>
                   <PhotoActions photo={photo} />
                 </CardFooter>
               </Card>
@@ -313,5 +313,3 @@ export default function GalleryManagementPage() {
     </div>
   );
 }
-
-    
