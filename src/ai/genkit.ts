@@ -14,7 +14,7 @@
 
 import {genkit} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
-import {googleCloud, genkitEval} from '@genkit-ai/google-cloud';
+import {googleCloud, genkitEval} from '@gen-ai/google-cloud';
 
 export const ai = genkit({
   plugins: [
@@ -22,7 +22,6 @@ export const ai = genkit({
       apiVersion: 'v1beta',
     }),
     googleCloud,
-    genkitEval,
   ],
   logSinks: ['googlecloud'],
   enableTracingAndMetrics: true,
