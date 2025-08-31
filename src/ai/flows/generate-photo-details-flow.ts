@@ -66,7 +66,7 @@ const enhanceTextFlow = ai.defineFlow(
     });
 
     const llmResponse = await prompt(input);
-    const output = llmResponse.output();
+    const output = llmResponse.output;
 
     if (!output) {
       throw new Error("The AI model did not return the expected output.");
