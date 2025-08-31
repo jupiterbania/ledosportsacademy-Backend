@@ -218,26 +218,4 @@ export const updateAdminRequestStatus = async (id: string, status: 'approved' | 
 export const getAllNotifications = () => getCollection<Notification>('notifications', 'createdAt', 'desc');
 export const addNotification = (data: Omit<Notification, 'id' | 'createdAt'>) => addDocument<Omit<Notification, 'id'>>('notifications', { ...data, createdAt: serverTimestamp() });
 export const deleteNotification = (id: string) => deleteDocument('notifications', id);
-
-
-export const getDashboardContent = async () => {
-    if (!isConfigComplete) return { photos: [], events: [], achievements: [] };
-
-    const photosQuery = query(collection(db, 'photos'), where('isSliderPhoto', '==', true), orderBy('uploadedAt', 'desc'), limit(5));
-    const eventsQuery = query(collection(db, 'events'), where('showOnSlider', '==', true), orderBy('date', 'desc'), limit(5));
-    const achievementsQuery = query(collection(db, 'achievements'), orderBy('date', 'desc'), limit(5));
-
-    const [photosSnapshot, eventsSnapshot, achievementsSnapshot] = await Promise.all([
-        getDocs(photosQuery),
-        getDocs(eventsQuery),
-        getDocs(achievementsQuery),
-    ]);
-
-    const photos = photosSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Photo));
-    const events = eventsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Event));
-    const achievements = achievementsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Achievement));
-
-    return { photos, events, achievements };
-};
-
     
