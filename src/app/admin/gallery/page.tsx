@@ -263,7 +263,7 @@ export default function GalleryManagementPage() {
                     </Badge>
                   </div>
                 </CardContent>
-                <CardFooter>
+                <CardFooter className="flex justify-end">
                   <PhotoActions photo={photo} />
                 </CardFooter>
               </Card>
