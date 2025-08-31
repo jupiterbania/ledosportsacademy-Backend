@@ -10,7 +10,9 @@ import {
   getAllExpenses, Expense,
   getAllMembers, Member,
   getDashboardContent, Event, Photo, Achievement,
-  getAllPhotos
+  getAllPhotos,
+  getAllEvents,
+  getAllAchievements
 } from "@/lib/data";
 import { useMemo, useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -258,5 +260,3 @@ export default function AdminDashboard() {
     </div>
   );
 }
-
-    
