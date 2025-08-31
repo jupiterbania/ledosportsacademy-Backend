@@ -47,19 +47,13 @@ const contextPrompts = {
 
 const getSystemPrompt = (context: EnhanceTextInput['context']) => `
     ${contextPrompts[context]}
-    Your task is to take the user-provided topic and generate an engaging, professional, and exciting title and description.
+    Your task is to take the user-provided topic and generate a title and description.
+    The tone should be in simple, normal Indian English. Avoid using very advanced or formal vocabulary.
+    The title should be clear, direct, and to the point.
+    The description should be engaging and professional, but easy to understand.
     Do not analyze or refer to any image. Do not use markdown in your response.
     Generate a response that fits the provided output schema.
 `;
-
-const prompt = ai.definePrompt({
-    name: 'enhanceTextPrompt',
-    input: { schema: EnhanceTextInputSchema },
-    output: { schema: EnhanceTextOutputSchema },
-    prompt: getSystemPrompt('gallery'), // Default prompt, will be overridden in the flow
-    model: googleAI.model('gemini-1.5-flash-latest'),
-});
-
 
 const enhanceTextFlow = ai.defineFlow(
   {
@@ -69,7 +63,7 @@ const enhanceTextFlow = ai.defineFlow(
   },
   async (input) => {
     
-    const dynamicPrompt = await ai.definePrompt({
+    const dynamicPrompt = ai.definePrompt({
         name: `enhanceTextPrompt_${input.context}`,
         input: { schema: EnhanceTextInputSchema },
         output: { schema: EnhanceTextOutputSchema },
@@ -87,3 +81,4 @@ const enhanceTextFlow = ai.defineFlow(
     return output;
   }
 );
+
