@@ -79,7 +79,7 @@ const enhanceTextFlow = ai.defineFlow(
     const promptText = buildPrompt(input);
 
     const { output } = await ai.generate({
-      model: 'googleai/gemini-1.5-flash-preview',
+      model: 'googleai/gemini-pro',
       prompt: promptText,
       output: {
         format: 'json',
@@ -94,3 +94,4 @@ const enhanceTextFlow = ai.defineFlow(
     return output;
   }
 );
+
