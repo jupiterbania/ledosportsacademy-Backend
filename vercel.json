@@ -1,11 +1,9 @@
+
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
   "functions": {
-    "src/app/**/*.ts": {
-      "maxDuration": 120
-    },
-    "src/ai/**/*.ts": {
+    "src/app/**/page.tsx": {
       "maxDuration": 120
     }
   }
