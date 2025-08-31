@@ -68,7 +68,7 @@ Description: {{{description}}}
 
 const galleryPrompt = ai.definePrompt({
   name: 'enhanceTextGalleryPrompt',
-  model: 'googleai/gemini-1.5-flash-preview',
+  model: 'gemini-1.5-flash-preview',
   input: {schema: EnhanceTextInputSchema},
   output: {schema: EnhanceTextOutputSchema},
   prompt: `${basePrompt}
@@ -78,7 +78,7 @@ const galleryPrompt = ai.definePrompt({
 
 const eventPrompt = ai.definePrompt({
   name: 'enhanceTextEventPrompt',
-  model: 'googleai/gemini-1.5-flash-preview',
+  model: 'gemini-1.5-flash-preview',
   input: {schema: EnhanceTextInputSchema},
   output: {schema: EnhanceTextOutputSchema},
   prompt: `${basePrompt}
