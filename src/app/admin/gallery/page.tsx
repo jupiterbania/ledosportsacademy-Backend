@@ -248,14 +248,14 @@ export default function GalleryManagementPage() {
           {/* Mobile View */}
           <div className="grid gap-4 sm:grid-cols-2 md:hidden">
             {photos.map((photo) => (
-              <Card key={photo.id}>
+              <Card key={photo.id} className="flex flex-col">
                 <div className="relative aspect-video w-full">
                   <Image src={photo.url} alt={photo.title || ''} fill className="object-cover rounded-t-lg" sizes="(max-width: 640px) 100vw, 50vw"/>
                 </div>
                 <CardHeader>
                   <CardTitle className="truncate">{photo.title || 'Untitled'}</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-2">
+                <CardContent className="space-y-2 flex-grow">
                    <p className="text-sm text-muted-foreground line-clamp-2">{photo.description || 'No description'}</p>
                    <div>
                     <Badge variant={photo.isSliderPhoto ? "default" : "outline"}>
@@ -275,10 +275,10 @@ export default function GalleryManagementPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Photo</TableHead>
-                  <TableHead>Description</TableHead>
-                  <TableHead>On Slider</TableHead>
-                  <TableHead>Actions</TableHead>
+                  <TableHead className="w-[30%]">Photo</TableHead>
+                  <TableHead className="w-[40%]">Description</TableHead>
+                  <TableHead className="w-[15%]">On Slider</TableHead>
+                  <TableHead className="w-[15%] text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -289,21 +289,23 @@ export default function GalleryManagementPage() {
                           <div className="relative h-16 w-16 rounded-md overflow-hidden shrink-0">
                              <Image src={photo.url} alt={photo.title || `Photo ${photo.id}`} fill className="object-cover" sizes="64px" />
                           </div>
-                           <div className="flex flex-col">
-                              <span className="font-medium">{photo.title || 'Untitled'}</span>
-                              <a href={photo.url} target="_blank" rel="noopener noreferrer" className="truncate text-sm text-muted-foreground hover:underline hidden sm:inline-block max-w-[150px] lg:max-w-[250px]">{photo.url}</a>
+                           <div className="flex flex-col min-w-0">
+                              <span className="font-medium truncate">{photo.title || 'Untitled'}</span>
+                              <a href={photo.url} target="_blank" rel="noopener noreferrer" className="truncate text-sm text-muted-foreground hover:underline">{photo.url}</a>
                            </div>
                         </div>
                     </TableCell>
-                    <TableCell className="hidden md:table-cell">{photo.description || 'N/A'}</TableCell>
-                    <TableCell className="hidden md:table-cell">
+                    <TableCell>
+                        <p className="line-clamp-2 text-sm text-muted-foreground">{photo.description || 'N/A'}</p>
+                    </TableCell>
+                    <TableCell>
                        {photo.isSliderPhoto ? (
                          <Badge>Yes</Badge>
                         ) : (
                          <Badge variant="outline">No</Badge>
                         )}
                       </TableCell>
-                    <TableCell>
+                    <TableCell className="text-right">
                       <PhotoActions photo={photo} />
                     </TableCell>
                   </TableRow>
