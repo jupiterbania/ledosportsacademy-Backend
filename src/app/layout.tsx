@@ -15,8 +15,8 @@ const spaceGrotesk = SpaceGrotesk({
 
 
 export const metadata: Metadata = {
-  title: 'Admin',
-  description: 'Admin panel',
+  title: 'AdminLSA',
+  description: 'AdminLSA panel',
   manifest: '/manifest.webmanifest',
   icons: {
     icon: 'https://iili.io/KKdeC0J.png',

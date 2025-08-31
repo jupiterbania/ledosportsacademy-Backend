@@ -69,7 +69,7 @@ export default function AdminLoginPage() {
               <div className="mx-auto bg-gradient-to-br from-primary/20 to-primary/5 text-primary rounded-full p-4 w-20 h-20 flex items-center justify-center mb-4 ring-2 ring-primary/30 aurora-glow">
                   <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
               </div>
-              <CardTitle className="text-2xl font-bold">Admin Panel Login</CardTitle>
+              <CardTitle className="text-2xl font-bold">AdminLSA Login</CardTitle>
               <CardDescription>
                   Please sign in to manage the application.
               </CardDescription>
