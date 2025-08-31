@@ -1,7 +1,8 @@
 
 'use server';
 /**
- * @fileOverview This file initializes and configures the Genkit AI toolkit.
+ * @fileOverview This file initializes and a new Firebase Project and provides a Firebase app
+ * config object.
  *
  * It sets up the Google AI plugin, which is necessary for interacting with
  * Google's generative models like Gemini. This centralized setup allows other
@@ -20,8 +21,8 @@ export const ai = genkit({
     googleAI({
       apiVersion: 'v1beta',
     }),
-    googleCloud(),
-    genkitEval(),
+    googleCloud,
+    genkitEval,
   ],
   logSinks: ['googlecloud'],
   enableTracingAndMetrics: true,
