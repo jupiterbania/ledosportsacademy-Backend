@@ -1,3 +1,4 @@
+
 /**
  * @fileOverview This file initializes and a new Firebase Project and provides a Firebase app
  * config object.
@@ -17,4 +18,11 @@ export const ai = genkit({
   plugins: [
     googleAI(),
   ],
+  models: {
+    'gemini-pro-vision': {
+        model: 'gemini-pro-vision',
+        path: 'models/gemini-pro-vision',
+        version: 'v1beta'
+    },
+  },
 });
