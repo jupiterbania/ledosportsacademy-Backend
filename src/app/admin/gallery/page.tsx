@@ -275,28 +275,23 @@ export default function GalleryManagementPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[30%]">Photo</TableHead>
-                  <TableHead className="w-[40%]">Description</TableHead>
-                  <TableHead className="w-[15%]">On Slider</TableHead>
-                  <TableHead className="w-[15%] text-right">Actions</TableHead>
+                  <TableHead className="w-[100px]">Photo</TableHead>
+                  <TableHead>Details</TableHead>
+                  <TableHead>On Slider</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {photos.map((photo) => (
                   <TableRow key={photo.id}>
                     <TableCell>
-                        <div className="flex items-center gap-4">
-                          <div className="relative h-16 w-16 rounded-md overflow-hidden shrink-0">
-                             <Image src={photo.url} alt={photo.title || `Photo ${photo.id}`} fill className="object-cover" sizes="64px" />
-                          </div>
-                           <div className="flex flex-col min-w-0">
-                              <span className="font-medium truncate">{photo.title || 'Untitled'}</span>
-                              <a href={photo.url} target="_blank" rel="noopener noreferrer" className="truncate text-sm text-muted-foreground hover:underline">{photo.url}</a>
-                           </div>
-                        </div>
+                      <div className="relative h-16 w-24 rounded-md overflow-hidden">
+                        <Image src={photo.url} alt={photo.title || `Photo ${photo.id}`} fill className="object-cover" sizes="96px" />
+                      </div>
                     </TableCell>
                     <TableCell>
-                        <p className="line-clamp-2 text-sm text-muted-foreground">{photo.description || 'N/A'}</p>
+                      <div className="font-medium truncate">{photo.title || 'Untitled'}</div>
+                      <div className="text-sm text-muted-foreground line-clamp-2">{photo.description || 'N/A'}</div>
                     </TableCell>
                     <TableCell>
                        {photo.isSliderPhoto ? (
@@ -318,3 +313,5 @@ export default function GalleryManagementPage() {
     </div>
   );
 }
+
+    
