@@ -28,6 +28,7 @@ const photoSchema = z.object({
   title: z.string().optional(),
   description: z.string().optional(),
   isSliderPhoto: z.boolean().default(false),
+  showInRecent: z.boolean().default(false),
   sendNotification: z.boolean().default(true),
 });
 
@@ -54,6 +55,7 @@ export default function GalleryManagementPage() {
     defaultValues: {
       url: "https://placehold.co/600x400.png",
       isSliderPhoto: false,
+      showInRecent: false,
       title: '',
       description: '',
       sendNotification: true,
@@ -170,6 +172,7 @@ export default function GalleryManagementPage() {
                     id: undefined,
                     url: "https://placehold.co/600x400.png",
                     isSliderPhoto: false,
+                    showInRecent: false,
                     title: '',
                     description: '',
                     sendNotification: true,
@@ -266,6 +269,23 @@ export default function GalleryManagementPage() {
                         </FormItem>
                       )}
                     />
+                     <FormField
+                      control={form.control}
+                      name="showInRecent"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                          <div className="space-y-0.5">
+                            <FormLabel>Show in Recent on Dashboard</FormLabel>
+                          </div>
+                          <FormControl>
+                            <Switch
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
                      {!form.getValues("id") && (
                       <FormField
                         control={form.control}
@@ -315,6 +335,9 @@ export default function GalleryManagementPage() {
                     <Badge variant={photo.isSliderPhoto ? "default" : "outline"}>
                       {photo.isSliderPhoto ? "On Slider" : "Not on Slider"}
                     </Badge>
+                     <Badge variant={photo.showInRecent ? "default" : "outline"}>
+                      {photo.showInRecent ? "In Recents" : "Not in Recents"}
+                    </Badge>
                   </div>
                 </CardContent>
                 <CardFooter>
@@ -351,6 +374,9 @@ export default function GalleryManagementPage() {
                        <div className="flex flex-col gap-2">
                         <Badge variant={photo.isSliderPhoto ? 'default' : 'outline'} className="w-fit">
                           {photo.isSliderPhoto ? 'On Slider' : 'Not on Slider'}
+                        </Badge>
+                        <Badge variant={photo.showInRecent ? 'default' : 'outline'} className="w-fit">
+                          {photo.showInRecent ? 'In Recents' : 'Not in Recents'}
                         </Badge>
                       </div>
                       </TableCell>

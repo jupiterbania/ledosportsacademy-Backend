@@ -10,9 +10,10 @@ import {
   getAllCollections, Collection,
   getAllExpenses, Expense,
   getAllMembers, Member,
-  getAllPhotos, Photo,
-  getAllEvents, Event,
-  getAllAchievements, Achievement
+  getRecentPhotos, Photo,
+  getRecentEvents, Event,
+  getAllAchievements, Achievement,
+  getSliderPhotos, getSliderEvents
 } from "@/lib/data";
 import { useMemo, useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -31,28 +32,50 @@ export default function AdminDashboard() {
   const [events, setEvents] = useState<Event[]>([]);
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   
+  const [sliderPhotos, setSliderPhotos] = useState<Photo[]>([]);
+  const [sliderEvents, setSliderEvents] = useState<Event[]>([]);
+  const [recentPhotos, setRecentPhotos] = useState<Photo[]>([]);
+  const [recentEvents, setRecentEvents] = useState<Event[]>([]);
+
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [donationsData, collectionsData, expensesData, membersData, photosData, eventsData, achievementsData] = await Promise.all([
+      const [
+        donationsData, 
+        collectionsData, 
+        expensesData, 
+        membersData, 
+        achievementsData, 
+        sliderPhotosData, 
+        sliderEventsData,
+        recentPhotosData,
+        recentEventsData
+    ] = await Promise.all([
         getAllDonations(),
         getAllCollections(),
         getAllExpenses(),
         getAllMembers(),
-        getAllPhotos(),
-        getAllEvents(),
         getAllAchievements(),
+        getSliderPhotos(),
+        getSliderEvents(),
+        getRecentPhotos(),
+        getRecentEvents(),
       ]);
       setDonations(donationsData);
       setCollections(collectionsData);
       setExpenses(expensesData);
       setMembers(membersData);
-      setPhotos(photosData);
-      setEvents(eventsData);
       setAchievements(achievementsData);
+      setSliderPhotos(sliderPhotosData);
+      setSliderEvents(sliderEventsData);
+      setRecentPhotos(recentPhotosData);
+      setRecentEvents(recentEventsData);
+      setPhotos(await getRecentPhotos());
+      setEvents(await getRecentEvents());
+
     } catch (error) {
       console.error("Failed to fetch data:", error);
       toast({ title: "Error", description: "Failed to load dashboard data.", variant: "destructive" });
@@ -64,11 +87,6 @@ export default function AdminDashboard() {
     fetchData();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const sliderPhotos = useMemo(() => photos.filter(p => p.isSliderPhoto), [photos]);
-  const sliderEvents = useMemo(() => events.filter(e => e.showOnSlider), [events]);
-  const recentPhotos = useMemo(() => photos.slice(0, 5), [photos]);
-  const recentEvents = useMemo(() => events.slice(0, 5), [events]);
 
   const totalDonations = useMemo(() => donations.reduce((sum, d) => sum + (d.amount || 0), 0), [donations]);
   const totalCollections = useMemo(() => collections.reduce((sum, c) => sum + c.amount, 0), [collections]);
@@ -181,7 +199,7 @@ export default function AdminDashboard() {
             <Card>
               <CardHeader>
                 <CardTitle>Recent Gallery Photos</CardTitle>
-                <CardDescription>The 5 most recently added photos.</CardDescription>
+                <CardDescription>The 5 most recently added or selected photos.</CardDescription>
               </CardHeader>
               <CardContent>
                 <Table>
@@ -210,7 +228,7 @@ export default function AdminDashboard() {
             <Card>
               <CardHeader>
                 <CardTitle>Recent Events</CardTitle>
-                <CardDescription>The 5 most recently added events.</CardDescription>
+                <CardDescription>The 5 most recently added or selected events.</CardDescription>
               </CardHeader>
               <CardContent>
                 <Table>

@@ -30,6 +30,7 @@ const eventSchema = z.object({
   photoUrl: z.string().url({ message: "Please enter a valid URL." }),
   redirectUrl: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
   showOnSlider: z.boolean().default(false),
+  showInRecent: z.boolean().default(false),
   sendNotification: z.boolean().default(true),
 });
 
@@ -60,6 +61,7 @@ export default function EventsManagementPage() {
       photoUrl: "https://placehold.co/600x400.png",
       redirectUrl: "",
       showOnSlider: false,
+      showInRecent: false,
       sendNotification: true,
     },
   });
@@ -173,6 +175,7 @@ export default function EventsManagementPage() {
                     photoUrl: "https://placehold.co/600x400.png",
                     redirectUrl: "",
                     showOnSlider: false,
+                    showInRecent: false,
                     sendNotification: true,
                   });
                   setAiTopic('');
@@ -292,6 +295,23 @@ export default function EventsManagementPage() {
                         </FormItem>
                       )}
                     />
+                    <FormField
+                      control={form.control}
+                      name="showInRecent"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                          <div className="space-y-0.5">
+                            <FormLabel>Show in Recent on Dashboard</FormLabel>
+                          </div>
+                          <FormControl>
+                            <Switch
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
                     {!form.getValues("id") && (
                       <FormField
                         control={form.control}
@@ -342,6 +362,9 @@ export default function EventsManagementPage() {
                     <Badge variant={event.showOnSlider ? "default" : "outline"}>
                       {event.showOnSlider ? "On Slider" : "Not on Slider"}
                     </Badge>
+                     <Badge variant={event.showInRecent ? "default" : "outline"}>
+                        {event.showInRecent ? "In Recents" : "Not in Recents"}
+                     </Badge>
                   </div>
                 </CardContent>
                 <CardFooter>
@@ -377,6 +400,9 @@ export default function EventsManagementPage() {
                        <div className="flex flex-col gap-2">
                         <Badge variant={event.showOnSlider ? 'default' : 'outline'} className="w-fit">
                           {event.showOnSlider ? 'On Slider' : 'Not on Slider'}
+                        </Badge>
+                        <Badge variant={event.showInRecent ? 'default' : 'outline'} className="w-fit">
+                          {event.showInRecent ? 'In Recents' : 'Not in Recents'}
                         </Badge>
                       </div>
                       </TableCell>

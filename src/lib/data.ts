@@ -14,6 +14,7 @@ export interface Photo extends BaseDocument {
   uploadedAt: string;
   title?: string;
   description?: string;
+  showInRecent?: boolean;
 }
 
 export interface Event extends BaseDocument {
@@ -23,6 +24,7 @@ export interface Event extends BaseDocument {
   photoUrl:string;
   redirectUrl?: string;
   showOnSlider?: boolean;
+  showInRecent?: boolean;
 }
 
 export interface Member extends BaseDocument {
@@ -118,18 +120,60 @@ async function deleteDocument(collectionName: string, id: string) {
   await deleteDoc(docRef);
 }
 
-
 // Photos
 export const getAllPhotos = () => getCollection<Photo>('photos', 'uploadedAt');
 export const addPhoto = (data: Omit<Photo, 'id'>) => addDocument<Photo>('photos', data);
 export const updatePhoto = (id: string, data: Partial<Photo>) => updateDocument<Photo>('photos', id, data);
 export const deletePhoto = (id: string) => deleteDocument('photos', id);
+export const getSliderPhotos = async () => {
+    if (!isConfigComplete) return [];
+    const q = query(collection(db, "photos"), where("isSliderPhoto", "==", true), orderBy("uploadedAt", "desc"));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Photo));
+}
+export const getRecentPhotos = async () => {
+    if (!isConfigComplete) return [];
+    
+    // First, try to get photos specifically marked for recents
+    let q = query(collection(db, "photos"), where("showInRecent", "==", true), orderBy("uploadedAt", "desc"), limit(5));
+    let snapshot = await getDocs(q);
+    
+    // If none are marked, fall back to the 5 most recent photos
+    if (snapshot.empty) {
+        q = query(collection(db, "photos"), orderBy("uploadedAt", "desc"), limit(5));
+        snapshot = await getDocs(q);
+    }
+    
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Photo));
+}
+
 
 // Events
 export const getAllEvents = () => getCollection<Event>('events', 'date', 'desc');
 export const addEvent = (data: Omit<Event, 'id'>) => addDocument<Event>('events', data);
 export const updateEvent = (id: string, data: Partial<Event>) => updateDocument<Event>('events', id, data);
 export const deleteEvent = (id: string) => deleteDocument('events', id);
+export const getSliderEvents = async () => {
+    if (!isConfigComplete) return [];
+    const q = query(collection(db, "events"), where("showOnSlider", "==", true), orderBy("date", "desc"));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Event));
+}
+export const getRecentEvents = async () => {
+    if (!isConfigComplete) return [];
+
+    // First, try to get events specifically marked for recents
+    let q = query(collection(db, "events"), where("showInRecent", "==", true), orderBy("date", "desc"), limit(5));
+    let snapshot = await getDocs(q);
+
+    // If none are marked, fall back to the 5 most recent events
+    if (snapshot.empty) {
+        q = query(collection(db, "events"), orderBy("date", "desc"), limit(5));
+        snapshot = await getDocs(q);
+    }
+
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Event));
+}
 
 // Members
 export const getAllMembers = () => getCollection<Member>('members', 'joinDate');
@@ -218,4 +262,3 @@ export const updateAdminRequestStatus = async (id: string, status: 'approved' | 
 export const getAllNotifications = () => getCollection<Notification>('notifications', 'createdAt', 'desc');
 export const addNotification = (data: Omit<Notification, 'id' | 'createdAt'>) => addDocument<Omit<Notification, 'id'>>('notifications', { ...data, createdAt: serverTimestamp() });
 export const deleteNotification = (id: string) => deleteDocument('notifications', id);
-    
