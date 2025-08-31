@@ -71,14 +71,19 @@ const prompt = ai.definePrompt({
   {{/if}}
   {{/if}}
 
-  {{#ifCond context "==" "gallery"}}
+  {{#if (eq context 'gallery')}}
   Generate the response with a tone that is engaging and appropriate for a photo gallery caption.
-  {{/ifCond}}
+  {{/if}}
 
-  {{#ifCond context "==" "event"}}
+  {{#if (eq context 'event')}}
   Generate the response with a tone that is exciting and inviting, suitable for promoting an upcoming event.
-  {{/ifCond}}
+  {{/if}}
   `,
+  config: {
+    customHelpers: {
+      eq: (a: any, b: any) => a === b,
+    },
+  },
 });
 
 
@@ -96,3 +101,4 @@ const enhanceTextFlow = ai.defineFlow(
     return output;
   }
 );
+
