@@ -3,7 +3,6 @@ import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/components/auth/auth-provider';
-import { Header } from '@/components/layout/header';
 import { ThemeProvider } from "@/components/theme-provider"
 import { Space_Grotesk as SpaceGrotesk } from 'next/font/google'
 import { Background } from '@/components/background';
@@ -16,8 +15,8 @@ const spaceGrotesk = SpaceGrotesk({
 
 
 export const metadata: Metadata = {
-  title: 'LEDO SPORTS ACADEMY',
-  description: 'Welcome to LEDO SPORTS ACADEMY',
+  title: 'LEDO SPORTS ACADEMY - Admin',
+  description: 'Admin panel for LEDO SPORTS ACADEMY',
   manifest: '/manifest.webmanifest',
   icons: {
     icon: 'https://iili.io/KKdeC0J.png',
@@ -43,7 +42,6 @@ export default function RootLayout({
               themes={['light', 'dark', 'system', 'football']}
           >       
                   <Background />
-                  <Header />
                   <main className="flex-grow">{children}</main>
                   <Toaster />
           </ThemeProvider>
@@ -52,4 +50,3 @@ export default function RootLayout({
     </html>
   );
 }
-

@@ -31,24 +31,30 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!loading) {
       if (!user) {
-        router.push('/login');
-      } else if (!isAdmin) {
-        router.push('/'); // Redirect non-admins to home page
+        router.push('/admin/login');
+      } else if (!isAdmin && pathname !== '/admin/login') {
+         router.push('/admin/login'); // Redirect non-admins to login
       }
     }
-  }, [user, loading, isAdmin, router]);
+  }, [user, loading, isAdmin, router, pathname]);
 
   const handleLogout = async () => {
     await signOut();
-    router.push('/login');
+    router.push('/admin/login');
   };
 
   if (loading || !user || !isAdmin) {
+      if (pathname === '/admin/login') {
+          return <>{children}</>;
+      }
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-lg">Loading or Access Denied...</div>
       </div>
     );
+  }
+   if (pathname === '/admin/login') {
+      return <>{children}</>;
   }
 
   const baseMenuItems = [
