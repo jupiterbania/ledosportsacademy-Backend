@@ -48,42 +48,42 @@ export async function enhanceText(input: EnhanceTextInput): Promise<EnhanceTextO
   return enhanceTextFlow(input);
 }
 
+const basePrompt = `You are an expert in creative writing for a sports club.
+Your task is to take the user-provided input and generate an engaging, professional, and exciting title and description.
+You should only use the text provided. Do not analyze or refer to any image.
 
-const prompt = ai.definePrompt({
-  name: 'enhanceTextPrompt',
+{{#if topic}}
+The user has provided the following topic. Generate a brand new, compelling title and description based on it.
+Topic: {{{topic}}}
+{{else}}
+The user has provided the following draft. Enhance the provided text. If a field is empty, generate a suitable value for it based on the field that is provided. Do not just repeat the user's text; improve it significantly.
+{{#if title}}
+Title: {{{title}}}
+{{/if}}
+{{#if description}}
+Description: {{{description}}}
+{{/if}}
+{{/if}}`;
+
+
+const galleryPrompt = ai.definePrompt({
+  name: 'enhanceTextGalleryPrompt',
   model: 'googleai/gemini-1.5-flash-preview',
   input: {schema: EnhanceTextInputSchema},
   output: {schema: EnhanceTextOutputSchema},
-  prompt: `You are an expert in creative writing for a sports club.
-  Your task is to take the user-provided input and generate an engaging, professional, and exciting title and description.
-  You should only use the text provided. Do not analyze or refer to any image.
+  prompt: `${basePrompt}
 
-  {{#if topic}}
-  The user has provided the following topic. Generate a brand new, compelling title and description based on it.
-  Topic: {{{topic}}}
-  {{else}}
-  The user has provided the following draft. Enhance the provided text. If a field is empty, generate a suitable value for it based on the field that is provided. Do not just repeat the user's text; improve it significantly.
-  {{#if title}}
-  Title: {{{title}}}
-  {{/if}}
-  {{#if description}}
-  Description: {{{description}}}
-  {{/if}}
-  {{/if}}
+  Generate the response with a tone that is engaging and appropriate for a photo gallery caption.`,
+});
 
-  {{#if (eq context 'gallery')}}
-  Generate the response with a tone that is engaging and appropriate for a photo gallery caption.
-  {{/if}}
+const eventPrompt = ai.definePrompt({
+  name: 'enhanceTextEventPrompt',
+  model: 'googleai/gemini-1.5-flash-preview',
+  input: {schema: EnhanceTextInputSchema},
+  output: {schema: EnhanceTextOutputSchema},
+  prompt: `${basePrompt}
 
-  {{#if (eq context 'event')}}
-  Generate the response with a tone that is exciting and inviting, suitable for promoting an upcoming event.
-  {{/if}}
-  `,
-  config: {
-    customHelpers: {
-      eq: (a: any, b: any) => a === b,
-    },
-  },
+  Generate the response with a tone that is exciting and inviting, suitable for promoting an upcoming event.`,
 });
 
 
@@ -94,6 +94,7 @@ const enhanceTextFlow = ai.defineFlow(
     outputSchema: EnhanceTextOutputSchema,
   },
   async input => {
+    const prompt = input.context === 'event' ? eventPrompt : galleryPrompt;
     const {output} = await prompt(input);
     if (!output) {
         throw new Error("The AI model did not return the expected output.");
