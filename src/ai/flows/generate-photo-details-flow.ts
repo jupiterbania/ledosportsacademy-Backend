@@ -55,6 +55,18 @@ const getSystemPrompt = (context: EnhanceTextInput['context']) => `
     Generate a response that fits the provided output schema.
 `;
 
+
+const enhanceTextPrompt = ai.definePrompt({
+    name: 'enhanceTextPrompt',
+    input: { schema: EnhanceTextInputSchema },
+    output: { schema: EnhanceTextOutputSchema },
+    prompt: `{{{contextPrompt}}}
+
+Topic: {{{topic}}}`,
+    model: googleAI.model('gemini-1.5-flash-latest'),
+});
+
+
 const enhanceTextFlow = ai.defineFlow(
   {
     name: 'enhanceTextFlow',
@@ -63,15 +75,11 @@ const enhanceTextFlow = ai.defineFlow(
   },
   async (input) => {
     
-    const dynamicPrompt = ai.definePrompt({
-        name: `enhanceTextPrompt_${input.context}`,
-        input: { schema: EnhanceTextInputSchema },
-        output: { schema: EnhanceTextOutputSchema },
-        prompt: getSystemPrompt(input.context) + '\n\nTopic: {{{topic}}}',
-        model: googleAI.model('gemini-1.5-flash-latest'),
+    const llmResponse = await enhanceTextPrompt({
+        ...input,
+        contextPrompt: getSystemPrompt(input.context)
     });
 
-    const llmResponse = await dynamicPrompt(input);
     const output = llmResponse.output;
 
     if (!output) {
@@ -81,4 +89,3 @@ const enhanceTextFlow = ai.defineFlow(
     return output;
   }
 );
-
