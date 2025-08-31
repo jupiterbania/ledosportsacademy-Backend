@@ -189,7 +189,7 @@ export default function EventsManagementPage() {
                           </p>
                           <div className="flex gap-2">
                             <Textarea 
-                                placeholder="e.g., 'Annual general meeting for all club members'" 
+                                placeholder="e.g., 'Club's annual general meeting this friday at the main hall. Elections will be held.'" 
                                 value={aiTopic}
                                 onChange={(e) => setAiTopic(e.target.value)}
                                 className="flex-grow"

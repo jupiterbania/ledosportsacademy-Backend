@@ -170,7 +170,7 @@ export default function AchievementsManagementPage() {
                           </p>
                           <div className="flex gap-2">
                             <Textarea 
-                                placeholder="e.g., 'Victory in the regional football finals'" 
+                                placeholder="e.g., 'We won the state football championship against the rivals.'" 
                                 value={aiTopic}
                                 onChange={(e) => setAiTopic(e.target.value)}
                                 className="flex-grow"

@@ -188,7 +188,7 @@ export default function GalleryManagementPage() {
                           </p>
                           <div className="flex gap-2">
                             <Textarea 
-                                placeholder="e.g., 'Team photo after winning the championship'" 
+                                placeholder="e.g., 'Team celebrating after a big win at the finals.'" 
                                 value={aiTopic}
                                 onChange={(e) => setAiTopic(e.target.value)}
                                 className="flex-grow"

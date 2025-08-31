@@ -50,6 +50,8 @@ const buildPrompt = (input: EnhanceTextInput): string => {
     Your task is to take the user-provided topic and generate an engaging, professional, and exciting title and description.
     Do not analyze or refer to any image. Do not use markdown.
     
+    The output should be the title, followed by "||", followed by the description.
+    
     Topic: ${input.topic}
   `;
 }
@@ -64,19 +66,24 @@ const enhanceTextFlow = ai.defineFlow(
   async input => {
     const promptText = buildPrompt(input);
 
-    const { output } = await ai.generate({
+    const { text } = await ai.generate({
       model: googleAI.model('gemini-pro'),
       prompt: promptText,
-      output: {
-        format: 'json',
-        schema: EnhanceTextOutputSchema,
-      },
     });
 
-    if (!output) {
+    if (!text) {
         throw new Error("The AI model did not return the expected output.");
     }
     
-    return output;
+    const [title, description] = text.split('||');
+
+    if (!title || !description) {
+      throw new Error('Could not parse the AI response.');
+    }
+
+    return {
+      title: title.trim(),
+      description: description.trim(),
+    };
   }
 );
