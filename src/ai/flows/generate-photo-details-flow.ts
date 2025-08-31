@@ -11,7 +11,6 @@
 import {ai} from '@/ai/genkit';
 import { googleAI } from '@genkit-ai/googleai';
 import {z} from 'zod';
-import { GenerateRequest, Part } from 'genkit/ai';
 
 const EnhanceTextInputSchema = z.object({
   topic: z
@@ -79,7 +78,7 @@ const enhanceTextFlow = ai.defineFlow(
     const promptText = buildPrompt(input);
 
     const { output } = await ai.generate({
-      model: 'googleai/gemini-pro',
+      model: googleAI.model('gemini-pro'),
       prompt: promptText,
       output: {
         format: 'json',
@@ -94,4 +93,5 @@ const enhanceTextFlow = ai.defineFlow(
     return output;
   }
 );
+
 
