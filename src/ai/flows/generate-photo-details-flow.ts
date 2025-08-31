@@ -9,6 +9,7 @@
  */
 
 import {ai} from '@/ai/genkit';
+import { googleAI } from '@genkit-ai/googleai';
 import {z} from 'zod';
 
 const EnhanceTextInputSchema = z.object({
@@ -68,7 +69,7 @@ Description: {{{description}}}
 
 const galleryPrompt = ai.definePrompt({
   name: 'enhanceTextGalleryPrompt',
-  model: 'gemini-1.5-flash-preview',
+  model: googleAI.model('gemini-1.5-flash-preview'),
   input: {schema: EnhanceTextInputSchema},
   output: {schema: EnhanceTextOutputSchema},
   prompt: `${basePrompt}
@@ -78,7 +79,7 @@ const galleryPrompt = ai.definePrompt({
 
 const eventPrompt = ai.definePrompt({
   name: 'enhanceTextEventPrompt',
-  model: 'gemini-1.5-flash-preview',
+  model: googleAI.model('gemini-1.5-flash-preview'),
   input: {schema: EnhanceTextInputSchema},
   output: {schema: EnhanceTextOutputSchema},
   prompt: `${basePrompt}
