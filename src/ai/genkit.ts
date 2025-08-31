@@ -13,8 +13,7 @@
 
 import {genkit} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
-import {genkitEval} from 'genkit/eval';
-import {googleCloud} from '@genkit-ai/google-cloud';
+import {googleCloud, genkitEval} from '@genkit-ai/google-cloud';
 
 export const ai = genkit({
   plugins: [
