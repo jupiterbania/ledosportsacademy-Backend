@@ -276,8 +276,8 @@ export default function GalleryManagementPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Photo</TableHead>
-                  <TableHead>Description</TableHead>
-                  <TableHead>On Slider</TableHead>
+                  <TableHead className="hidden md:table-cell">Description</TableHead>
+                  <TableHead className="hidden md:table-cell">On Slider</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -289,13 +289,13 @@ export default function GalleryManagementPage() {
                           <div className="relative h-16 w-16 rounded-md overflow-hidden shrink-0">
                              <Image src={photo.url} alt={photo.title || `Photo ${photo.id}`} fill className="object-cover" sizes="64px" />
                           </div>
-                           <div className="flex flex-col">
-                              <span className="font-medium">{photo.title || 'Untitled'}</span>
+                           <div className="flex flex-col min-w-0">
+                              <span className="font-medium truncate">{photo.title || 'Untitled'}</span>
                               <a href={photo.url} target="_blank" rel="noopener noreferrer" className="truncate text-sm text-muted-foreground hover:underline hidden sm:inline-block max-w-[150px] lg:max-w-[250px]">{photo.url}</a>
                            </div>
                         </div>
                     </TableCell>
-                    <TableCell className="hidden md:table-cell">{photo.description || 'N/A'}</TableCell>
+                    <TableCell className="hidden md:table-cell max-w-sm truncate">{photo.description || 'N/A'}</TableCell>
                     <TableCell className="hidden md:table-cell">
                        {photo.isSliderPhoto ? (
                          <Badge>Yes</Badge>
@@ -315,4 +315,5 @@ export default function GalleryManagementPage() {
       </Card>
     </div>
   );
-}
+
+    
