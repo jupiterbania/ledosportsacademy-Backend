@@ -18,7 +18,6 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import Image from 'next/image';
 import { enhanceText, EnhanceTextInput, EnhanceTextOutput } from '@/ai/flows/generate-photo-details-flow';
 import { PlusCircle, Trash, Pencil, Bot } from 'lucide-react';
-import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 
 
@@ -28,7 +27,6 @@ const achievementSchema = z.object({
   description: z.string().min(1, { message: "Description is required" }),
   date: z.string().refine((val) => !isNaN(Date.parse(val)), { message: "Invalid date format" }),
   photoUrl: z.string().url({ message: "Please enter a valid URL." }),
-  showOnDashboard: z.boolean().default(false),
 });
 
 type AchievementFormValues = z.infer<typeof achievementSchema>;
@@ -56,7 +54,6 @@ export default function AchievementsManagementPage() {
       description: "",
       date: "",
       photoUrl: "https://placehold.co/600x400.png",
-      showOnDashboard: false,
     },
   });
 
@@ -159,7 +156,6 @@ export default function AchievementsManagementPage() {
                     description: "",
                     date: "",
                     photoUrl: "https://placehold.co/600x400.png",
-                    showOnDashboard: false,
                   });
                   setAiTopic('');
                   setIsDialogOpen(true);
@@ -248,23 +244,6 @@ export default function AchievementsManagementPage() {
                         </FormItem>
                       )}
                     />
-                     <FormField
-                      control={form.control}
-                      name="showOnDashboard"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                          <div className="space-y-0.5">
-                            <FormLabel>Show on Admin Dashboard</FormLabel>
-                          </div>
-                          <FormControl>
-                            <Switch
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
                     <DialogFooter className="sticky bottom-0 bg-background py-4 -mx-6 px-6 border-t">
                       <DialogClose asChild>
                         <Button type="button" variant="ghost">Cancel</Button>
@@ -291,9 +270,6 @@ export default function AchievementsManagementPage() {
                 </CardHeader>
                 <CardContent className="space-y-2">
                   <p className="text-sm text-muted-foreground line-clamp-3">{achievement.description}</p>
-                  <Badge variant={achievement.showOnDashboard ? "default" : "outline"}>
-                    {achievement.showOnDashboard ? "On Dashboard" : "Not on Dashboard"}
-                  </Badge>
                 </CardContent>
                 <CardFooter>
                   <AchievementActions achievement={achievement} />
@@ -310,7 +286,6 @@ export default function AchievementsManagementPage() {
                   <TableHead>Title</TableHead>
                   <TableHead>Description</TableHead>
                   <TableHead>Date</TableHead>
-                   <TableHead>On Dashboard</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -326,11 +301,6 @@ export default function AchievementsManagementPage() {
                     <TableCell className="text-muted-foreground line-clamp-2">{achievement.description}</TableCell>
                     <TableCell>{new Date(achievement.date).toLocaleDateString()}</TableCell>
                     <TableCell>
-                       <Badge variant={achievement.showOnDashboard ? "default" : "outline"}>
-                        {achievement.showOnDashboard ? "Yes" : "No"}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
                       <AchievementActions achievement={achievement} />
                     </TableCell>
                   </TableRow>
@@ -343,3 +313,5 @@ export default function AchievementsManagementPage() {
     </div>
   );
 }
+
+    

@@ -9,7 +9,8 @@ import {
   getAllCollections, Collection,
   getAllExpenses, Expense,
   getAllMembers, Member,
-  getDashboardContent, Event, Photo, Achievement
+  getDashboardContent, Event, Photo, Achievement,
+  getAllPhotos
 } from "@/lib/data";
 import { useMemo, useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -24,6 +25,9 @@ export default function AdminDashboard() {
   const [collections, setCollections] = useState<Collection[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [members, setMembers] = useState<Member[]>([]);
+  const [photos, setPhotos] = useState<Photo[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [dashboardPhotos, setDashboardPhotos] = useState<Photo[]>([]);
   const [dashboardEvents, setDashboardEvents] = useState<Event[]>([]);
   const [dashboardAchievements, setDashboardAchievements] = useState<Achievement[]>([]);
@@ -34,17 +38,23 @@ export default function AdminDashboard() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [donationsData, collectionsData, expensesData, membersData, dashboardContent] = await Promise.all([
+      const [donationsData, collectionsData, expensesData, membersData, photosData, eventsData, achievementsData, dashboardContent] = await Promise.all([
         getAllDonations(),
         getAllCollections(),
         getAllExpenses(),
         getAllMembers(),
+        getAllPhotos(),
+        getAllEvents(),
+        getAllAchievements(),
         getDashboardContent(),
       ]);
       setDonations(donationsData);
       setCollections(collectionsData);
       setExpenses(expensesData);
       setMembers(membersData);
+      setPhotos(photosData);
+      setEvents(eventsData);
+      setAchievements(achievementsData);
       setDashboardPhotos(dashboardContent.photos);
       setDashboardEvents(dashboardContent.events);
       setDashboardAchievements(dashboardContent.achievements);
@@ -73,19 +83,19 @@ export default function AdminDashboard() {
      { 
       href: "/admin/gallery", 
       title: "Total Photos", 
-      value: dashboardPhotos.length,
+      value: photos.length,
       icon: GalleryHorizontal
     },
     { 
       href: "/admin/events", 
       title: "Total Events", 
-      value: dashboardEvents.length,
+      value: events.length,
       icon: CalendarDays
     },
     { 
       href: "/admin/achievements", 
       title: "Total Achievements", 
-      value: dashboardAchievements.length,
+      value: achievements.length,
       icon: Trophy
     },
   ];
@@ -172,7 +182,7 @@ export default function AdminDashboard() {
           <Card className="xl:col-span-1">
             <CardHeader>
               <CardTitle>Featured Photos</CardTitle>
-               <CardDescription>Photos selected to show on the dashboard.</CardDescription>
+               <CardDescription>Photos selected to show on the homepage slider.</CardDescription>
             </CardHeader>
             <CardContent className="grid grid-cols-3 gap-2">
               {dashboardPhotos.slice(0, 5).map(photo => (
@@ -188,7 +198,7 @@ export default function AdminDashboard() {
           <Card className="xl:col-span-2">
             <CardHeader>
               <CardTitle>Featured Events</CardTitle>
-               <CardDescription>Events selected to show on the dashboard.</CardDescription>
+               <CardDescription>Events selected to show on the homepage slider.</CardDescription>
             </CardHeader>
             <CardContent>
                 <Table>
@@ -218,8 +228,8 @@ export default function AdminDashboard() {
           
            <Card className="xl:col-span-3">
             <CardHeader>
-              <CardTitle>Featured Achievements</CardTitle>
-              <CardDescription>Achievements selected to show on the dashboard.</CardDescription>
+              <CardTitle>Recent Achievements</CardTitle>
+              <CardDescription>Latest achievements by the club members.</CardDescription>
             </CardHeader>
             <CardContent>
                 <Table>
@@ -248,3 +258,5 @@ export default function AdminDashboard() {
     </div>
   );
 }
+
+    

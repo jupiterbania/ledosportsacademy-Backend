@@ -14,7 +14,6 @@ export interface Photo extends BaseDocument {
   uploadedAt: string;
   title?: string;
   description?: string;
-  showOnDashboard?: boolean;
 }
 
 export interface Event extends BaseDocument {
@@ -24,7 +23,6 @@ export interface Event extends BaseDocument {
   photoUrl:string;
   redirectUrl?: string;
   showOnSlider?: boolean;
-  showOnDashboard?: boolean;
 }
 
 export interface Member extends BaseDocument {
@@ -65,7 +63,6 @@ export interface Achievement extends BaseDocument {
     description: string;
     date: string;
     photoUrl: string;
-    showOnDashboard?: boolean;
 }
 
 export interface AdminRequest extends BaseDocument {
@@ -226,9 +223,9 @@ export const deleteNotification = (id: string) => deleteDocument('notifications'
 export const getDashboardContent = async () => {
     if (!isConfigComplete) return { photos: [], events: [], achievements: [] };
 
-    const photosQuery = query(collection(db, 'photos'), where('showOnDashboard', '==', true), orderBy('uploadedAt', 'desc'), limit(5));
-    const eventsQuery = query(collection(db, 'events'), where('showOnDashboard', '==', true), orderBy('date', 'desc'), limit(5));
-    const achievementsQuery = query(collection(db, 'achievements'), where('showOnDashboard', '==', true), orderBy('date', 'desc'), limit(5));
+    const photosQuery = query(collection(db, 'photos'), where('isSliderPhoto', '==', true), orderBy('uploadedAt', 'desc'), limit(5));
+    const eventsQuery = query(collection(db, 'events'), where('showOnSlider', '==', true), orderBy('date', 'desc'), limit(5));
+    const achievementsQuery = query(collection(db, 'achievements'), orderBy('date', 'desc'), limit(5));
 
     const [photosSnapshot, eventsSnapshot, achievementsSnapshot] = await Promise.all([
         getDocs(photosQuery),
@@ -242,3 +239,5 @@ export const getDashboardContent = async () => {
 
     return { photos, events, achievements };
 };
+
+    
