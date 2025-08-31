@@ -1,71 +1,77 @@
 
 'use server';
 /**
- * @fileOverview An AI flow for generating a creative title and description for a photo.
+ * @fileOverview An AI flow for enhancing a user-provided title and description.
  *
- * - generatePhotoDetails - A function that takes a photo URL and uses AI to generate content.
- * - GeneratePhotoDetailsInput - The input type for the function.
- * - GeneratePhotoDetailsOutput - The return type for the function.
+ * - enhanceText - A function that takes a title and description and uses AI to improve them.
+ * - EnhanceTextInput - The input type for the function.
+ * - EnhanceTextOutput - The return type for the function.
  */
 
 import {ai} from '@/ai/genkit';
 import {z} from 'zod';
 
-const GeneratePhotoDetailsInputSchema = z.object({
-  photoUrl: z
+const EnhanceTextInputSchema = z.object({
+  title: z
     .string()
-    .url()
     .describe(
-      "The public URL of a photo to generate a title and description for."
+      "The user-provided title to be enhanced."
+    ),
+  description: z
+    .string()
+    .describe(
+        "The user-provided description to be enhanced."
     ),
   context: z.enum(['gallery', 'event']).optional().default('gallery').describe("The context for which the details are being generated, e.g., 'gallery' or 'event'.")
 });
-export type GeneratePhotoDetailsInput = z.infer<typeof GeneratePhotoDetailsInputSchema>;
+export type EnhanceTextInput = z.infer<typeof EnhanceTextInputSchema>;
 
-const GeneratePhotoDetailsOutputSchema = z.object({
-  title: z.string().describe('A creative and engaging title for the photo. Should be concise and descriptive.'),
-  description: z.string().describe('A compelling, one-paragraph description for the photo, suitable for a gallery or social media.'),
+const EnhanceTextOutputSchema = z.object({
+  title: z.string().describe('A creative and engaging title, improved from the user\'s input.'),
+  description: z.string().describe('A compelling, one-paragraph description, improved from the user\'s input.'),
 });
-export type GeneratePhotoDetailsOutput = z.infer<typeof GeneratePhotoDetailsOutputSchema>;
+export type EnhanceTextOutput = z.infer<typeof EnhanceTextOutputSchema>;
 
 
 /**
- * Generates a title and description for a given photo URL using a generative AI model.
- * @param input The input object containing the photoUrl.
- * @returns A promise that resolves to the generated title and description.
+ * Enhances a title and description using a generative AI model.
+ * @param input The input object containing the text to be enhanced.
+ * @returns A promise that resolves to the enhanced title and description.
  */
-export async function generatePhotoDetails(input: GeneratePhotoDetailsInput): Promise<GeneratePhotoDetailsOutput> {
-  return generatePhotoDetailsFlow(input);
+export async function enhanceText(input: EnhanceTextInput): Promise<EnhanceTextOutput> {
+  return enhanceTextFlow(input);
 }
 
 
 const prompt = ai.definePrompt({
-  name: 'generatePhotoDetailsPrompt',
+  name: 'enhanceTextPrompt',
   model: 'googleai/gemini-1.5-flash-preview',
-  input: {schema: GeneratePhotoDetailsInputSchema},
-  output: {schema: GeneratePhotoDetailsOutputSchema},
+  input: {schema: EnhanceTextInputSchema},
+  output: {schema: EnhanceTextOutputSchema},
   prompt: `You are an expert in creative writing for a sports club. 
-  Your task is to analyze the provided image and generate a compelling title and a one-paragraph description for it.
+  Your task is to take the user-provided title and description and make them more engaging, professional, and exciting.
+
+  Here is the user's draft:
+  Title: {{{title}}}
+  Description: {{{description}}}
 
   {{#ifCond context "==" "gallery"}}
-  The tone should be engaging and appropriate for a photo gallery.
+  Please rewrite them with a tone that is engaging and appropriate for a photo gallery caption.
   {{/ifCond}}
 
   {{#ifCond context "==" "event"}}
-  The tone should be exciting and inviting, suitable for promoting an upcoming event.
+  Please rewrite them with a tone that is exciting and inviting, suitable for promoting an upcoming event.
   {{/ifCond}}
   
-  Generate a creative title and a detailed description for the following image:
-  
-  Image: {{media url=photoUrl}}`,
+  Do not just repeat the user's text. Enhance it significantly.`,
 });
 
 
-const generatePhotoDetailsFlow = ai.defineFlow(
+const enhanceTextFlow = ai.defineFlow(
   {
-    name: 'generatePhotoDetailsFlow',
-    inputSchema: GeneratePhotoDetailsInputSchema,
-    outputSchema: GeneratePhotoDetailsOutputSchema,
+    name: 'enhanceTextFlow',
+    inputSchema: EnhanceTextInputSchema,
+    outputSchema: EnhanceTextOutputSchema,
   },
   async input => {
     const {output} = await prompt(input);
@@ -75,4 +81,5 @@ const generatePhotoDetailsFlow = ai.defineFlow(
     return output;
   }
 );
+
 
