@@ -107,17 +107,17 @@ export default function EventsManagementPage() {
     const title = form.getValues("title");
     const description = form.getValues("description");
 
-    if (!title || !description) {
-      toast({ title: "Input Required", description: "Please provide a title and description to enhance.", variant: "destructive"});
+    if (!title && !description) {
+      toast({ title: "Input Required", description: "Please provide a title or description to enhance.", variant: "destructive"});
       return;
     }
     
     setIsGenerating(true);
     try {
-        const result = await enhanceText({ title, description, context: 'event' });
-        form.setValue('title', result.title, { shouldValidate: true });
-        form.setValue('description', result.description, { shouldValidate: true });
-        toast({ title: "Content Enhanced", description: "Title and description have been improved by AI." });
+        const result = await enhanceText({ title: title || '', description: description || '', context: 'event' });
+        if(title) form.setValue('title', result.title, { shouldValidate: true });
+        if(description) form.setValue('description', result.description, { shouldValidate: true });
+        toast({ title: "Content Enhanced", description: "Content has been improved by AI." });
     } catch (error) {
         console.error("AI enhancement failed:", error);
         toast({ title: "AI Error", description: "Could not enhance content. Please try again.", variant: "destructive" });
@@ -197,45 +197,58 @@ export default function EventsManagementPage() {
                       )}
                     />
                     
-                    <div className="relative space-y-4 rounded-lg border p-4 pt-6">
-                        <Button 
-                          type="button" 
-                          onClick={handleAiEnhance} 
-                          disabled={isGenerating}
-                          variant="outline"
-                          size="sm"
-                          className="absolute -top-4 right-4"
-                        >
-                          <Sparkles className={`mr-2 h-4 w-4 ${isGenerating ? 'animate-spin' : ''}`} />
-                            {isGenerating ? 'Generating...' : 'Enhance with AI'}
-                        </Button>
-                        <FormField
-                          control={form.control}
-                          name="title"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Title</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Annual General Meeting" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="description"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Description</FormLabel>
-                              <FormControl>
-                                <Textarea placeholder="Join us for our annual general meeting..." {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                    </div>
+                    <FormField
+                      control={form.control}
+                      name="title"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Title</FormLabel>
+                          <div className="relative">
+                            <FormControl>
+                              <Input placeholder="Annual General Meeting" {...field} className="pr-28" />
+                            </FormControl>
+                            <Button 
+                              type="button" 
+                              onClick={handleAiEnhance} 
+                              disabled={isGenerating || !field.value}
+                              variant="outline"
+                              size="sm"
+                              className="absolute top-1/2 -translate-y-1/2 right-1.5 h-7"
+                            >
+                              <Sparkles className={`mr-1.5 h-3.5 w-3.5 ${isGenerating ? 'animate-spin' : ''}`} />
+                              Enhance
+                            </Button>
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="description"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Description</FormLabel>
+                          <div className="relative">
+                            <FormControl>
+                              <Textarea placeholder="Join us for our annual general meeting..." {...field} className="pr-28" />
+                            </FormControl>
+                            <Button 
+                              type="button" 
+                              onClick={handleAiEnhance} 
+                              disabled={isGenerating || !field.value}
+                              variant="outline"
+                              size="sm"
+                              className="absolute top-2.5 right-1.5 h-7"
+                            >
+                              <Sparkles className={`mr-1.5 h-3.5 w-3.5 ${isGenerating ? 'animate-spin' : ''}`} />
+                              Enhance
+                            </Button>
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                     
                     <FormField
                       control={form.control}
@@ -381,4 +394,3 @@ export default function EventsManagementPage() {
     </div>
   );
 }
-

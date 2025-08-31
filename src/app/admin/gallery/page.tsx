@@ -108,17 +108,17 @@ export default function GalleryManagementPage() {
     const title = form.getValues("title");
     const description = form.getValues("description");
     
-    if (!title || !description) {
-      toast({ title: "Input Required", description: "Please provide a title and description to enhance.", variant: "destructive"});
+    if (!title && !description) {
+      toast({ title: "Input Required", description: "Please provide a title or description to enhance.", variant: "destructive"});
       return;
     }
     
     setIsGenerating(true);
     try {
-        const result = await enhanceText({ title, description, context: 'gallery' });
-        form.setValue('title', result.title, { shouldValidate: true });
-        form.setValue('description', result.description, { shouldValidate: true });
-        toast({ title: "Content Enhanced", description: "Title and description have been improved by AI." });
+        const result = await enhanceText({ title: title || '', description: description || '', context: 'gallery' });
+        if(title) form.setValue('title', result.title, { shouldValidate: true });
+        if(description) form.setValue('description', result.description, { shouldValidate: true });
+        toast({ title: "Content Enhanced", description: "Content has been improved by AI." });
     } catch (error) {
         console.error("AI enhancement failed:", error);
         toast({ title: "AI Error", description: "Could not enhance content. Please try again.", variant: "destructive" });
@@ -196,46 +196,58 @@ export default function GalleryManagementPage() {
                       )}
                     />
                     
-                    <div className="relative space-y-4 rounded-lg border p-4 pt-6">
-                       <Button 
-                        type="button" 
-                        onClick={handleAiEnhance} 
-                        disabled={isGenerating}
-                        variant="outline"
-                        size="sm"
-                        className="absolute -top-4 right-4"
-                       >
-                         <Sparkles className={`mr-2 h-4 w-4 ${isGenerating ? 'animate-spin' : ''}`} />
-                          {isGenerating ? 'Generating...' : 'Enhance with AI'}
-                      </Button>
-
-                       <FormField
-                        control={form.control}
-                        name="title"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Title (Optional)</FormLabel>
+                    <FormField
+                      control={form.control}
+                      name="title"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Title (Optional)</FormLabel>
+                          <div className="relative">
                             <FormControl>
-                              <Input placeholder="A nice title for the photo" {...field} />
+                              <Input placeholder="A nice title for the photo" {...field} className="pr-28" />
                             </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="description"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Description (Optional)</FormLabel>
+                            <Button 
+                              type="button" 
+                              onClick={handleAiEnhance} 
+                              disabled={isGenerating || !field.value}
+                              variant="outline"
+                              size="sm"
+                              className="absolute top-1/2 -translate-y-1/2 right-1.5 h-7"
+                            >
+                              <Sparkles className={`mr-1.5 h-3.5 w-3.5 ${isGenerating ? 'animate-spin' : ''}`} />
+                              Enhance
+                            </Button>
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="description"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Description (Optional)</FormLabel>
+                          <div className="relative">
                             <FormControl>
-                              <Textarea placeholder="A short description of the photo" {...field} />
+                              <Textarea placeholder="A short description of the photo" {...field} className="pr-28" />
                             </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
+                             <Button 
+                              type="button" 
+                              onClick={handleAiEnhance} 
+                              disabled={isGenerating || !field.value}
+                              variant="outline"
+                              size="sm"
+                              className="absolute top-2.5 right-1.5 h-7"
+                            >
+                              <Sparkles className={`mr-1.5 h-3.5 w-3.5 ${isGenerating ? 'animate-spin' : ''}`} />
+                              Enhance
+                            </Button>
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
                      <FormField
                       control={form.control}
@@ -355,4 +367,3 @@ export default function GalleryManagementPage() {
     </div>
   );
 }
-

@@ -15,12 +15,12 @@ const EnhanceTextInputSchema = z.object({
   title: z
     .string()
     .describe(
-      "The user-provided title to be enhanced."
+      "The user-provided title to be enhanced. Can be an empty string if only description is provided."
     ),
   description: z
     .string()
     .describe(
-        "The user-provided description to be enhanced."
+        "The user-provided description to be enhanced. Can be an empty string if only title is provided."
     ),
   context: z.enum(['gallery', 'event']).optional().default('gallery').describe("The context for which the details are being generated, e.g., 'gallery' or 'event'.")
 });
@@ -49,22 +49,26 @@ const prompt = ai.definePrompt({
   input: {schema: EnhanceTextInputSchema},
   output: {schema: EnhanceTextOutputSchema},
   prompt: `You are an expert in creative writing for a sports club. 
-  Your task is to take the user-provided title and description and make them more engaging, professional, and exciting.
+  Your task is to take the user-provided title and/or description and make them more engaging, professional, and exciting.
   You should only use the text provided. Do not analyze or refer to any image.
 
   Here is the user's draft:
+  {{#if title}}
   Title: {{{title}}}
+  {{/if}}
+  {{#if description}}
   Description: {{{description}}}
+  {{/if}}
 
   {{#ifCond context "==" "gallery"}}
-  Please rewrite them with a tone that is engaging and appropriate for a photo gallery caption.
+  Rewrite the provided text with a tone that is engaging and appropriate for a photo gallery caption. If a field is empty, generate a suitable value for it based on the provided field.
   {{/ifCond}}
 
   {{#ifCond context "==" "event"}}
-  Please rewrite them with a tone that is exciting and inviting, suitable for promoting an upcoming event.
+  Rewrite the provided text with a tone that is exciting and inviting, suitable for promoting an upcoming event. If a field is empty, generate a suitable value for it based on the provided field.
   {{/ifCond}}
   
-  Do not just repeat the user's text. Enhance it significantly.`,
+  Do not just repeat the user's text. Enhance it significantly. If a field was empty, create a compelling new version for it.`,
 });
 
 
@@ -82,6 +86,3 @@ const enhanceTextFlow = ai.defineFlow(
     return output;
   }
 );
-
-
-
