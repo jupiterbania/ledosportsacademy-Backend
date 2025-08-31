@@ -11,6 +11,7 @@
 import {ai} from '@/ai/genkit';
 import { googleAI } from '@genkit-ai/googleai';
 import {z} from 'zod';
+import { GenerateRequest, Part } from 'genkit/ai';
 
 const EnhanceTextInputSchema = z.object({
   topic: z
@@ -49,43 +50,23 @@ export async function enhanceText(input: EnhanceTextInput): Promise<EnhanceTextO
   return enhanceTextFlow(input);
 }
 
-const basePrompt = `You are an expert in creative writing for a sports club.
+const buildPrompt = (input: EnhanceTextInput): string => {
+  const basePrompt = `You are an expert in creative writing for a sports club.
 Your task is to take the user-provided input and generate an engaging, professional, and exciting title and description.
-You should only use the text provided. Do not analyze or refer to any image.
+You should only use the text provided. Do not analyze or refer to any image.`;
 
-{{#if topic}}
-The user has provided the following topic. Generate a brand new, compelling title and description based on it.
-Topic: {{{topic}}}
-{{else}}
-The user has provided the following draft. Enhance the provided text. If a field is empty, generate a suitable value for it based on the field that is provided. Do not just repeat the user's text; improve it significantly.
-{{#if title}}
-Title: {{{title}}}
-{{/if}}
-{{#if description}}
-Description: {{{description}}}
-{{/if}}
-{{/if}}`;
+  const topicPrompt = input.topic 
+    ? `The user has provided the following topic. Generate a brand new, compelling title and description based on it.\nTopic: ${input.topic}`
+    : `The user has provided the following draft. Enhance the provided text. If a field is empty, generate a suitable value for it based on the field that is provided. Do not just repeat the user's text; improve it significantly.
+${input.title ? `Title: ${input.title}` : ''}
+${input.description ? `Description: ${input.description}` : ''}`;
+  
+  const contextPrompt = input.context === 'event'
+    ? 'Generate the response with a tone that is exciting and inviting, suitable for promoting an upcoming event.'
+    : 'Generate the response with a tone that is engaging and appropriate for a photo gallery caption.';
 
-
-const galleryPrompt = ai.definePrompt({
-  name: 'enhanceTextGalleryPrompt',
-  model: googleAI.model('gemini-1.5-flash-preview'),
-  input: {schema: EnhanceTextInputSchema},
-  output: {schema: EnhanceTextOutputSchema},
-  prompt: `${basePrompt}
-
-  Generate the response with a tone that is engaging and appropriate for a photo gallery caption.`,
-});
-
-const eventPrompt = ai.definePrompt({
-  name: 'enhanceTextEventPrompt',
-  model: googleAI.model('gemini-1.5-flash-preview'),
-  input: {schema: EnhanceTextInputSchema},
-  output: {schema: EnhanceTextOutputSchema},
-  prompt: `${basePrompt}
-
-  Generate the response with a tone that is exciting and inviting, suitable for promoting an upcoming event.`,
-});
+  return `${basePrompt}\n\n${topicPrompt}\n\n${contextPrompt}`;
+}
 
 
 const enhanceTextFlow = ai.defineFlow(
@@ -95,11 +76,21 @@ const enhanceTextFlow = ai.defineFlow(
     outputSchema: EnhanceTextOutputSchema,
   },
   async input => {
-    const prompt = input.context === 'event' ? eventPrompt : galleryPrompt;
-    const {output} = await prompt(input);
+    const promptText = buildPrompt(input);
+
+    const { output } = await ai.generate({
+      model: 'googleai/gemini-1.5-flash-preview',
+      prompt: promptText,
+      output: {
+        format: 'json',
+        schema: EnhanceTextOutputSchema,
+      },
+    });
+
     if (!output) {
         throw new Error("The AI model did not return the expected output.");
     }
+    
     return output;
   }
 );
