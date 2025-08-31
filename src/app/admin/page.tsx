@@ -15,6 +15,7 @@ import {
 import { useMemo, useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Users, CalendarDays, CircleDollarSign, Trophy, GalleryHorizontal, ArrowUpRight, ArrowDownRight, Scale } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 
 export default function AdminDashboard() {
