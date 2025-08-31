@@ -30,6 +30,7 @@ const eventSchema = z.object({
   photoUrl: z.string().url({ message: "Please enter a valid URL." }),
   redirectUrl: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
   showOnSlider: z.boolean().default(false),
+  showOnDashboard: z.boolean().default(false),
   sendNotification: z.boolean().default(true),
 });
 
@@ -60,6 +61,7 @@ export default function EventsManagementPage() {
       photoUrl: "https://placehold.co/600x400.png",
       redirectUrl: "",
       showOnSlider: false,
+      showOnDashboard: false,
       sendNotification: true,
     },
   });
@@ -173,6 +175,7 @@ export default function EventsManagementPage() {
                     photoUrl: "https://placehold.co/600x400.png",
                     redirectUrl: "",
                     showOnSlider: false,
+                    showOnDashboard: false,
                     sendNotification: true,
                   });
                   setAiTopic('');
@@ -292,6 +295,23 @@ export default function EventsManagementPage() {
                         </FormItem>
                       )}
                     />
+                     <FormField
+                      control={form.control}
+                      name="showOnDashboard"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                          <div className="space-y-0.5">
+                            <FormLabel>Show on Admin Dashboard</FormLabel>
+                          </div>
+                          <FormControl>
+                            <Switch
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
                     {!form.getValues("id") && (
                       <FormField
                         control={form.control}
@@ -338,9 +358,12 @@ export default function EventsManagementPage() {
                 </CardHeader>
                 <CardContent className="space-y-2">
                    <p className="text-sm text-muted-foreground line-clamp-3">{event.description}</p>
-                   <div>
+                   <div className="flex flex-wrap gap-2">
                     <Badge variant={event.showOnSlider ? "default" : "outline"}>
                       {event.showOnSlider ? "On Slider" : "Not on Slider"}
+                    </Badge>
+                     <Badge variant={event.showOnDashboard ? "default" : "outline"}>
+                      {event.showOnDashboard ? "On Dashboard" : "Not on Dashboard"}
                     </Badge>
                   </div>
                 </CardContent>
@@ -359,7 +382,7 @@ export default function EventsManagementPage() {
                   <TableHead className="w-[100px]">Image</TableHead>
                   <TableHead>Title</TableHead>
                   <TableHead>Date</TableHead>
-                  <TableHead>On Slider</TableHead>
+                  <TableHead>Flags</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -374,11 +397,14 @@ export default function EventsManagementPage() {
                     <TableCell className="font-medium">{event.title}</TableCell>
                     <TableCell>{new Date(event.date).toLocaleDateString()}</TableCell>
                     <TableCell>
-                       {event.showOnSlider ? (
-                         <Badge>Yes</Badge>
-                        ) : (
-                         <Badge variant="outline">No</Badge>
-                        )}
+                       <div className="flex flex-col gap-2">
+                        <Badge variant={event.showOnSlider ? 'default' : 'outline'} className="w-fit">
+                          {event.showOnSlider ? 'On Slider' : 'Not on Slider'}
+                        </Badge>
+                        <Badge variant={event.showOnDashboard ? 'default' : 'outline'} className="w-fit">
+                          {event.showOnDashboard ? 'On Dashboard' : 'Not on Dashboard'}
+                        </Badge>
+                      </div>
                       </TableCell>
                     <TableCell>
                       <EventActions event={event} />

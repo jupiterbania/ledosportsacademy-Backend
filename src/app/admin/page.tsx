@@ -8,10 +8,8 @@ import {
   getAllDonations, Donation, 
   getAllCollections, Collection,
   getAllExpenses, Expense,
-  getAllAchievements, Achievement,
   getAllMembers, Member,
-  getAllEvents, Event,
-  getAllPhotos, Photo,
+  getDashboardContent, Event, Photo, Achievement
 } from "@/lib/data";
 import { useMemo, useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -25,32 +23,31 @@ export default function AdminDashboard() {
   const [donations, setDonations] = useState<Donation[]>([]);
   const [collections, setCollections] = useState<Collection[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [members, setMembers] = useState<Member[]>([]);
-  const [events, setEvents] = useState<Event[]>([]);
-  const [photos, setPhotos] = useState<Photo[]>([]);
+  const [dashboardPhotos, setDashboardPhotos] = useState<Photo[]>([]);
+  const [dashboardEvents, setDashboardEvents] = useState<Event[]>([]);
+  const [dashboardAchievements, setDashboardAchievements] = useState<Achievement[]>([]);
+
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [donationsData, collectionsData, expensesData, achievementsData, membersData, eventsData, photosData] = await Promise.all([
+      const [donationsData, collectionsData, expensesData, membersData, dashboardContent] = await Promise.all([
         getAllDonations(),
         getAllCollections(),
         getAllExpenses(),
-        getAllAchievements(),
         getAllMembers(),
-        getAllEvents(),
-        getAllPhotos(),
+        getDashboardContent(),
       ]);
       setDonations(donationsData);
       setCollections(collectionsData);
       setExpenses(expensesData);
-      setAchievements(achievementsData);
       setMembers(membersData);
-      setEvents(eventsData);
-      setPhotos(photosData);
+      setDashboardPhotos(dashboardContent.photos);
+      setDashboardEvents(dashboardContent.events);
+      setDashboardAchievements(dashboardContent.achievements);
     } catch (error) {
       console.error("Failed to fetch data:", error);
       toast({ title: "Error", description: "Failed to load dashboard data.", variant: "destructive" });
@@ -76,19 +73,19 @@ export default function AdminDashboard() {
      { 
       href: "/admin/gallery", 
       title: "Total Photos", 
-      value: photos.length,
+      value: dashboardPhotos.length,
       icon: GalleryHorizontal
     },
     { 
       href: "/admin/events", 
       title: "Total Events", 
-      value: events.length,
+      value: dashboardEvents.length,
       icon: CalendarDays
     },
     { 
       href: "/admin/achievements", 
       title: "Total Achievements", 
-      value: achievements.length,
+      value: dashboardAchievements.length,
       icon: Trophy
     },
   ];
@@ -174,11 +171,11 @@ export default function AdminDashboard() {
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           <Card className="xl:col-span-1">
             <CardHeader>
-              <CardTitle>Recent Photos</CardTitle>
-               <CardDescription>Last 5 photos added to the gallery.</CardDescription>
+              <CardTitle>Featured Photos</CardTitle>
+               <CardDescription>Photos selected to show on the dashboard.</CardDescription>
             </CardHeader>
             <CardContent className="grid grid-cols-3 gap-2">
-              {photos.slice(0, 5).map(photo => (
+              {dashboardPhotos.slice(0, 5).map(photo => (
                 <Link href="/admin/gallery" key={photo.id}>
                   <div className="relative aspect-square w-full rounded-md overflow-hidden transition-all hover:scale-105 hover:shadow-lg">
                     <Image src={photo.url} alt={photo.title || 'Gallery photo'} fill className="object-cover" sizes="100px" />
@@ -190,8 +187,8 @@ export default function AdminDashboard() {
 
           <Card className="xl:col-span-2">
             <CardHeader>
-              <CardTitle>Recent Events</CardTitle>
-               <CardDescription>Last 5 created events.</CardDescription>
+              <CardTitle>Featured Events</CardTitle>
+               <CardDescription>Events selected to show on the dashboard.</CardDescription>
             </CardHeader>
             <CardContent>
                 <Table>
@@ -203,7 +200,7 @@ export default function AdminDashboard() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {events.slice(0, 5).map(event => (
+                    {dashboardEvents.slice(0, 5).map(event => (
                       <TableRow key={event.id}>
                         <TableCell className="font-medium">{event.title}</TableCell>
                         <TableCell>{new Date(event.date).toLocaleDateString()}</TableCell>
@@ -221,8 +218,8 @@ export default function AdminDashboard() {
           
            <Card className="xl:col-span-3">
             <CardHeader>
-              <CardTitle>Recent Achievements</CardTitle>
-              <CardDescription>Last 5 recorded achievements.</CardDescription>
+              <CardTitle>Featured Achievements</CardTitle>
+              <CardDescription>Achievements selected to show on the dashboard.</CardDescription>
             </CardHeader>
             <CardContent>
                 <Table>
@@ -233,7 +230,7 @@ export default function AdminDashboard() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {achievements.slice(0, 5).map(achievement => (
+                    {dashboardAchievements.slice(0, 5).map(achievement => (
                       <TableRow key={achievement.id}>
                         <TableCell>
                           <div className="font-medium">{achievement.title}</div>

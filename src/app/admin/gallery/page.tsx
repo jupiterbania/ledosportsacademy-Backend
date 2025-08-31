@@ -28,6 +28,7 @@ const photoSchema = z.object({
   title: z.string().optional(),
   description: z.string().optional(),
   isSliderPhoto: z.boolean().default(false),
+  showOnDashboard: z.boolean().default(false),
   sendNotification: z.boolean().default(true),
 });
 
@@ -54,6 +55,7 @@ export default function GalleryManagementPage() {
     defaultValues: {
       url: "https://placehold.co/600x400.png",
       isSliderPhoto: false,
+      showOnDashboard: false,
       title: '',
       description: '',
       sendNotification: true,
@@ -170,6 +172,7 @@ export default function GalleryManagementPage() {
                     id: undefined,
                     url: "https://placehold.co/600x400.png",
                     isSliderPhoto: false,
+                    showOnDashboard: false,
                     title: '',
                     description: '',
                     sendNotification: true,
@@ -266,6 +269,23 @@ export default function GalleryManagementPage() {
                         </FormItem>
                       )}
                     />
+                     <FormField
+                      control={form.control}
+                      name="showOnDashboard"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                          <div className="space-y-0.5">
+                            <FormLabel>Show on Admin Dashboard</FormLabel>
+                          </div>
+                          <FormControl>
+                            <Switch
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
                      {!form.getValues("id") && (
                       <FormField
                         control={form.control}
@@ -311,9 +331,12 @@ export default function GalleryManagementPage() {
                 </CardHeader>
                 <CardContent className="space-y-2">
                    <p className="text-sm text-muted-foreground line-clamp-2">{photo.description || 'No description'}</p>
-                   <div>
+                   <div className="flex flex-wrap gap-2">
                     <Badge variant={photo.isSliderPhoto ? "default" : "outline"}>
                       {photo.isSliderPhoto ? "On Slider" : "Not on Slider"}
+                    </Badge>
+                     <Badge variant={photo.showOnDashboard ? "default" : "outline"}>
+                      {photo.showOnDashboard ? "On Dashboard" : "Not on Dashboard"}
                     </Badge>
                   </div>
                 </CardContent>
@@ -331,7 +354,7 @@ export default function GalleryManagementPage() {
                 <TableRow>
                   <TableHead className="w-[100px]">Photo</TableHead>
                   <TableHead>Details</TableHead>
-                  <TableHead>On Slider</TableHead>
+                  <TableHead>Flags</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -348,11 +371,14 @@ export default function GalleryManagementPage() {
                       <div className="text-sm text-muted-foreground line-clamp-2">{photo.description || 'N/A'}</div>
                     </TableCell>
                     <TableCell>
-                       {photo.isSliderPhoto ? (
-                         <Badge>Yes</Badge>
-                        ) : (
-                         <Badge variant="outline">No</Badge>
-                        )}
+                       <div className="flex flex-col gap-2">
+                        <Badge variant={photo.isSliderPhoto ? 'default' : 'outline'} className="w-fit">
+                          {photo.isSliderPhoto ? 'On Slider' : 'Not on Slider'}
+                        </Badge>
+                        <Badge variant={photo.showOnDashboard ? 'default' : 'outline'} className="w-fit">
+                          {photo.showOnDashboard ? 'On Dashboard' : 'Not on Dashboard'}
+                        </Badge>
+                      </div>
                       </TableCell>
                     <TableCell className="text-right">
                       <PhotoActions photo={photo} />
