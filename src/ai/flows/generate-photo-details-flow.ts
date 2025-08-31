@@ -18,6 +18,7 @@ const GeneratePhotoDetailsInputSchema = z.object({
     .describe(
       "The public URL of a photo to generate a title and description for."
     ),
+  context: z.enum(['gallery', 'event']).optional().default('gallery').describe("The context for which the details are being generated, e.g., 'gallery' or 'event'.")
 });
 export type GeneratePhotoDetailsInput = z.infer<typeof GeneratePhotoDetailsInputSchema>;
 
@@ -43,10 +44,16 @@ const prompt = ai.definePrompt({
   model: 'googleai/gemini-1.5-flash-preview',
   input: {schema: GeneratePhotoDetailsInputSchema},
   output: {schema: GeneratePhotoDetailsOutputSchema},
-  prompt: `You are an expert in creative writing for photo galleries. 
+  prompt: `You are an expert in creative writing for a sports club. 
   Your task is to analyze the provided image and generate a compelling title and a one-paragraph description for it.
 
-  The tone should be engaging and appropriate for a sports club's public gallery.
+  {{#ifCond context "==" "gallery"}}
+  The tone should be engaging and appropriate for a photo gallery.
+  {{/ifCond}}
+
+  {{#ifCond context "==" "event"}}
+  The tone should be exciting and inviting, suitable for promoting an upcoming event.
+  {{/ifCond}}
   
   Generate a creative title and a detailed description for the following image:
   
@@ -68,3 +75,4 @@ const generatePhotoDetailsFlow = ai.defineFlow(
     return output;
   }
 );
+
