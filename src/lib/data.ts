@@ -52,12 +52,14 @@ export interface Collection extends BaseDocument {
     title: string;
     amount: number;
     date: string;
+    description?: string;
 }
 
 export interface Expense extends BaseDocument {
     title: string;
     amount: number;
     date: string;
+    description?: string;
 }
 
 export interface Achievement extends BaseDocument {
@@ -262,3 +264,5 @@ export const updateAdminRequestStatus = async (id: string, status: 'approved' | 
 export const getAllNotifications = () => getCollection<Notification>('notifications', 'createdAt', 'desc');
 export const addNotification = (data: Omit<Notification, 'id' | 'createdAt'>) => addDocument<Omit<Notification, 'id'>>('notifications', { ...data, createdAt: serverTimestamp() });
 export const deleteNotification = (id: string) => deleteDocument('notifications', id);
+
+    

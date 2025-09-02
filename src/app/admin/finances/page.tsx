@@ -57,6 +57,7 @@ const collectionSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
   amount: z.coerce.number().positive({ message: "Amount must be a positive number" }),
   date: z.string().refine((val) => !isNaN(Date.parse(val)), { message: "Invalid date format" }),
+  description: z.string().optional(),
 });
 
 const expenseSchema = z.object({
@@ -64,6 +65,7 @@ const expenseSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
   amount: z.coerce.number().positive({ message: "Amount must be a positive number" }),
   date: z.string().refine((val) => !isNaN(Date.parse(val)), { message: "Invalid date format" }),
+  description: z.string().optional(),
 });
 
 
@@ -345,6 +347,7 @@ function FinanceTable<T extends Collection | Expense>({
       title: "",
       amount: 0,
       date: "",
+      description: "",
     },
   });
 
@@ -395,7 +398,7 @@ function FinanceTable<T extends Collection | Expense>({
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button size="sm" onClick={() => {
-              form.reset({ id: undefined, title: "", amount: 0, date: "" });
+              form.reset({ id: undefined, title: "", amount: 0, date: "", description: "" });
               setIsDialogOpen(true);
             }}>
               Add {title}
@@ -412,6 +415,13 @@ function FinanceTable<T extends Collection | Expense>({
                     <FormItem>
                       <FormLabel>Title</FormLabel>
                       <FormControl><Input placeholder={`${title} title`} {...field} /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+                   <FormField control={form.control} name="description" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Description (Optional)</FormLabel>
+                      <FormControl><Textarea placeholder={`A short description for the ${category}`} {...field} /></FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
@@ -444,6 +454,7 @@ function FinanceTable<T extends Collection | Expense>({
           <TableHeader>
             <TableRow>
               <TableHead>Title</TableHead>
+              <TableHead className="hidden md:table-cell">Description</TableHead>
               <TableHead className="text-right">Amount</TableHead>
               <TableHead className="hidden md:table-cell">Date</TableHead>
               <TableHead>Actions</TableHead>
@@ -453,6 +464,7 @@ function FinanceTable<T extends Collection | Expense>({
             {items.map((item) => (
               <TableRow key={item.id}>
                 <TableCell className="font-medium">{item.title}</TableCell>
+                <TableCell className="hidden md:table-cell text-muted-foreground">{item.description || 'N/A'}</TableCell>
                 <TableCell className="text-right">Rs {new Intl.NumberFormat('en-IN').format(item.amount)}</TableCell>
                 <TableCell className="hidden md:table-cell">{new Date(item.date).toLocaleDateString()}</TableCell>
                 <TableCell>
@@ -531,3 +543,5 @@ export default function FinancesPage() {
     </div>
   );
 }
+
+    
