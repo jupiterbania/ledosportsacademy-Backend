@@ -52,9 +52,11 @@ export default function ExportPage() {
         const commonHeader = (doc: jsPDFWithAutoTable, title: string) => {
             doc.addImage(logoBase64, 'PNG', 14, 15, 20, 20);
             doc.setFontSize(18);
-            doc.text(title, 40, 22);
+            doc.text("Ledo Sports Academy", 105, 25, { align: 'center' });
+            doc.setFontSize(14);
+            doc.text(title, 105, 33, { align: 'center' });
             doc.setFontSize(11);
-            doc.text(`Report generated on: ${date}`, 40, 30);
+            doc.text(`Report generated on: ${date}`, 105, 39, { align: 'center' });
         };
 
         switch (dataType) {
@@ -98,7 +100,7 @@ export default function ExportPage() {
         }
 
         doc.autoTable({
-            startY: 40,
+            startY: 45,
             head: [columns],
             body: body,
             theme: 'striped',
