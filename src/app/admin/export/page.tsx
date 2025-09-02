@@ -72,20 +72,22 @@ export default function ExportPage() {
                 break;
             case 'Collections':
                 data = await getAllCollections();
-                columns = ["Date", "Title", "Amount"];
+                columns = ["Date", "Title", "Description", "Amount"];
                 body = data.map((c: Collection) => [
                     new Date(c.date).toLocaleDateString(),
                     c.title,
+                    c.description || 'N/A',
                     `Rs ${new Intl.NumberFormat('en-IN').format(c.amount)}`
                 ]);
                 commonHeader(doc, "Collections Report");
                 break;
             case 'Expenses':
                 data = await getAllExpenses();
-                columns = ["Date", "Title", "Amount"];
+                columns = ["Date", "Title", "Description", "Amount"];
                 body = data.map((e: Expense) => [
                      new Date(e.date).toLocaleDateString(),
                     e.title,
+                    e.description || 'N/A',
                     `Rs ${new Intl.NumberFormat('en-IN').format(e.amount)}`
                 ]);
                  commonHeader(doc, "Expenses Report");
@@ -190,15 +192,15 @@ export default function ExportPage() {
       // Collections
       addSection(
         "Collections",
-        [["Date", "Title", "Amount"]],
-        collections.map(c => [new Date(c.date).toLocaleDateString(), c.title, `Rs ${new Intl.NumberFormat('en-IN').format(c.amount)}`])
+        [["Date", "Title", "Description", "Amount"]],
+        collections.map(c => [new Date(c.date).toLocaleDateString(), c.title, c.description || 'N/A', `Rs ${new Intl.NumberFormat('en-IN').format(c.amount)}`])
       );
       
       // Expenses
       addSection(
         "Expenses",
-        [["Date", "Title", "Amount"]],
-        expenses.map(e => [new Date(e.date).toLocaleDateString(), e.title, `Rs ${new Intl.NumberFormat('en-IN').format(e.amount)}`])
+        [["Date", "Title", "Description", "Amount"]],
+        expenses.map(e => [new Date(e.date).toLocaleDateString(), e.title, e.description || 'N/A', `Rs ${new Intl.NumberFormat('en-IN').format(e.amount)}`])
       );
       
       // Members
