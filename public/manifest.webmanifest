@@ -1,11 +1,11 @@
 {
-  "name": "LEDO SPORTS ACADEMY",
-  "short_name": "LSA",
-  "description": "Welcome to LEDO SPORTS ACADEMY",
+  "name": "AdminLSA",
+  "short_name": "AdminLSA",
+  "description": "Admin panel for Ledo Sports Academy",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0a0a",
-  "theme_color": "#00c4c4",
+  "theme_color": "#00e6e6",
   "icons": [
     {
       "src": "https://iili.io/KKdeC0J.png",
